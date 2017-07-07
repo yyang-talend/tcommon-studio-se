@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.talend.commons.ui.swt.actions.ITreeContextualAction;
 import org.talend.components.api.properties.ComponentProperties;
 import org.talend.core.IService;
 import org.talend.core.model.metadata.IMetadataTable;
@@ -38,22 +39,22 @@ public interface IGenericWizardService extends IService {
 
     /**
      * Create repository nodes by component service.
-     * 
+     *
      * @param curParentNode
      */
     public List<RepositoryNode> createNodesFromComponentService(RepositoryNode curParentNode);
 
     /**
      * Get all the names of generic type.
-     * 
+     *
      * @return
      */
     public List<String> getGenericTypeNames();
 
     /**
-     * 
+     *
      * Estimate whether <code>repObjType</code> is a generic type or not.
-     * 
+     *
      * @param repObjType
      * @return
      */
@@ -65,7 +66,7 @@ public interface IGenericWizardService extends IService {
 
     /**
      * Get node image by node type name.
-     * 
+     *
      * @param typeName
      * @return
      */
@@ -73,7 +74,7 @@ public interface IGenericWizardService extends IService {
 
     /**
      * Get wizard image by node type name.
-     * 
+     *
      * @param typeName
      * @return
      */
@@ -82,7 +83,7 @@ public interface IGenericWizardService extends IService {
     /**
      *
      * Get metadata tables from connection
-     * 
+     *
      * @param connection
      * @return
      */
@@ -102,14 +103,14 @@ public interface IGenericWizardService extends IService {
     /**
      * Refresh the <code>composite</code> if it is a instance of
      * <code>org.talend.repository.generic.ui.DynamicComposite</code>
-     * 
+     *
      * @param composite
      */
     public void refreshDynamicComposite(Composite composite);
 
     /**
      * Update component schema for node metadata table of node.
-     * 
+     *
      * @param componentProperties
      * @param metadataTable
      */
@@ -117,7 +118,7 @@ public interface IGenericWizardService extends IService {
 
     /**
      * Get all component properties which are related to the <code>connection</code>.
-     * 
+     *
      * @param connection the connection.
      * @param tableLabel the table which need to consider the component properties along.
      * @return
@@ -126,12 +127,19 @@ public interface IGenericWizardService extends IService {
 
     /**
      * Get the new repository type (the type from component framework) by the old repository type name.
-     * 
+     *
      * @param oldRepTypeName
      * @return
      */
     public ERepositoryObjectType getNewRepType(String oldRepTypeName);
 
     public String getConnectionProperties(Connection connection);
-    
+
+    /**
+     * FIXME: will modify it according the rules of component definition when they finish.
+     *
+     * @param node
+     * @return the default action which will be invoked when double click the node.
+     */
+    public ITreeContextualAction getDefaultAction(RepositoryNode node);
 }
