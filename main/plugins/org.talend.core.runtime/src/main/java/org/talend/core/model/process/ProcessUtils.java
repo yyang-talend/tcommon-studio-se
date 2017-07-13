@@ -27,6 +27,7 @@ import org.talend.commons.utils.VersionUtils;
 import org.talend.core.GlobalServiceRegister;
 import org.talend.core.ITDQItemService;
 import org.talend.core.PluginChecker;
+import org.talend.core.hadoop.HadoopConstants;
 import org.talend.core.hadoop.IHadoopClusterService;
 import org.talend.core.hadoop.repository.HadoopRepositoryUtil;
 import org.talend.core.model.properties.Item;
@@ -363,7 +364,7 @@ public final class ProcessUtils {
                     if (propertyParam != null) {
                         Map<String, IElementParameter> propertyChildParameters = propertyParam.getChildParameters();
                         if (propertyChildParameters != null) {
-                            IElementParameter subPropertyTypeElement = propertyChildParameters.get("REPOSITORY_PROPERTY_TYPE");
+                            IElementParameter subPropertyTypeElement = propertyChildParameters.get("REPOSITORY_PROPERTY_TYPE"); //$NON-NLS-1$
                             if (subPropertyTypeElement != null) {
                                 repositoryMetadataId = (String) subPropertyTypeElement.getValue();
                             }
@@ -374,7 +375,7 @@ public final class ProcessUtils {
                     if (schemaParam != null) {
                         Map<String, IElementParameter> schemaChildParameters = schemaParam.getChildParameters();
                         if (schemaChildParameters != null) {
-                            IElementParameter subSchemaElement = schemaChildParameters.get("REPOSITORY_SCHEMA_TYPE");
+                            IElementParameter subSchemaElement = schemaChildParameters.get("REPOSITORY_SCHEMA_TYPE"); //$NON-NLS-1$
                             if (subSchemaElement != null) {
                                 repositoryMetadataId = (String) subSchemaElement.getValue();
                             }
@@ -385,7 +386,7 @@ public final class ProcessUtils {
                     if (querystoreParam != null) {
                         Map<String, IElementParameter> queryChildParameters = querystoreParam.getChildParameters();
                         if (queryChildParameters != null) {
-                            IElementParameter subQueryElement = queryChildParameters.get("REPOSITORY_QUERYSTORE_TYPE");
+                            IElementParameter subQueryElement = queryChildParameters.get("REPOSITORY_QUERYSTORE_TYPE"); //$NON-NLS-1$
                             if (subQueryElement != null) {
                                 repositoryMetadataId = (String) subQueryElement.getValue();
                             }
@@ -445,7 +446,7 @@ public final class ProcessUtils {
                     if (processParam != null) {
                         String repositoryProcessId = (String) processParam.getChildParameters()
                                 .get("PROCESS_TYPE_PROCESS").getValue(); //$NON-NLS-1$
-                        String repositoryProcessVersion = (String) processParam.getChildParameters().get("PROCESS_TYPE_VERSION")
+                        String repositoryProcessVersion = (String) processParam.getChildParameters().get("PROCESS_TYPE_VERSION") //$NON-NLS-1$
                                 .getValue();
                         if (repositoryProcessId != null && !repositoryProcessId.equals("")) { //$NON-NLS-1$
                             try {
@@ -733,8 +734,8 @@ public final class ProcessUtils {
                 for (Object obj : ((ProcessItem) item).getProcess().getNode()) {
                     if (obj instanceof NodeType) {
                         // tAssert will be sued on DI job, tCollectAndCheck will be used on Spark job
-                        if (((NodeType) obj).getComponentName().equals("tAssert")
-                                || ((NodeType) obj).getComponentName().equals("tCollectAndCheck")) {
+                        if (((NodeType) obj).getComponentName().equals("tAssert") //$NON-NLS-1$
+                                || ((NodeType) obj).getComponentName().equals("tCollectAndCheck")) { //$NON-NLS-1$
                             count++;
                         }
                     }
@@ -744,7 +745,7 @@ public final class ProcessUtils {
         } else {
             for (INode node : process.getGraphicalNodes()) {
                 // tAssert will be sued on DI job, tCollectAndCheck will be used on Spark job
-                if (node.getComponent().getName().equals("tAssert") || node.getComponent().getName().equals("tCollectAndCheck")) {
+                if (node.getComponent().getName().equals("tAssert") || node.getComponent().getName().equals("tCollectAndCheck")) { //$NON-NLS-1$ //$NON-NLS-2$
                     count++;
                 }
             }
@@ -971,17 +972,45 @@ public final class ProcessUtils {
     /** Find the distribution where the generated jar rquired to have the context files inside **/
     public static boolean needsToHaveContextInsideJar(ProcessItem processItem) {
         EList<ElementParameterType> parameters = processItem.getProcess().getParameters().getElementParameter();
-        for (ElementParameterType pt : parameters) {
-            if (pt.getName().equals("DISTRIBUTION")) { //$NON-NLS-1$
-                String value = pt.getValue();
-                if ("MICROSOFT_HD_INSIGHT".equals(value) //$NON-NLS-1$
-                        || "GOOGLE_CLOUD_DATAPROC".equals(value) //$NON-NLS-1$
-                        || "CLOUDERA_ALTUS".equals(value)) { //$NON-NLS-1$
-                    return true;
+        String distribution = getParameterValue(parameters, "DISTRIBUTION"); //$NON-NLS-1$
+        if ("MICROSOFT_HD_INSIGHT".equals(distribution) //$NON-NLS-1$
+                || "GOOGLE_CLOUD_DATAPROC".equals(distribution) //$NON-NLS-1$
+                || "CLOUDERA_ALTUS".equals(distribution)) { //$NON-NLS-1$
+            return true;
+        } else {
+            String framework = processItem.getProcess().getFramework();
+            // If we are in Spark/Spark Streaming and the YARN_CLUSTER mode is used, then we need to add the contexts
+            // into the job jar.
+            if (framework != null
+                    && (framework.equals(HadoopConstants.FRAMEWORK_SPARK) || framework
+                            .equals(HadoopConstants.FRAMEWORK_SPARKSTREAMING))) {
+                String sparkLocalMode = getParameterValue(parameters, "SPARK_LOCAL_MODE"); //$NON-NLS-1$
+                if ("false".equals(sparkLocalMode)) { //$NON-NLS-1$
+                    String sparkMode = getParameterValue(parameters, "SPARK_MODE"); //$NON-NLS-1$
+                    if ("YARN_CLUSTER".equals(sparkMode)) { //$NON-NLS-1$
+                        return true;
+                    }
+
                 }
             }
         }
         return false;
+    }
+
+    /**
+     * Search for a parameter into a collection of parameters, and return its value.
+     *
+     * @param parameters the collection of parameters to search in
+     * @param parameter the parameter to search for
+     * @return the value of the parameter if it's been found, else null.
+     */
+    private static String getParameterValue(EList<ElementParameterType> parameters, String parameter) {
+        for (ElementParameterType pt : parameters) {
+            if (parameter.equals(pt.getName())) {
+                return pt.getValue();
+            }
+        }
+        return null;
     }
 
 }
