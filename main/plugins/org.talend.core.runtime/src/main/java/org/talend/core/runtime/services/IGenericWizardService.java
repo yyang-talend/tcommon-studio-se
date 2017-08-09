@@ -24,7 +24,9 @@ import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.process.EComponentCategory;
 import org.talend.core.model.process.Element;
 import org.talend.core.model.process.INode;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.repository.model.RepositoryNode;
 
@@ -131,5 +133,12 @@ public interface IGenericWizardService extends IService {
     public ERepositoryObjectType getNewRepType(String oldRepTypeName);
 
     public String getConnectionProperties(Connection connection);
+    
+    public Composite creatDBDynamicComposite(Composite composite, EComponentCategory sectionCategory,
+            boolean isCompactView,Property property, String typeName);
+    
+    public Connection createGenericConnection();
+    
+    public ConnectionItem createGenericConnectionItem();
 
 }
