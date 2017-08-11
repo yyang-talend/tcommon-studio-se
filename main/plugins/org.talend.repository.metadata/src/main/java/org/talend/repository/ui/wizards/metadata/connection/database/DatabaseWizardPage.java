@@ -29,6 +29,7 @@ import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.process.EComponentCategory;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.core.runtime.services.IGenericDBService;
 import org.talend.core.runtime.services.IGenericWizardService;
 import org.talend.designer.core.model.utils.emf.talendfile.ContextType;
 import org.talend.metadata.managment.ui.wizard.AbstractForm;
@@ -100,13 +101,17 @@ public class DatabaseWizardPage extends WizardPage {
         data.left = new FormAttachment(0, 0);
         data.right = new FormAttachment(100, 0);
         compositeDbSettings.setLayoutData(data);
-        dbTypeForm = new DBTypeForm(this, compositeDbSettings, connectionItem, SWT.NONE, !isRepositoryObjectEditable);
+        dbTypeForm = new DBTypeForm(this, compositeDbSettings, connectionItem, SWT.NONE, !isRepositoryObjectEditable, isCreation);
         
-        createDBForm();
-        setControl(parentContainer);
+        createDBForm(null);
+//        setControl(parentContainer);
     }
     
-    public void createDBForm(){
+    public void createDBForm(ConnectionItem connItem){
+        if(connItem != null){
+            this.connectionItem = connItem;
+            ((DatabaseWizard)getWizard()).setNewConnectionItem(connItem);
+        }
         if(parentContainer == null || parentContainer.isDisposed()){
             return;
         }
@@ -115,23 +120,23 @@ public class DatabaseWizardPage extends WizardPage {
         data.right = new FormAttachment(100, 0);
         data.top = new FormAttachment(compositeDbSettings, 0);
         data.bottom = new FormAttachment(100, 0);
-        if(isGeneralJDBC(dbTypeForm.getDBType())){
-            IGenericWizardService wizardService = null;
-            if (GlobalServiceRegister.getDefault().isServiceRegistered(IGenericWizardService.class)) {
-                wizardService = (IGenericWizardService) GlobalServiceRegister.getDefault().getService(
-                        IGenericWizardService.class);
+        if(isTCOMDB(dbTypeForm.getDBType())){
+            IGenericDBService dbService = null;
+            if (GlobalServiceRegister.getDefault().isServiceRegistered(IGenericDBService.class)) {
+                dbService = (IGenericDBService) GlobalServiceRegister.getDefault().getService(
+                        IGenericDBService.class);
+            }
+            if(dbService == null){
+                return;
             }
             dynamicParentForm = new Composite(parentContainer, SWT.NONE);
             dynamicParentForm.setLayoutData(data);
             dynamicParentForm.setLayout(new FormLayout());
-            
-            if(wizardService == null){
-                return;
-            }
-            dynamicForm = wizardService.creatDBDynamicComposite(dynamicParentForm, EComponentCategory.BASIC, true, connectionItem.getProperty(), 
+            dynamicForm = dbService.creatDBDynamicComposite(dynamicParentForm, EComponentCategory.BASIC, true, connectionItem.getProperty(), 
                     ERepositoryObjectType.JDBC.getType());
             dynamicForm.layout();
             dynamicParentForm.layout();
+            setControl(dynamicForm);
         }else{
             
             databaseForm = new DatabaseForm(parentContainer, connectionItem, existingNames, isCreation);
@@ -157,15 +162,32 @@ public class DatabaseWizardPage extends WizardPage {
             if (connectionItem.getProperty().getLabel() != null && !connectionItem.getProperty().getLabel().equals("")) { //$NON-NLS-1$
                 databaseForm.checkFieldsValue();
             }
+            setControl(databaseForm);
         }
         parentContainer.layout();
     }
     
-    public boolean isGeneralJDBC(String type){
+    public boolean isTCOMDB(String type){
         if(type == null){
             return false;
         }
+        EDatabaseConnTemplate template = EDatabaseConnTemplate.indexOfTemplate(type);
+        if(template != null && EDatabaseConnTemplate.GENERAL_JDBC.getDBTypeName().equals(type)){
+            return true;
+        }
         return EDatabaseConnTemplate.GENERAL_JDBC.getDBDisplayName().equals(type);
+    }
+    
+    public boolean isGenericConn(ConnectionItem connItem){
+        IGenericWizardService dbService = null;
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(IGenericWizardService.class)) {
+            dbService = (IGenericWizardService) GlobalServiceRegister.getDefault().getService(
+                    IGenericWizardService.class);
+        }
+        if(dbService != null){
+            return dbService.isGenericItem(connItem);
+        }
+        return false;
     }
     
     public void refreshDBForm(){
@@ -194,11 +216,17 @@ public class DatabaseWizardPage extends WizardPage {
      * @return
      */
     public IMetadataConnection getMetadataConnection() {
-        return databaseForm.getMetadataConnection();
+        if(databaseForm != null){
+            return databaseForm.getMetadataConnection();
+        }
+        return null;
     }
 
     public ContextType getSelectedContextType() {
-        return databaseForm.getSelectedContextType();
+        if(databaseForm != null){
+            return databaseForm.getSelectedContextType();
+        }
+        return null;
     }
     
 }

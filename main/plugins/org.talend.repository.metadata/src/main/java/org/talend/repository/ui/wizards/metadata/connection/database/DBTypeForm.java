@@ -24,12 +24,24 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.talend.commons.ui.swt.formtools.LabelledCombo;
+import org.talend.commons.utils.VersionUtils;
 import org.talend.commons.utils.platform.PluginChecker;
+import org.talend.core.GlobalServiceRegister;
+import org.talend.core.context.Context;
+import org.talend.core.context.RepositoryContext;
 import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.database.conn.template.EDatabaseConnTemplate;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.ExtractMetaDataFromDataBase;
 import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.PropertiesFactory;
+import org.talend.core.model.properties.Property;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.core.runtime.CoreRuntimePlugin;
+import org.talend.core.runtime.services.IGenericDBService;
+import org.talend.core.runtime.services.IGenericWizardService;
 import org.talend.core.ui.branding.IBrandingConfiguration;
 import org.talend.metadata.managment.utils.MetadataConnectionUtils;
 import org.talend.repository.metadata.i18n.Messages;
@@ -47,23 +59,29 @@ public class DBTypeForm {
     
     private boolean isReadOnly;
     
+    private boolean isCreation;
+    
     private DatabaseWizardPage wizardPage;
     
     private Composite parent;
     
     private String dbType;
     
-    public DBTypeForm(DatabaseWizardPage wizardPage, Composite parent, ConnectionItem connectionItem,int style, boolean readOnly) {
+    public DBTypeForm(DatabaseWizardPage wizardPage, Composite parent, ConnectionItem connectionItem,int style, boolean readOnly, boolean isCreation) {
         this.parent = parent;
         this.wizardPage = wizardPage;
         this.connectionItem = connectionItem;
         this.isReadOnly = readOnly;
+        this.isCreation = isCreation;
         initialize();
     }
     
     public void initialize() {
+        if(!isCreation){
+            this.dbType = getConnectionDBType();
+        }
         addDBSelectCombo();
-        EDatabaseConnTemplate template = EDatabaseConnTemplate.indexOfTemplate(getConnection().getDatabaseType());
+        EDatabaseConnTemplate template = EDatabaseConnTemplate.indexOfTemplate(getConnectionDBType());
         if (template != null) {
             if (dbTypeCombo.getText().length() == 0 || !dbTypeCombo.getText().equals(template.getDbType().getDisplayName())) {
                 dbTypeCombo.setText(template.getDbType().getDisplayName());
@@ -179,16 +197,23 @@ public class DBTypeForm {
             @Override
             public void modifyText(final ModifyEvent e) {
                 dbType = dbTypeCombo.getText();
-                String oldType = getConnection().getDatabaseType();
+                String oldType = getConnectionDBType();
                 if(dbType.equals(oldType)){
                     return;
                 }
-                getConnection().setDatabaseType(dbType);
-                if(wizardPage.isGeneralJDBC(dbType) || wizardPage.isGeneralJDBC(oldType)){
-                    getConnection().getParameters().clear();
-                    getConnection().setDbVersionString(null);
+                setConnectionDBType(dbType);
+                if(needDisposeOldForm(dbType, oldType)){
+                    reCreateConnection();
+                    if(!wizardPage.isTCOMDB(dbType)){
+                        ((DatabaseConnection)connectionItem.getConnection()).getParameters().clear();
+                        ((DatabaseConnection)connectionItem.getConnection()).setDbVersionString(null);
+                    }
+                    
                     wizardPage.disposeDBForm();
-                    wizardPage.createDBForm();
+                    wizardPage.createDBForm(connectionItem);
+                    if(wizardPage.isTCOMDB(dbType)){
+                        
+                    }
                 }else{
                     wizardPage.refreshDBForm();
                 }
@@ -196,12 +221,87 @@ public class DBTypeForm {
         });
     }
     
-    public DatabaseConnection getConnection(){
-        return (DatabaseConnection) connectionItem.getConnection();
+    public boolean needDisposeOldForm(String newType, String oldType){
+        if(newType.equals(oldType)){
+            return false;
+        }
+        if(wizardPage.isTCOMDB(newType) && !wizardPage.isTCOMDB(oldType) || 
+                !wizardPage.isTCOMDB(newType) && wizardPage.isTCOMDB(oldType)){
+            return true;
+        }
+        return false;
+    }
+    
+    private void reCreateConnection(){
+        Connection connection = null;
+        if(wizardPage.isTCOMDB(dbType)){
+            IGenericDBService dbService = null;
+            if (GlobalServiceRegister.getDefault().isServiceRegistered(IGenericDBService.class)) {
+                dbService = (IGenericDBService) GlobalServiceRegister.getDefault().getService(
+                        IGenericDBService.class);
+            }
+            if(dbService == null){
+                return;
+            }
+            connection = dbService.createGenericConnection();
+            connectionItem = dbService.createGenericConnectionItem();
+        }else{
+            connection = ConnectionFactory.eINSTANCE.createDatabaseConnection(); 
+            connectionItem = PropertiesFactory.eINSTANCE.createDatabaseConnectionItem();
+        }
+        Property property = PropertiesFactory.eINSTANCE.createProperty();
+        property.setAuthor(((RepositoryContext) CoreRuntimePlugin.getInstance().getContext()
+                .getProperty(Context.REPOSITORY_CONTEXT_KEY)).getUser());
+        property.setId(ProxyRepositoryFactory.getInstance().getNextId());
+        property.setVersion(VersionUtils.DEFAULT_VERSION);
+        property.setStatusCode(""); //$NON-NLS-1$
+        connectionItem.setProperty(property);
+        connectionItem.setConnection(connection);
+    }
+    
+    public DatabaseConnection getDatabseConnection(){
+        if(connectionItem.getConnection() instanceof DatabaseConnection){
+            return (DatabaseConnection) connectionItem.getConnection();
+        }
+        return null;
     }
     
     public String getDBType(){
         return this.dbType;
     }
+    
+    private String getConnectionDBType(){
+        if(wizardPage.isTCOMDB(dbType) || wizardPage.isGenericConn(connectionItem)){
+            IGenericDBService dbService = null;
+            if (GlobalServiceRegister.getDefault().isServiceRegistered(IGenericDBService.class)) {
+                dbService = (IGenericDBService) GlobalServiceRegister.getDefault().getService(
+                        IGenericDBService.class);
+            }
+            if(dbService != null){
+                return dbService.getGenericConnectionType(connectionItem);
+            }
+        }
+        return ((DatabaseConnection)connectionItem.getConnection()).getDatabaseType();
+    }
 
+    
+    private void setConnectionDBType(String type){
+        if(wizardPage.isTCOMDB(type)){
+            EDatabaseConnTemplate template = EDatabaseConnTemplate.indexOfTemplate(type);
+            if(template == null){
+                return;
+            }
+            IGenericDBService dbService = null;
+            if (GlobalServiceRegister.getDefault().isServiceRegistered(IGenericDBService.class)) {
+                dbService = (IGenericDBService) GlobalServiceRegister.getDefault().getService(
+                        IGenericDBService.class);
+            }
+            if(dbService != null){
+                dbService.setGenericConnectionType(template.getDBTypeName(), connectionItem);
+                return;
+            }
+        }else{
+            ((DatabaseConnection)connectionItem.getConnection()).setDatabaseType(type);
+        }
+    }
 }

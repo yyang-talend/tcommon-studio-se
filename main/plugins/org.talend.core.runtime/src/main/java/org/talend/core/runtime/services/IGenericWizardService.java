@@ -134,11 +134,4 @@ public interface IGenericWizardService extends IService {
 
     public String getConnectionProperties(Connection connection);
     
-    public Composite creatDBDynamicComposite(Composite composite, EComponentCategory sectionCategory,
-            boolean isCompactView,Property property, String typeName);
-    
-    public Connection createGenericConnection();
-    
-    public ConnectionItem createGenericConnectionItem();
-
 }
