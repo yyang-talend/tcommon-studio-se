@@ -13,9 +13,11 @@
 package org.talend.repository.ui.wizards.metadata.connection.database;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridLayout;
@@ -142,6 +144,9 @@ public class DBTypeForm {
         if (visibleItemCount > VISIBLE_DATABASE_COUNT) {
             visibleItemCount = VISIBLE_DATABASE_COUNT;
         }
+        if(this.dbType != null){
+            dbTypeCombo.setText(dbType);
+        }
         dbTypeCombo.getCombo().setVisibleItemCount(visibleItemCount);
     }
     
@@ -196,14 +201,16 @@ public class DBTypeForm {
         dbTypeCombo.addModifyListener(new ModifyListener() {
             @Override
             public void modifyText(final ModifyEvent e) {
+                wizardPage.setPageComplete(!isReadOnly);
+                wizardPage.setErrorMessage(null);
                 dbType = dbTypeCombo.getText();
                 String oldType = getConnectionDBType();
                 if(dbType.equals(oldType)){
                     return;
                 }
-                setConnectionDBType(dbType);
                 if(needDisposeOldForm(dbType, oldType)){
                     reCreateConnection();
+                    setConnectionDBType(dbType);
                     if(!wizardPage.isTCOMDB(dbType)){
                         ((DatabaseConnection)connectionItem.getConnection()).getParameters().clear();
                         ((DatabaseConnection)connectionItem.getConnection()).setDbVersionString(null);
@@ -211,10 +218,12 @@ public class DBTypeForm {
                     
                     wizardPage.disposeDBForm();
                     wizardPage.createDBForm(connectionItem);
+                    wizardPage.refreshDBForm();
                     if(wizardPage.isTCOMDB(dbType)){
                         
                     }
                 }else{
+                    setConnectionDBType(dbType);
                     wizardPage.refreshDBForm();
                 }
             }
@@ -233,6 +242,7 @@ public class DBTypeForm {
     }
     
     private void reCreateConnection(){
+        String name = connectionItem.getProperty().getLabel();
         Connection connection = null;
         if(wizardPage.isTCOMDB(dbType)){
             IGenericDBService dbService = null;
@@ -255,6 +265,11 @@ public class DBTypeForm {
         property.setId(ProxyRepositoryFactory.getInstance().getNextId());
         property.setVersion(VersionUtils.DEFAULT_VERSION);
         property.setStatusCode(""); //$NON-NLS-1$
+        
+        property.setLabel(StringUtils.trimToNull(name));
+        property.setDisplayName(StringUtils.trimToNull(name));
+        property.setModificationDate(new Date());
+        
         connectionItem.setProperty(property);
         connectionItem.setConnection(connection);
     }
@@ -300,7 +315,7 @@ public class DBTypeForm {
                 dbService.setGenericConnectionType(template.getDBTypeName(), connectionItem);
                 return;
             }
-        }else{
+        }else if(connectionItem.getConnection() instanceof DatabaseConnection){
             ((DatabaseConnection)connectionItem.getConnection()).setDatabaseType(type);
         }
     }

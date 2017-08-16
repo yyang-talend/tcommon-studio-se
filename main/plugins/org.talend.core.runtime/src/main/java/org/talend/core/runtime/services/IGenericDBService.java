@@ -12,13 +12,19 @@
 // ============================================================================
 package org.talend.core.runtime.services;
 
+import java.util.List;
+
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.swt.widgets.Composite;
 import org.talend.core.IService;
+import org.talend.core.model.metadata.IMetadataTable;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.process.EComponentCategory;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
+import org.talend.daikon.properties.presentation.Form;
 
 /**
  * DOC hwang  class global comment. Detailled comment
@@ -35,5 +41,9 @@ public interface IGenericDBService extends IService{
     public String getGenericConnectionType(Item item);
     
     public void setGenericConnectionType(String type, Item item);
+    
+    public void dbWizardPerformFinish(ConnectionItem item, Form form, boolean creation, IPath pathToSave, List<IMetadataTable> oldMetadataTable) throws CoreException;
+    
+    public Form getDynamicForm(Composite composite);
     
 }

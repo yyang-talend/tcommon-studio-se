@@ -31,9 +31,11 @@ import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.runtime.services.IGenericDBService;
 import org.talend.core.runtime.services.IGenericWizardService;
+import org.talend.daikon.properties.presentation.Form;
 import org.talend.designer.core.model.utils.emf.talendfile.ContextType;
 import org.talend.metadata.managment.ui.wizard.AbstractForm;
 import org.talend.metadata.managment.ui.wizard.RepositoryWizard;
+import org.talend.repository.metadata.i18n.Messages;
 
 /**
  * DatabaseWizard present the DatabaseForm. Use to Use to manage the metadata connection. Page allows setting a
@@ -137,6 +139,8 @@ public class DatabaseWizardPage extends WizardPage {
             dynamicForm.layout();
             dynamicParentForm.layout();
             setControl(dynamicForm);
+            //just set it for test, need to revert
+            DatabaseWizardPage.this.setPageComplete(true);
         }else{
             
             databaseForm = new DatabaseForm(parentContainer, connectionItem, existingNames, isCreation);
@@ -148,7 +152,10 @@ public class DatabaseWizardPage extends WizardPage {
 
                 @Override
                 public void checkPerformed(final AbstractForm source) {
-                    if (source.isStatusOnError()) {
+                    if (dbTypeForm.getDBType() == null){
+                        DatabaseWizardPage.this.setPageComplete(false);
+                        setErrorMessage(Messages.getString("DatabaseForm.alert", "DB Type"));//$NON-NLS-1$  //$NON-NLS-2$
+                    }else if (source.isStatusOnError()) {
                         DatabaseWizardPage.this.setPageComplete(false);
                         setErrorMessage(source.getStatus());
                     } else {
@@ -163,6 +170,7 @@ public class DatabaseWizardPage extends WizardPage {
                 databaseForm.checkFieldsValue();
             }
             setControl(databaseForm);
+            databaseForm.layout();
         }
         parentContainer.layout();
     }
@@ -225,6 +233,20 @@ public class DatabaseWizardPage extends WizardPage {
     public ContextType getSelectedContextType() {
         if(databaseForm != null){
             return databaseForm.getSelectedContextType();
+        }
+        return null;
+    }
+    
+    public Form getForm(){
+        if(dynamicForm != null){
+            IGenericDBService dbService = null;
+            if (GlobalServiceRegister.getDefault().isServiceRegistered(IGenericDBService.class)) {
+                dbService = (IGenericDBService) GlobalServiceRegister.getDefault().getService(
+                        IGenericDBService.class);
+            }
+            if(dbService != null){
+                return dbService.getDynamicForm(dynamicForm);
+            }
         }
         return null;
     }

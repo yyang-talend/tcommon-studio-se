@@ -5861,11 +5861,11 @@ public class DatabaseForm extends AbstractForm {
                 }
             }
         }
-
-        if (getConnectionDBType().length() <= 0) {
-            updateStatus(IStatus.ERROR, Messages.getString("DatabaseForm.alert", "DB Type")); //$NON-NLS-1$
-            return false;
-        }
+//
+//        if (getConnectionDBType().length() <= 0) {
+//            updateStatus(IStatus.ERROR, Messages.getString("DatabaseForm.alert", "DB Type")); //$NON-NLS-1$
+//            return false;
+//        }
 
         // Show Database Properties
         // if (!isModify) {

@@ -23,6 +23,7 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
@@ -52,6 +53,7 @@ import org.talend.core.hadoop.IHadoopClusterService;
 import org.talend.core.hadoop.IHadoopDistributionService;
 import org.talend.core.hadoop.repository.HadoopRepositoryUtil;
 import org.talend.core.model.metadata.IMetadataConnection;
+import org.talend.core.model.metadata.IMetadataTable;
 import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
@@ -74,6 +76,7 @@ import org.talend.core.repository.utils.AbstractResourceChangesService;
 import org.talend.core.repository.utils.TDQServiceRegister;
 import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.core.runtime.hd.IHDistribution;
+import org.talend.core.runtime.services.IGenericDBService;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.designer.core.IDesignerCoreService;
@@ -432,41 +435,60 @@ public class DatabaseWizard extends CheckLastVersionRepositoryWizard implements 
 
             // MOD by gdbu 2011-3-24 bug 19528
             EDatabaseTypeName dbType = EDatabaseTypeName.getTypeFromDbType(getDBType());
-            if (dbType != EDatabaseTypeName.GENERAL_JDBC) {
-                String driverClass = ExtractMetaDataUtils.getInstance().getDriverClassByDbType(getDBType());
-                DatabaseConnection dbConnection = (DatabaseConnection) connectionItem.getConnection();
-                String dbVersion = dbConnection.getDbVersionString();
-                // feature TDI-22108
-                if (EDatabaseTypeName.VERTICA.equals(dbType)
-                        && (EDatabaseVersion4Drivers.VERTICA_6.getVersionValue().equals(dbVersion)
-                                || EDatabaseVersion4Drivers.VERTICA_5_1.getVersionValue().equals(dbVersion)
-                                || EDatabaseVersion4Drivers.VERTICA_6_1_X.getVersionValue().equals(dbVersion) || EDatabaseVersion4Drivers.VERTICA_7
-                                .getVersionValue().equals(dbVersion))) {
-                    driverClass = EDatabase4DriverClassName.VERTICA2.getDriverClass();
-                } else if (EDatabaseTypeName.IMPALA.equals(dbType)) {
-                    IHadoopDistributionService hadoopService = getHadoopDistributionService();
-                    if (hadoopService != null) {
-                        String distributionName = dbConnection.getParameters().get(
-                                ConnParameterKeys.CONN_PARA_KEY_IMPALA_DISTRIBUTION);
-                        IHDistribution impalaDistribution = hadoopService.getImpalaDistributionManager().getDistribution(
-                                distributionName, false);
-                        if (null != impalaDistribution && !impalaDistribution.useCustom()) {
-                            dbConnection.setDbVersionString(dbConnection.getParameters().get(
-                                    ConnParameterKeys.CONN_PARA_KEY_IMPALA_VERSION));
-                        }
-                    }
-                } else if (EDatabaseTypeName.MYSQL.equals(dbType)
-                        && (EDatabaseVersion4Drivers.MARIADB.getVersionValue().equals(dbVersion))) {
-                    driverClass = EDatabase4DriverClassName.MARIADB.getDriverClass();
-                } else if (EDatabaseTypeName.MSSQL.equals(dbType)
-                        && EDatabaseVersion4Drivers.MSSQL_PROP.getVersionValue().equals(dbVersion)) {
-                    driverClass = EDatabase4DriverClassName.MSSQL2.getDriverClass();
-                } else if (EDatabaseTypeName.SYBASEASE.equals(dbType)
-                        && EDatabaseVersion4Drivers.SYBASEIQ_16.getVersionValue().equals(dbVersion)) {
-                    driverClass = EDatabase4DriverClassName.SYBASEIQ_16.getDriverClass();
+            if(dbType == EDatabaseTypeName.GENERAL_JDBC){
+                IGenericDBService dbService = null;
+                if (GlobalServiceRegister.getDefault().isServiceRegistered(IGenericDBService.class)) {
+                    dbService = (IGenericDBService) GlobalServiceRegister.getDefault().getService(
+                            IGenericDBService.class);
                 }
-                dbConnection.setDriverClass(driverClass);
+                if(dbService == null){
+                    return false;
+                }
+                try {
+                    dbService.dbWizardPerformFinish(connectionItem, databaseWizardPage.getForm(), isCreation(), pathToSave, new ArrayList<IMetadataTable>());
+                } catch (CoreException e) {
+                    new ErrorDialogWidthDetailArea(getShell(), PID, Messages.getString("CommonWizard.persistenceException"), //$NON-NLS-1$
+                            e.toString());
+                    log.error(Messages.getString("CommonWizard.persistenceException") + "\n" + e.toString()); //$NON-NLS-1$ //$NON-NLS-2$
+                    return false;
+                }
+                return true;
             }
+
+            String driverClass = ExtractMetaDataUtils.getInstance().getDriverClassByDbType(getDBType());
+            DatabaseConnection dbConnection = (DatabaseConnection) connectionItem.getConnection();
+            String dbVersion = dbConnection.getDbVersionString();
+            // feature TDI-22108
+            if (EDatabaseTypeName.VERTICA.equals(dbType)
+                    && (EDatabaseVersion4Drivers.VERTICA_6.getVersionValue().equals(dbVersion)
+                            || EDatabaseVersion4Drivers.VERTICA_5_1.getVersionValue().equals(dbVersion)
+                            || EDatabaseVersion4Drivers.VERTICA_6_1_X.getVersionValue().equals(dbVersion) || EDatabaseVersion4Drivers.VERTICA_7
+                            .getVersionValue().equals(dbVersion))) {
+                driverClass = EDatabase4DriverClassName.VERTICA2.getDriverClass();
+            } else if (EDatabaseTypeName.IMPALA.equals(dbType)) {
+                IHadoopDistributionService hadoopService = getHadoopDistributionService();
+                if (hadoopService != null) {
+                    String distributionName = dbConnection.getParameters().get(
+                            ConnParameterKeys.CONN_PARA_KEY_IMPALA_DISTRIBUTION);
+                    IHDistribution impalaDistribution = hadoopService.getImpalaDistributionManager().getDistribution(
+                            distributionName, false);
+                    if (null != impalaDistribution && !impalaDistribution.useCustom()) {
+                        dbConnection.setDbVersionString(dbConnection.getParameters().get(
+                                ConnParameterKeys.CONN_PARA_KEY_IMPALA_VERSION));
+                    }
+                }
+            } else if (EDatabaseTypeName.MYSQL.equals(dbType)
+                    && (EDatabaseVersion4Drivers.MARIADB.getVersionValue().equals(dbVersion))) {
+                driverClass = EDatabase4DriverClassName.MARIADB.getDriverClass();
+            } else if (EDatabaseTypeName.MSSQL.equals(dbType)
+                    && EDatabaseVersion4Drivers.MSSQL_PROP.getVersionValue().equals(dbVersion)) {
+                driverClass = EDatabase4DriverClassName.MSSQL2.getDriverClass();
+            } else if (EDatabaseTypeName.SYBASEASE.equals(dbType)
+                    && EDatabaseVersion4Drivers.SYBASEIQ_16.getVersionValue().equals(dbVersion)) {
+                driverClass = EDatabase4DriverClassName.SYBASEIQ_16.getDriverClass();
+            }
+            dbConnection.setDriverClass(driverClass);
+        
             // ~19528
 
             // use the context group of selected on check button to check the selection in perform finish.
@@ -818,7 +840,9 @@ public class DatabaseWizard extends CheckLastVersionRepositoryWizard implements 
     }
     
     public void setNewConnectionItem(ConnectionItem connectionItem){
+        this.connection = connectionItem.getConnection();
         this.connectionItem = connectionItem;
+        this.connectionProperty = connectionItem.getProperty();
     }
 
     /**
@@ -1025,6 +1049,14 @@ public class DatabaseWizard extends CheckLastVersionRepositoryWizard implements 
     private String getDBType(){
         if(connection instanceof DatabaseConnection){
             return ((DatabaseConnection)connection).getDatabaseType();
+        }
+        IGenericDBService dbService = null;
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(IGenericDBService.class)) {
+            dbService = (IGenericDBService) GlobalServiceRegister.getDefault().getService(
+                    IGenericDBService.class);
+        }
+        if(dbService != null){
+            return dbService.getGenericConnectionType(connectionItem);
         }
         return null;
     }
