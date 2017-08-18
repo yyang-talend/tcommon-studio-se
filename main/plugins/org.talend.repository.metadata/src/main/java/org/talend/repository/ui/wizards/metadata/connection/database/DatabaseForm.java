@@ -942,15 +942,6 @@ public class DatabaseForm extends AbstractForm {
 
         // Main Fields
 
-        // Database Type Combo
-
-//        addDBSelectCombo();
-
-        Label label = new Label(compositeDbSettings, SWT.SEPARATOR | SWT.H_SCROLL);
-        GridData data = new GridData(GridData.FILL_HORIZONTAL);
-        data.horizontalSpan = 3;
-        label.setLayoutData(data);
-
         addFieldsForTypeDB(compositeGroupDbSettings);
         addFieldsForGeneralDB(compositeGroupDbSettings);
 
