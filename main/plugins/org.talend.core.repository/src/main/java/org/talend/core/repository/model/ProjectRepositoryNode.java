@@ -533,10 +533,23 @@ public class ProjectRepositoryNode extends RepositoryNode implements IProjectRep
                 ERepositoryObjectType contentType = repositoryNode.getContentType();
                 if (contentType != null && contentType.isResourceItem()) {
                     convert(newProject, factory.getMetadata(newProject, contentType, true), repositoryNode, contentType);
+                    addExtraChildren(contentType, newProject,repositoryNode);
                 }
             }
         } catch (PersistenceException e) {
             RuntimeExceptionHandler.process(e);
+        }
+    }
+    
+    private void addExtraChildren(ERepositoryObjectType contentType, org.talend.core.model.general.Project newProject, 
+            RepositoryNode repositoryNode) throws PersistenceException{
+        if(contentType != ERepositoryObjectType.METADATA_CONNECTIONS){
+            return;
+        }
+        List<ERepositoryObjectType> extraTypes = new ArrayList<ERepositoryObjectType>();
+        extraTypes.add(ERepositoryObjectType.JDBC);
+        for(ERepositoryObjectType extraType : extraTypes){
+            convert(newProject, factory.getMetadata(newProject, extraType, true), repositoryNode, contentType);
         }
     }
 
@@ -1212,11 +1225,12 @@ public class ProjectRepositoryNode extends RepositoryNode implements IProjectRep
         DatabaseConnection dbMetadataConnection = null;
         // TOP
         if (type == ERepositoryObjectType.METADATA_CONNECTIONS) {
-            dbMetadataConnection = (DatabaseConnection) ((ConnectionItem) repositoryObject.getProperty().getItem())
-                    .getConnection();
-            isAvaliableInTOS = EDatabaseTypeName.getTypeFromDbType(dbMetadataConnection.getDatabaseType(), false) == null ? false
-                    : true;
-
+            Connection conn = ((ConnectionItem) repositoryObject.getProperty().getItem()).getConnection();
+            if(conn instanceof DatabaseConnection){
+                dbMetadataConnection = (DatabaseConnection) conn;
+                isAvaliableInTOS = EDatabaseTypeName.getTypeFromDbType(dbMetadataConnection.getDatabaseType(), false) == null ? false
+                        : true;
+            }
         }
 
         Connection connection = null;
