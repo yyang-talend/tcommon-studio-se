@@ -3956,45 +3956,45 @@ public class DatabaseForm extends AbstractForm {
 //        dbTypeCombo.getCombo().setVisibleItemCount(visibleItemCount);
 //    }
 
-    private void filterUnsupportedDBType(List<String> dbTypeDisplayList) {
-        Iterator<String> it = dbTypeDisplayList.iterator();
-        while (it.hasNext()) {
-            String displayName = it.next();
-            EDatabaseTypeName type = EDatabaseTypeName.getTypeFromDisplayName(displayName);
-            if (!type.isSupport()) {
-                it.remove();
-            }
-        }
-    }
-
-    private void filterTypesUnloadProviders(List<String> dbTypeDisplayList) {
-        Iterator<String> it = dbTypeDisplayList.iterator();
-        while (it.hasNext()) {
-            String displayName = it.next();
-            EDatabaseTypeName type = EDatabaseTypeName.getTypeFromDisplayName(displayName);
-            // if can't find the provider for current typename,remove it from combo
-            if (type != null && type.isUseProvider()) {
-                String dbtypeString = type.getXmlName();
-                if (dbtypeString != null && ExtractMetaDataFromDataBase.getProviderByDbType(dbtypeString) == null) {
-                    it.remove();
-                }
-            }
-        }
-
-    }
-
-    private List<String> filterUnavailableType(List<String> dbTypeDisplayList) {
-        List<String> resultList = new ArrayList<String>();
-
-        List<String> tdqSupportDBList = MetadataConnectionUtils.getTDQSupportDBTemplate();
-        for (String dbType : dbTypeDisplayList) {
-            if (tdqSupportDBList.contains(dbType)) {
-                resultList.add(dbType);
-            }
-        }
-
-        return resultList;
-    }
+//    private void filterUnsupportedDBType(List<String> dbTypeDisplayList) {
+//        Iterator<String> it = dbTypeDisplayList.iterator();
+//        while (it.hasNext()) {
+//            String displayName = it.next();
+//            EDatabaseTypeName type = EDatabaseTypeName.getTypeFromDisplayName(displayName);
+//            if (!type.isSupport()) {
+//                it.remove();
+//            }
+//        }
+//    }
+//
+//    private void filterTypesUnloadProviders(List<String> dbTypeDisplayList) {
+//        Iterator<String> it = dbTypeDisplayList.iterator();
+//        while (it.hasNext()) {
+//            String displayName = it.next();
+//            EDatabaseTypeName type = EDatabaseTypeName.getTypeFromDisplayName(displayName);
+//            // if can't find the provider for current typename,remove it from combo
+//            if (type != null && type.isUseProvider()) {
+//                String dbtypeString = type.getXmlName();
+//                if (dbtypeString != null && ExtractMetaDataFromDataBase.getProviderByDbType(dbtypeString) == null) {
+//                    it.remove();
+//                }
+//            }
+//        }
+//
+//    }
+//
+//    private List<String> filterUnavailableType(List<String> dbTypeDisplayList) {
+//        List<String> resultList = new ArrayList<String>();
+//
+//        List<String> tdqSupportDBList = MetadataConnectionUtils.getTDQSupportDBTemplate();
+//        for (String dbType : dbTypeDisplayList) {
+//            if (tdqSupportDBList.contains(dbType)) {
+//                resultList.add(dbType);
+//            }
+//        }
+//
+//        return resultList;
+//    }
 
     /**
      * Check DBType is AS400,set systemButton and stardardButton visible.a
@@ -4010,12 +4010,12 @@ public class DatabaseForm extends AbstractForm {
 
     }
 
-    /**
-     * Check data connection.
-     */
-    private void checkConnection() {
-        checkConnection(null);
-    }
+//    /**
+//     * Check data connection.
+//     */
+//    private void checkConnection() {
+//        checkConnection(null);
+//    }
 
     private void checkConnection(final StringBuffer retProposedSchema) {
         if (isSqliteFileFieldInvalidate()) {

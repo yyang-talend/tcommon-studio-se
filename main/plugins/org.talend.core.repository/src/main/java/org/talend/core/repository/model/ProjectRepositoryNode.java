@@ -549,7 +549,7 @@ public class ProjectRepositoryNode extends RepositoryNode implements IProjectRep
         List<ERepositoryObjectType> extraTypes = new ArrayList<ERepositoryObjectType>();
         extraTypes.add(ERepositoryObjectType.JDBC);
         for(ERepositoryObjectType extraType : extraTypes){
-            convert(newProject, factory.getMetadata(newProject, extraType, true), repositoryNode, contentType);
+            convert(newProject, factory.getMetadata(newProject, extraType, true), repositoryNode, contentType, true);
         }
     }
 
@@ -1041,9 +1041,14 @@ public class ProjectRepositoryNode extends RepositoryNode implements IProjectRep
             }
         }
     }
-
+    
     private void convert(org.talend.core.model.general.Project newProject, Container fromModel, RepositoryNode parent,
             ERepositoryObjectType type) {
+        convert(newProject, fromModel, parent, type, false);
+    }
+
+    private void convert(org.talend.core.model.general.Project newProject, Container fromModel, RepositoryNode parent,
+            ERepositoryObjectType type, boolean extra) {
 
         if (parent == null || fromModel == null) {
             return;
@@ -1136,16 +1141,23 @@ public class ProjectRepositoryNode extends RepositoryNode implements IProjectRep
                         if (newProject != this.project && !hasTalendItems(container)) {
                             continue;
                         }
-                        folder = new RepositoryNode(oFolder, parent, ENodeType.SIMPLE_FOLDER);
-                        if (factory.getStatus(oFolder) != ERepositoryStatus.DELETED) {
-                            parent.getChildren().add(folder);
+                        folder = avoidReCreateFolder(parent, oFolder, extra);
+                        if(folder == null){
+                            folder = new RepositoryNode(oFolder, parent, ENodeType.SIMPLE_FOLDER);
+                            if (factory.getStatus(oFolder) != ERepositoryStatus.DELETED) {
+                                parent.getChildren().add(folder);
+                            } 
                         }
                     }
                 } else {
-                    folder = new RepositoryNode(oFolder, parent, ENodeType.SIMPLE_FOLDER);
-                    if (factory.getStatus(oFolder) != ERepositoryStatus.DELETED) {
-                        parent.getChildren().add(folder);
+                    folder = avoidReCreateFolder(parent, oFolder, extra);
+                    if(folder == null){
+                        folder = new RepositoryNode(oFolder, parent, ENodeType.SIMPLE_FOLDER);
+                        if (factory.getStatus(oFolder) != ERepositoryStatus.DELETED) {
+                            parent.getChildren().add(folder);
+                        } 
                     }
+                    
                 }
 
             }
@@ -1177,6 +1189,19 @@ public class ProjectRepositoryNode extends RepositoryNode implements IProjectRep
                         repositoryObject.getLabel()));
             }
         }
+    }
+    
+    private RepositoryNode avoidReCreateFolder(RepositoryNode parent, Folder oFolder, boolean extra){
+        RepositoryNode folder = null;
+        if(extra){
+            for(IRepositoryNode child : parent.getChildren()){
+                if(child.getType() == ENodeType.SIMPLE_FOLDER && child.getObject().getLabel().equals(oFolder.getLabel())){
+                    folder = (RepositoryNode)child;
+                    break;
+                }
+            }
+        }
+        return folder;
     }
 
     private boolean hasTalendItems(Container container) {

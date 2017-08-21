@@ -71,14 +71,14 @@ public abstract class ResourceCollectorVisitor implements IResourceDeltaVisitor 
         for (final RepositoryNode repoNode : topLevelNodes) {
             IPath topLevelNodeWorkspaceRelativePath = getTopLevelNodePath(repoNode);
             if (topLevelNodeWorkspaceRelativePath != null && visitHelper.valid(topLevelNodeWorkspaceRelativePath, merged)) {
-                return findFolder(repoNode);
+                return findTopNode(repoNode);
             }
         }
         // this visitor doesn't handle the current folder
         return null;
     }
     
-    private IRepositoryNode findFolder(IRepositoryNode repoNode){
+    private IRepositoryNode findTopNode(IRepositoryNode repoNode){
         List<ERepositoryObjectType> hideTypes = new ArrayList<ERepositoryObjectType>();
         hideTypes.add(ERepositoryObjectType.JDBC);
         if(repoNode.getContentType() != null && hideTypes.contains(repoNode.getContentType())){

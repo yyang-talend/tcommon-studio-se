@@ -219,6 +219,7 @@ public class DatabaseWizard extends CheckLastVersionRepositoryWizard implements 
         repFactory = ProxyRepositoryFactory.getInstance();
         if (creation) {
             propertyId = repFactory.getNextId();
+            connectionProperty.setId(propertyId);
         } else {
             propertyId = connectionProperty.getId();
         }
@@ -296,6 +297,7 @@ public class DatabaseWizard extends CheckLastVersionRepositoryWizard implements 
         repFactory = ProxyRepositoryFactory.getInstance();
         if (creation) {
             propertyId = repFactory.getNextId();
+            connectionProperty.setId(propertyId);
         } else {
             propertyId = connectionProperty.getId();
         }

@@ -24,6 +24,7 @@ import org.talend.core.model.process.EComponentCategory;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
+import org.talend.core.ui.check.IChecker;
 import org.talend.daikon.properties.presentation.Form;
 
 /**
@@ -45,5 +46,7 @@ public interface IGenericDBService extends IService{
     public void dbWizardPerformFinish(ConnectionItem item, Form form, boolean creation, IPath pathToSave, List<IMetadataTable> oldMetadataTable) throws CoreException;
     
     public Form getDynamicForm(Composite composite);
+    
+    public IChecker getDynamicChecker(Composite dynamicComposite);
     
 }

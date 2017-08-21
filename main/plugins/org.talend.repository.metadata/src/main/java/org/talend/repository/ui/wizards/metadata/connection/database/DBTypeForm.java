@@ -215,16 +215,13 @@ public class DBTypeForm {
                         ((DatabaseConnection)connectionItem.getConnection()).getParameters().clear();
                         ((DatabaseConnection)connectionItem.getConnection()).setDbVersionString(null);
                     }
-                    
-                    wizardPage.disposeDBForm();
-                    wizardPage.createDBForm(connectionItem);
-                    wizardPage.refreshDBForm();
+                    wizardPage.refreshDBForm(connectionItem);
                     if(wizardPage.isTCOMDB(dbType)){
-                        
+                        wizardPage.setPageComplete(false);
                     }
                 }else{
                     setConnectionDBType(dbType);
-                    wizardPage.refreshDBForm();
+                    wizardPage.refreshDBForm(null);
                 }
             }
         });
@@ -243,6 +240,7 @@ public class DBTypeForm {
     
     private void reCreateConnection(){
         String name = connectionItem.getProperty().getLabel();
+        String id = connectionItem.getProperty().getId();
         Connection connection = null;
         if(wizardPage.isTCOMDB(dbType)){
             IGenericDBService dbService = null;
@@ -262,7 +260,10 @@ public class DBTypeForm {
         Property property = PropertiesFactory.eINSTANCE.createProperty();
         property.setAuthor(((RepositoryContext) CoreRuntimePlugin.getInstance().getContext()
                 .getProperty(Context.REPOSITORY_CONTEXT_KEY)).getUser());
-        property.setId(ProxyRepositoryFactory.getInstance().getNextId());
+        if(id == null){
+            id = ProxyRepositoryFactory.getInstance().getNextId();
+        }
+        property.setId(id);
         property.setVersion(VersionUtils.DEFAULT_VERSION);
         property.setStatusCode(""); //$NON-NLS-1$
         

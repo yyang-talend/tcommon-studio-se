@@ -13,6 +13,7 @@
 package org.talend.repository.ui.wizards.metadata.connection.database;
 
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -31,6 +32,8 @@ import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.runtime.services.IGenericDBService;
 import org.talend.core.runtime.services.IGenericWizardService;
+import org.talend.core.ui.check.ICheckListener;
+import org.talend.core.ui.check.IChecker;
 import org.talend.daikon.properties.presentation.Form;
 import org.talend.designer.core.model.utils.emf.talendfile.ContextType;
 import org.talend.metadata.managment.ui.wizard.AbstractForm;
@@ -62,6 +65,8 @@ public class DatabaseWizardPage extends WizardPage {
     private Composite parentContainer;
     
     private boolean isCreation = false;
+    
+    protected IStatus genericStatus;
 
     /**
      * DatabaseWizardPage constructor.
@@ -105,15 +110,10 @@ public class DatabaseWizardPage extends WizardPage {
         compositeDbSettings.setLayoutData(data);
         dbTypeForm = new DBTypeForm(this, compositeDbSettings, connectionItem, SWT.NONE, !isRepositoryObjectEditable, isCreation);
         
-        createDBForm(null);
-//        setControl(parentContainer);
+        createDBForm();
     }
     
-    public void createDBForm(ConnectionItem connItem){
-        if(connItem != null){
-            this.connectionItem = connItem;
-            ((DatabaseWizard)getWizard()).setNewConnectionItem(connItem);
-        }
+    public void createDBForm(){
         if(parentContainer == null || parentContainer.isDisposed()){
             return;
         }
@@ -122,56 +122,59 @@ public class DatabaseWizardPage extends WizardPage {
         data.right = new FormAttachment(100, 0);
         data.top = new FormAttachment(compositeDbSettings, 0);
         data.bottom = new FormAttachment(100, 0);
-        if(isTCOMDB(dbTypeForm.getDBType())){
-            IGenericDBService dbService = null;
-            if (GlobalServiceRegister.getDefault().isServiceRegistered(IGenericDBService.class)) {
-                dbService = (IGenericDBService) GlobalServiceRegister.getDefault().getService(
-                        IGenericDBService.class);
-            }
-            if(dbService == null){
-                return;
-            }
-            dynamicParentForm = new Composite(parentContainer, SWT.NONE);
-            dynamicParentForm.setLayoutData(data);
-            dynamicParentForm.setLayout(new FormLayout());
-            dynamicForm = dbService.creatDBDynamicComposite(dynamicParentForm, EComponentCategory.BASIC, true, connectionItem.getProperty(), 
-                    ERepositoryObjectType.JDBC.getType());
-            dynamicForm.layout();
-            dynamicParentForm.layout();
-            setControl(dynamicForm);
-            //just set it for test, need to revert
-            DatabaseWizardPage.this.setPageComplete(true);
-        }else{
-            
-            databaseForm = new DatabaseForm(parentContainer, connectionItem, existingNames, isCreation);
-            databaseForm.setLayoutData(data);
-            databaseForm.setReadOnly(!isRepositoryObjectEditable);
-            databaseForm.updateSpecialFieldsState();
 
-            AbstractForm.ICheckListener listener = new AbstractForm.ICheckListener() {
-
-                @Override
-                public void checkPerformed(final AbstractForm source) {
-                    if (dbTypeForm.getDBType() == null){
-                        DatabaseWizardPage.this.setPageComplete(false);
-                        setErrorMessage(Messages.getString("DatabaseForm.alert", "DB Type"));//$NON-NLS-1$  //$NON-NLS-2$
-                    }else if (source.isStatusOnError()) {
-                        DatabaseWizardPage.this.setPageComplete(false);
-                        setErrorMessage(source.getStatus());
-                    } else {
-                        DatabaseWizardPage.this.setPageComplete(isRepositoryObjectEditable);
-                        setErrorMessage(null);
-                        setMessage(source.getStatus(), source.getStatusLevel());
-                    }
-                }
-            };
-            databaseForm.setListener(listener);
-            if (connectionItem.getProperty().getLabel() != null && !connectionItem.getProperty().getLabel().equals("")) { //$NON-NLS-1$
-                databaseForm.checkFieldsValue();
-            }
-            setControl(databaseForm);
-            databaseForm.layout();
+        //dynamic Composite
+        IGenericDBService dbService = null;
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(IGenericDBService.class)) {
+            dbService = (IGenericDBService) GlobalServiceRegister.getDefault().getService(
+                    IGenericDBService.class);
         }
+        if(dbService == null){
+            return;
+        }
+        dynamicParentForm = new Composite(parentContainer, SWT.NONE);
+        dynamicParentForm.setLayoutData(data);
+        dynamicParentForm.setLayout(new FormLayout());
+        dynamicForm = dbService.creatDBDynamicComposite(dynamicParentForm, EComponentCategory.BASIC, true, connectionItem.getProperty(), 
+                ERepositoryObjectType.JDBC.getType());
+        if(isTCOMDB(dbTypeForm.getDBType())){
+            setControl(dynamicForm);
+        }
+        dynamicParentForm.setVisible(isTCOMDB(dbTypeForm.getDBType()));
+        addCheckListener(dbService.getDynamicChecker(dynamicForm));
+        
+        //DB Composite
+        databaseForm = new DatabaseForm(parentContainer, connectionItem, existingNames, isCreation);
+        databaseForm.setLayoutData(data);
+        databaseForm.setReadOnly(!isRepositoryObjectEditable);
+        databaseForm.updateSpecialFieldsState();
+
+        AbstractForm.ICheckListener listener = new AbstractForm.ICheckListener() {
+
+            @Override
+            public void checkPerformed(final AbstractForm source) {
+                if (dbTypeForm.getDBType() == null){
+                    DatabaseWizardPage.this.setPageComplete(false);
+                    setErrorMessage(Messages.getString("DatabaseForm.alert", "DB Type"));//$NON-NLS-1$  //$NON-NLS-2$
+                }else if (source.isStatusOnError()) {
+                    DatabaseWizardPage.this.setPageComplete(false);
+                    setErrorMessage(source.getStatus());
+                } else {
+                    DatabaseWizardPage.this.setPageComplete(isRepositoryObjectEditable);
+                    setErrorMessage(null);
+                    setMessage(source.getStatus(), source.getStatusLevel());
+                }
+            }
+        };
+        databaseForm.setListener(listener);
+        if (connectionItem.getProperty().getLabel() != null && !connectionItem.getProperty().getLabel().equals("")) { //$NON-NLS-1$
+            databaseForm.checkFieldsValue();
+        }
+        if(!isTCOMDB(dbTypeForm.getDBType())){
+            setControl(databaseForm);
+        }
+        databaseForm.setVisible(!isTCOMDB(dbTypeForm.getDBType()));
+        
         parentContainer.layout();
     }
     
@@ -198,11 +201,28 @@ public class DatabaseWizardPage extends WizardPage {
         return false;
     }
     
-    public void refreshDBForm(){
+    public void refreshDBForm(ConnectionItem connItem){
+        if(connItem != null){
+            this.connectionItem = connItem;
+            ((DatabaseWizard)getWizard()).setNewConnectionItem(connItem);
+        }
         if(databaseForm == null || databaseForm.isDisposed()){
             return;
         }
-        databaseForm.refreshDBForm();
+        if(dynamicParentForm == null || dynamicParentForm.isDisposed()){
+            return;
+        }
+        if(isTCOMDB(dbTypeForm.getDBType())){
+            dynamicParentForm.setVisible(true);
+            databaseForm.setVisible(false);
+            setControl(dynamicForm);
+        }else{
+            databaseForm.setVisible(true);
+            dynamicParentForm.setVisible(false);
+            databaseForm.refreshDBForm();
+            setControl(databaseForm);
+        }
+        parentContainer.layout();
     }
 
     
@@ -249,6 +269,27 @@ public class DatabaseWizardPage extends WizardPage {
             }
         }
         return null;
+    }
+    
+    protected void addCheckListener(IChecker checker) {
+        if(checker == null){
+            return;
+        }
+        ICheckListener checkListener = new ICheckListener() {
+
+            @Override
+            public void checkPerformed(IChecker source) {
+                if (source.isStatusOnError()) {
+                    DatabaseWizardPage.this.setPageComplete(false);
+                    setErrorMessage(source.getStatus());
+                } else {
+                    DatabaseWizardPage.this.setPageComplete(isRepositoryObjectEditable);
+                    setErrorMessage(null);
+                    setMessage(source.getStatus(), source.getStatusLevel());
+                }
+            }
+        };
+        checker.setListener(checkListener);
     }
     
 }

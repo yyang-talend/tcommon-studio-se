@@ -980,22 +980,26 @@ public abstract class AbstractCreateTableAction extends AbstractCreateAction {
             ERepositoryObjectType nodeType = (ERepositoryObjectType) node.getProperties(EProperties.CONTENT_TYPE);
             String metadataTableLabel = (String) node.getProperties(EProperties.LABEL);
 
-            DatabaseConnectionItem item = null;
+            DatabaseConnectionItem connItem = null;
+            Item item = node.getObject().getProperty().getItem();
+            if(!(item instanceof DatabaseConnectionItem)){
+                return;
+            }
             if (nodeType == ERepositoryObjectType.METADATA_CON_TABLE) {
-                item = (DatabaseConnectionItem) node.getObject().getProperty().getItem();
-                connection = (DatabaseConnection) item.getConnection();
+                connItem = (DatabaseConnectionItem) item;
+                connection = (DatabaseConnection) connItem.getConnection();
                 metadataTable = TableHelper.findByLabel(connection, metadataTableLabel);
                 creation = false;
             } else if (nodeType == ERepositoryObjectType.METADATA_CONNECTIONS) {
-                item = (DatabaseConnectionItem) node.getObject().getProperty().getItem();
-                connection = (DatabaseConnection) item.getConnection();
+                connItem = (DatabaseConnectionItem) item;
+                connection = (DatabaseConnection) connItem.getConnection();
                 creation = true;
             } else {
                 return;
             }
 
-            initContextMode(item);
-            openDatabaseTableWizard(item, metadataTable, forceReadOnly, node, creation);
+            initContextMode(connItem);
+            openDatabaseTableWizard(connItem, metadataTable, forceReadOnly, node, creation);
         }
     }
 
