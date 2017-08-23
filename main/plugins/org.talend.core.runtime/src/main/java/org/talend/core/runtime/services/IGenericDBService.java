@@ -13,6 +13,7 @@
 package org.talend.core.runtime.services;
 
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -32,8 +33,8 @@ import org.talend.daikon.properties.presentation.Form;
  */
 public interface IGenericDBService extends IService{
     
-    public Composite creatDBDynamicComposite(Composite composite, EComponentCategory sectionCategory,
-            boolean isCompactView,Property property, String typeName);
+    public Map<String, Composite> creatDBDynamicComposite(Composite composite, EComponentCategory sectionCategory,
+            boolean isReadOnly,Property property, String typeName);
     
     public Connection createGenericConnection();
     
@@ -48,5 +49,7 @@ public interface IGenericDBService extends IService{
     public Form getDynamicForm(Composite composite);
     
     public IChecker getDynamicChecker(Composite dynamicComposite);
+    
+    public void resetConnectionItem(Composite composite, ConnectionItem connectionItem);
     
 }

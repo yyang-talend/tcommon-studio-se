@@ -90,16 +90,14 @@ public class DBTypeForm {
             }
         }
         addListerner();
+        adaptFormToReadOnly();
     }
     
-    protected void adaptFormToReadOnly() {
+    private void adaptFormToReadOnly() {
         dbTypeCombo.setReadOnly(isReadOnly);
     }
     
     private void addDBSelectCombo() {
-        // PTODO cantoine : HIDDEN some Database connection in function of
-        // project MODE (Perl/Java).
-
         List<String> dbTypeDisplayList = EDatabaseConnTemplate.getDBTypeDisplay();
 
         // added by dlin for 21721,only a temporary approach to resolve it -begin

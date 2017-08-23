@@ -13,6 +13,8 @@
 package org.talend.repository.ui.wizards.metadata.connection.database;
 
 
+import java.util.Map;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogPage;
 import org.eclipse.jface.wizard.WizardPage;
@@ -51,6 +53,8 @@ public class DatabaseWizardPage extends WizardPage {
     private DatabaseForm databaseForm;
     
     private Composite dynamicForm;
+    
+    private Composite dynamicContextForm;
     
     private Composite dynamicParentForm;
     
@@ -135,8 +139,10 @@ public class DatabaseWizardPage extends WizardPage {
         dynamicParentForm = new Composite(parentContainer, SWT.NONE);
         dynamicParentForm.setLayoutData(data);
         dynamicParentForm.setLayout(new FormLayout());
-        dynamicForm = dbService.creatDBDynamicComposite(dynamicParentForm, EComponentCategory.BASIC, true, connectionItem.getProperty(), 
+        Map<String, Composite> map = dbService.creatDBDynamicComposite(dynamicParentForm, EComponentCategory.BASIC, !isRepositoryObjectEditable, connectionItem.getProperty(), 
                 ERepositoryObjectType.JDBC.getType());
+        dynamicForm = map.get("DynamicComposite");//$NON-NLS-1$
+        dynamicContextForm = map.get("ContextComposite");//$NON-NLS-1$
         if(isTCOMDB(dbTypeForm.getDBType())){
             setControl(dynamicForm);
         }
@@ -216,6 +222,15 @@ public class DatabaseWizardPage extends WizardPage {
             dynamicParentForm.setVisible(true);
             databaseForm.setVisible(false);
             setControl(dynamicForm);
+            IGenericDBService dbService = null;
+            if (GlobalServiceRegister.getDefault().isServiceRegistered(IGenericDBService.class)) {
+                dbService = (IGenericDBService) GlobalServiceRegister.getDefault().getService(
+                        IGenericDBService.class);
+            }
+            if(dbService != null){
+                dbService.resetConnectionItem(dynamicForm, connItem);
+                dbService.resetConnectionItem(dynamicContextForm, connItem);
+            }
         }else{
             databaseForm.setVisible(true);
             dynamicParentForm.setVisible(false);
