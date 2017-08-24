@@ -37,6 +37,7 @@ import org.talend.core.repository.ui.actions.metadata.AbstractCreateAction;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.metadata.i18n.Messages;
 import org.talend.repository.model.IProxyRepositoryFactory;
+import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.IRepositoryNode.EProperties;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.repository.model.RepositoryNodeUtilities;
@@ -200,7 +201,7 @@ public class CreateConnectionAction extends AbstractCreateAction {
     @Override
     protected void init(RepositoryNode node) {
         ERepositoryObjectType nodeType = node.getObjectType();
-        if(nodeType == null || nodeType == ERepositoryObjectType.FOLDER){
+        if(nodeType == null || node.getType() != ENodeType.REPOSITORY_ELEMENT){
             nodeType = (ERepositoryObjectType) node.getProperties(EProperties.CONTENT_TYPE);
         }
         if (!ERepositoryObjectType.METADATA_CONNECTIONS.equals(nodeType)) {
