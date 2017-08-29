@@ -547,7 +547,9 @@ public class ProjectRepositoryNode extends RepositoryNode implements IProjectRep
             return;
         }
         List<ERepositoryObjectType> extraTypes = new ArrayList<ERepositoryObjectType>();
-        extraTypes.add(ERepositoryObjectType.JDBC);
+        if(ERepositoryObjectType.JDBC != null){
+            extraTypes.add(ERepositoryObjectType.JDBC);
+        }
         for(ERepositoryObjectType extraType : extraTypes){
             convert(newProject, factory.getMetadata(newProject, extraType, true), repositoryNode, contentType, true);
         }

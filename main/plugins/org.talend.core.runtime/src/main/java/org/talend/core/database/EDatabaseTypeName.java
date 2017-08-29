@@ -110,7 +110,7 @@ public enum EDatabaseTypeName {
     SAS("SAS", "SAS", Boolean.TRUE, "SAS", EDatabaseSchemaOrCatalogMapping.None, EDatabaseSchemaOrCatalogMapping.Schema), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     // General JDBC not support schema defalut
     GENERAL_JDBC(
-                 "JDBC", "General JDBC", Boolean.FALSE, "JDBC", EDatabaseSchemaOrCatalogMapping.Sid, EDatabaseSchemaOrCatalogMapping.None), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 "General JDBC", "General JDBC", Boolean.FALSE, "JDBC", EDatabaseSchemaOrCatalogMapping.Sid, EDatabaseSchemaOrCatalogMapping.None), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     EXASOL("Exasol", "Exasol", Boolean.TRUE, "Exasol", EDatabaseSchemaOrCatalogMapping.Sid, EDatabaseSchemaOrCatalogMapping.None), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     HIVE("Hive", "Hive", Boolean.FALSE, "HIVE", EDatabaseSchemaOrCatalogMapping.Sid, EDatabaseSchemaOrCatalogMapping.None), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

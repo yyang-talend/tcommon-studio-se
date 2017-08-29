@@ -80,7 +80,9 @@ public abstract class ResourceCollectorVisitor implements IResourceDeltaVisitor 
     
     private IRepositoryNode findTopNode(IRepositoryNode repoNode){
         List<ERepositoryObjectType> hideTypes = new ArrayList<ERepositoryObjectType>();
-        hideTypes.add(ERepositoryObjectType.JDBC);
+        if(ERepositoryObjectType.JDBC != null){
+            hideTypes.add(ERepositoryObjectType.JDBC);
+        }
         if(repoNode.getContentType() != null && hideTypes.contains(repoNode.getContentType())){
             RepositoryNode dbRootNode = (RepositoryNode) repoNode.getRoot().getRootRepositoryNode(
                     ERepositoryObjectType.METADATA_CONNECTIONS);

@@ -27,7 +27,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.talend.core.GlobalServiceRegister;
-import org.talend.core.database.conn.template.EDatabaseConnTemplate;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.process.EComponentCategory;
 import org.talend.core.model.properties.ConnectionItem;
@@ -136,18 +135,20 @@ public class DatabaseWizardPage extends WizardPage {
         if(dbService == null){
             return;
         }
-        dynamicParentForm = new Composite(parentContainer, SWT.NONE);
-        dynamicParentForm.setLayoutData(data);
-        dynamicParentForm.setLayout(new FormLayout());
-        Map<String, Composite> map = dbService.creatDBDynamicComposite(dynamicParentForm, EComponentCategory.BASIC, !isRepositoryObjectEditable, connectionItem.getProperty(), 
-                ERepositoryObjectType.JDBC.getType());
-        dynamicForm = map.get("DynamicComposite");//$NON-NLS-1$
-        dynamicContextForm = map.get("ContextComposite");//$NON-NLS-1$
-        if(isTCOMDB(dbTypeForm.getDBType())){
-            setControl(dynamicForm);
+        if(ERepositoryObjectType.JDBC != null){
+            dynamicParentForm = new Composite(parentContainer, SWT.NONE);
+            dynamicParentForm.setLayoutData(data);
+            dynamicParentForm.setLayout(new FormLayout());
+            Map<String, Composite> map = dbService.creatDBDynamicComposite(dynamicParentForm, EComponentCategory.BASIC, !isRepositoryObjectEditable, connectionItem.getProperty(), 
+                    ERepositoryObjectType.JDBC.getType());
+            dynamicForm = map.get("DynamicComposite");//$NON-NLS-1$
+            dynamicContextForm = map.get("ContextComposite");//$NON-NLS-1$
+            if(isTCOMDB(dbTypeForm.getDBType())){
+                setControl(dynamicForm);
+            }
+            dynamicParentForm.setVisible(isTCOMDB(dbTypeForm.getDBType()));
+            addCheckListener(dbService.getDynamicChecker(dynamicForm));
         }
-        dynamicParentForm.setVisible(isTCOMDB(dbTypeForm.getDBType()));
-        addCheckListener(dbService.getDynamicChecker(dynamicForm));
         
         //DB Composite
         databaseForm = new DatabaseForm(parentContainer, connectionItem, existingNames, isCreation);
@@ -188,11 +189,10 @@ public class DatabaseWizardPage extends WizardPage {
         if(type == null){
             return false;
         }
-        EDatabaseConnTemplate template = EDatabaseConnTemplate.indexOfTemplate(type);
-        if(template != null && EDatabaseConnTemplate.GENERAL_JDBC.getDBTypeName().equals(type)){
-            return true;
+        if(ERepositoryObjectType.JDBC == null){
+            return false;
         }
-        return EDatabaseConnTemplate.GENERAL_JDBC.getDBDisplayName().equals(type);
+        return ERepositoryObjectType.JDBC.getType().equals(type);
     }
     
     public boolean isGenericConn(ConnectionItem connItem){
@@ -215,10 +215,10 @@ public class DatabaseWizardPage extends WizardPage {
         if(databaseForm == null || databaseForm.isDisposed()){
             return;
         }
-        if(dynamicParentForm == null || dynamicParentForm.isDisposed()){
-            return;
-        }
         if(isTCOMDB(dbTypeForm.getDBType())){
+            if(dynamicParentForm == null || dynamicParentForm.isDisposed()){
+                return;
+            }
             dynamicParentForm.setVisible(true);
             databaseForm.setVisible(false);
             setControl(dynamicForm);
@@ -233,8 +233,10 @@ public class DatabaseWizardPage extends WizardPage {
             }
         }else{
             databaseForm.setVisible(true);
-            dynamicParentForm.setVisible(false);
-            databaseForm.refreshDBForm();
+            if(dynamicParentForm != null && !dynamicParentForm.isDisposed()){
+                dynamicParentForm.setVisible(false);
+            }
+            databaseForm.refreshDBForm(connItem);
             setControl(databaseForm);
         }
         parentContainer.layout();

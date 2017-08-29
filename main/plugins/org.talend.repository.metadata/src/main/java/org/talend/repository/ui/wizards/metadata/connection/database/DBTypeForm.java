@@ -20,7 +20,6 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -43,7 +42,6 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.core.runtime.services.IGenericDBService;
-import org.talend.core.runtime.services.IGenericWizardService;
 import org.talend.core.ui.branding.IBrandingConfiguration;
 import org.talend.metadata.managment.utils.MetadataConnectionUtils;
 import org.talend.repository.metadata.i18n.Messages;
@@ -133,7 +131,6 @@ public class DBTypeForm {
 
         filterUnsupportedDBType(dbTypeDisplayList);
 
-//        this.setLayout(new GridLayout());
         dbTypeCombo = new LabelledCombo(parent, Messages.getString("DatabaseForm.dbType"), Messages //$NON-NLS-1$
                 .getString("DatabaseForm.dbTypeTip"), dbTypeDisplayList.toArray(new String[0]), 2, true); //$NON-NLS-1$
 
@@ -229,8 +226,7 @@ public class DBTypeForm {
         if(newType.equals(oldType)){
             return false;
         }
-        if(wizardPage.isTCOMDB(newType) && !wizardPage.isTCOMDB(oldType) || 
-                !wizardPage.isTCOMDB(newType) && wizardPage.isTCOMDB(oldType)){
+        if(wizardPage.isTCOMDB(newType) != wizardPage.isTCOMDB(oldType)){
             return true;
         }
         return false;
@@ -273,13 +269,6 @@ public class DBTypeForm {
         connectionItem.setConnection(connection);
     }
     
-    public DatabaseConnection getDatabseConnection(){
-        if(connectionItem.getConnection() instanceof DatabaseConnection){
-            return (DatabaseConnection) connectionItem.getConnection();
-        }
-        return null;
-    }
-    
     public String getDBType(){
         return this.dbType;
     }
@@ -301,17 +290,13 @@ public class DBTypeForm {
     
     private void setConnectionDBType(String type){
         if(wizardPage.isTCOMDB(type)){
-            EDatabaseConnTemplate template = EDatabaseConnTemplate.indexOfTemplate(type);
-            if(template == null){
-                return;
-            }
             IGenericDBService dbService = null;
             if (GlobalServiceRegister.getDefault().isServiceRegistered(IGenericDBService.class)) {
                 dbService = (IGenericDBService) GlobalServiceRegister.getDefault().getService(
                         IGenericDBService.class);
             }
             if(dbService != null){
-                dbService.setGenericConnectionType(template.getDBTypeName(), connectionItem);
+                dbService.setGenericConnectionType(type, connectionItem);
                 return;
             }
         }else if(connectionItem.getConnection() instanceof DatabaseConnection){

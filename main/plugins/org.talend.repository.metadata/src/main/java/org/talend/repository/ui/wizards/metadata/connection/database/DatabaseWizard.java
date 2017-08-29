@@ -435,9 +435,7 @@ public class DatabaseWizard extends CheckLastVersionRepositoryWizard implements 
              * original. hywang
              */
 
-            // MOD by gdbu 2011-3-24 bug 19528
-            EDatabaseTypeName dbType = EDatabaseTypeName.getTypeFromDbType(getDBType());
-            if(dbType == EDatabaseTypeName.GENERAL_JDBC){
+            if(ERepositoryObjectType.JDBC != null && ERepositoryObjectType.JDBC.getType().equals(getDBType())){
                 IGenericDBService dbService = null;
                 if (GlobalServiceRegister.getDefault().isServiceRegistered(IGenericDBService.class)) {
                     dbService = (IGenericDBService) GlobalServiceRegister.getDefault().getService(
@@ -456,40 +454,44 @@ public class DatabaseWizard extends CheckLastVersionRepositoryWizard implements 
                 }
                 return true;
             }
-
-            String driverClass = ExtractMetaDataUtils.getInstance().getDriverClassByDbType(getDBType());
-            DatabaseConnection dbConnection = (DatabaseConnection) connectionItem.getConnection();
-            String dbVersion = dbConnection.getDbVersionString();
-            // feature TDI-22108
-            if (EDatabaseTypeName.VERTICA.equals(dbType)
-                    && (EDatabaseVersion4Drivers.VERTICA_6.getVersionValue().equals(dbVersion)
-                            || EDatabaseVersion4Drivers.VERTICA_5_1.getVersionValue().equals(dbVersion)
-                            || EDatabaseVersion4Drivers.VERTICA_6_1_X.getVersionValue().equals(dbVersion) || EDatabaseVersion4Drivers.VERTICA_7
-                            .getVersionValue().equals(dbVersion))) {
-                driverClass = EDatabase4DriverClassName.VERTICA2.getDriverClass();
-            } else if (EDatabaseTypeName.IMPALA.equals(dbType)) {
-                IHadoopDistributionService hadoopService = getHadoopDistributionService();
-                if (hadoopService != null) {
-                    String distributionName = dbConnection.getParameters().get(
-                            ConnParameterKeys.CONN_PARA_KEY_IMPALA_DISTRIBUTION);
-                    IHDistribution impalaDistribution = hadoopService.getImpalaDistributionManager().getDistribution(
-                            distributionName, false);
-                    if (null != impalaDistribution && !impalaDistribution.useCustom()) {
-                        dbConnection.setDbVersionString(dbConnection.getParameters().get(
-                                ConnParameterKeys.CONN_PARA_KEY_IMPALA_VERSION));
+            
+            // MOD by gdbu 2011-3-24 bug 19528
+            EDatabaseTypeName dbType = EDatabaseTypeName.getTypeFromDbType(getDBType());
+            if (dbType != EDatabaseTypeName.GENERAL_JDBC) {
+                String driverClass = ExtractMetaDataUtils.getInstance().getDriverClassByDbType(getDBType());
+                DatabaseConnection dbConnection = (DatabaseConnection) connectionItem.getConnection();
+                String dbVersion = dbConnection.getDbVersionString();
+                // feature TDI-22108
+                if (EDatabaseTypeName.VERTICA.equals(dbType)
+                        && (EDatabaseVersion4Drivers.VERTICA_6.getVersionValue().equals(dbVersion)
+                                || EDatabaseVersion4Drivers.VERTICA_5_1.getVersionValue().equals(dbVersion)
+                                || EDatabaseVersion4Drivers.VERTICA_6_1_X.getVersionValue().equals(dbVersion) || EDatabaseVersion4Drivers.VERTICA_7
+                                .getVersionValue().equals(dbVersion))) {
+                    driverClass = EDatabase4DriverClassName.VERTICA2.getDriverClass();
+                } else if (EDatabaseTypeName.IMPALA.equals(dbType)) {
+                    IHadoopDistributionService hadoopService = getHadoopDistributionService();
+                    if (hadoopService != null) {
+                        String distributionName = dbConnection.getParameters().get(
+                                ConnParameterKeys.CONN_PARA_KEY_IMPALA_DISTRIBUTION);
+                        IHDistribution impalaDistribution = hadoopService.getImpalaDistributionManager().getDistribution(
+                                distributionName, false);
+                        if (null != impalaDistribution && !impalaDistribution.useCustom()) {
+                            dbConnection.setDbVersionString(dbConnection.getParameters().get(
+                                    ConnParameterKeys.CONN_PARA_KEY_IMPALA_VERSION));
+                        }
                     }
+                } else if (EDatabaseTypeName.MYSQL.equals(dbType)
+                        && (EDatabaseVersion4Drivers.MARIADB.getVersionValue().equals(dbVersion))) {
+                    driverClass = EDatabase4DriverClassName.MARIADB.getDriverClass();
+                } else if (EDatabaseTypeName.MSSQL.equals(dbType)
+                        && EDatabaseVersion4Drivers.MSSQL_PROP.getVersionValue().equals(dbVersion)) {
+                    driverClass = EDatabase4DriverClassName.MSSQL2.getDriverClass();
+                } else if (EDatabaseTypeName.SYBASEASE.equals(dbType)
+                        && EDatabaseVersion4Drivers.SYBASEIQ_16.getVersionValue().equals(dbVersion)) {
+                    driverClass = EDatabase4DriverClassName.SYBASEIQ_16.getDriverClass();
                 }
-            } else if (EDatabaseTypeName.MYSQL.equals(dbType)
-                    && (EDatabaseVersion4Drivers.MARIADB.getVersionValue().equals(dbVersion))) {
-                driverClass = EDatabase4DriverClassName.MARIADB.getDriverClass();
-            } else if (EDatabaseTypeName.MSSQL.equals(dbType)
-                    && EDatabaseVersion4Drivers.MSSQL_PROP.getVersionValue().equals(dbVersion)) {
-                driverClass = EDatabase4DriverClassName.MSSQL2.getDriverClass();
-            } else if (EDatabaseTypeName.SYBASEASE.equals(dbType)
-                    && EDatabaseVersion4Drivers.SYBASEIQ_16.getVersionValue().equals(dbVersion)) {
-                driverClass = EDatabase4DriverClassName.SYBASEIQ_16.getDriverClass();
+                dbConnection.setDriverClass(driverClass);
             }
-            dbConnection.setDriverClass(driverClass);
         
             // ~19528
 

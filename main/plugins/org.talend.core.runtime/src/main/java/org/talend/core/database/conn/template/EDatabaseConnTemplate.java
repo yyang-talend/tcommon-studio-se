@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.database.conn.version.EDatabaseVersion4Drivers;
+import org.talend.core.model.repository.ERepositoryObjectType;
 
 /**
  * cli class global comment. Detailled comment
@@ -288,6 +289,9 @@ public enum EDatabaseConnTemplate {
     private static List<String> getDBTypes(boolean sort, boolean all, boolean display) {
         EDatabaseConnTemplate[] values = EDatabaseConnTemplate.values();
         List<String> databaseType = new ArrayList<String>(values.length);
+        if(ERepositoryObjectType.JDBC != null){
+            databaseType.add(ERepositoryObjectType.JDBC.getType());
+        }
         for (EDatabaseConnTemplate temp : values) {
             String typeName = getDBTypeName(temp, display);
             if (typeName != null && !databaseType.contains(typeName)) {

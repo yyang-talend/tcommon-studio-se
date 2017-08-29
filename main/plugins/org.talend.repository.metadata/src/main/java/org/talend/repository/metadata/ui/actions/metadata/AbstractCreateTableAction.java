@@ -985,14 +985,12 @@ public abstract class AbstractCreateTableAction extends AbstractCreateAction {
             if(!(item instanceof DatabaseConnectionItem)){
                 return;
             }
+            connItem = (DatabaseConnectionItem) item;
+            connection = (DatabaseConnection) connItem.getConnection();
             if (nodeType == ERepositoryObjectType.METADATA_CON_TABLE) {
-                connItem = (DatabaseConnectionItem) item;
-                connection = (DatabaseConnection) connItem.getConnection();
                 metadataTable = TableHelper.findByLabel(connection, metadataTableLabel);
                 creation = false;
             } else if (nodeType == ERepositoryObjectType.METADATA_CONNECTIONS) {
-                connItem = (DatabaseConnectionItem) item;
-                connection = (DatabaseConnection) connItem.getConnection();
                 creation = true;
             } else {
                 return;
