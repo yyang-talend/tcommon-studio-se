@@ -25,6 +25,7 @@ import org.talend.core.model.process.EComponentCategory;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.ui.check.IChecker;
 import org.talend.daikon.properties.presentation.Form;
 
@@ -51,5 +52,7 @@ public interface IGenericDBService extends IService{
     public IChecker getDynamicChecker(Composite dynamicComposite);
     
     public void resetConnectionItem(Composite composite, ConnectionItem connectionItem);
+    
+    public List<ERepositoryObjectType> getExtraTypes();
     
 }

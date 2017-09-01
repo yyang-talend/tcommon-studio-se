@@ -25,10 +25,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.talend.commons.exception.ExceptionHandler;
 import org.talend.commons.utils.io.FilesUtils;
+import org.talend.core.GlobalServiceRegister;
 import org.talend.core.model.general.TalendNature;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.repository.model.ProjectRepositoryNode;
 import org.talend.core.repository.utils.XmiResourceManager;
+import org.talend.core.runtime.services.IGenericDBService;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.repository.viewer.content.VisitResourceHelper;
@@ -79,11 +81,17 @@ public abstract class ResourceCollectorVisitor implements IResourceDeltaVisitor 
     }
     
     private IRepositoryNode findTopNode(IRepositoryNode repoNode){
-        List<ERepositoryObjectType> hideTypes = new ArrayList<ERepositoryObjectType>();
-        if(ERepositoryObjectType.JDBC != null){
-            hideTypes.add(ERepositoryObjectType.JDBC);
+        List<ERepositoryObjectType> extraTypes = new ArrayList<ERepositoryObjectType>();
+        IGenericDBService dbService = null;
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(IGenericDBService.class)) {
+            dbService = (IGenericDBService) GlobalServiceRegister.getDefault().getService(
+                    IGenericDBService.class);
         }
-        if(repoNode.getContentType() != null && hideTypes.contains(repoNode.getContentType())){
+        if(dbService != null){
+            extraTypes.addAll(dbService.getExtraTypes());
+        }
+        
+        if(repoNode.getContentType() != null && extraTypes.contains(repoNode.getContentType())){
             RepositoryNode dbRootNode = (RepositoryNode) repoNode.getRoot().getRootRepositoryNode(
                     ERepositoryObjectType.METADATA_CONNECTIONS);
             if(dbRootNode != null){

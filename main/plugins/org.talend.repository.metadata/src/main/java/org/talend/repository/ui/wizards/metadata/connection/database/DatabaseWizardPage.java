@@ -13,6 +13,8 @@
 package org.talend.repository.ui.wizards.metadata.connection.database;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
@@ -189,10 +191,21 @@ public class DatabaseWizardPage extends WizardPage {
         if(type == null){
             return false;
         }
-        if(ERepositoryObjectType.JDBC == null){
-            return false;
+        List<ERepositoryObjectType> extraTypes = new ArrayList<ERepositoryObjectType>();
+        IGenericDBService dbService = null;
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(IGenericDBService.class)) {
+            dbService = (IGenericDBService) GlobalServiceRegister.getDefault().getService(
+                    IGenericDBService.class);
         }
-        return ERepositoryObjectType.JDBC.getType().equals(type);
+        if(dbService != null){
+            extraTypes.addAll(dbService.getExtraTypes());
+        }
+        for(ERepositoryObjectType eType:extraTypes){
+            if(eType.getType().equals(type)){
+               return true; 
+            }
+        }
+        return false;
     }
     
     public boolean isGenericConn(ConnectionItem connItem){

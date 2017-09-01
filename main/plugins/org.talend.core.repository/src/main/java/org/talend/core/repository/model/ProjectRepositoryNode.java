@@ -88,6 +88,7 @@ import org.talend.core.repository.model.repositoryObject.SAPIDocRepositoryObject
 import org.talend.core.repository.model.repositoryObject.SalesforceModuleRepositoryObject;
 import org.talend.core.repository.recyclebin.RecycleBinManager;
 import org.talend.core.repository.ui.utils.ProjectRepositoryNodeCache;
+import org.talend.core.runtime.services.IGenericDBService;
 import org.talend.core.runtime.services.IGenericWizardService;
 import org.talend.core.ui.ICDCProviderService;
 import org.talend.core.ui.ITestContainerProviderService;
@@ -547,8 +548,13 @@ public class ProjectRepositoryNode extends RepositoryNode implements IProjectRep
             return;
         }
         List<ERepositoryObjectType> extraTypes = new ArrayList<ERepositoryObjectType>();
-        if(ERepositoryObjectType.JDBC != null){
-            extraTypes.add(ERepositoryObjectType.JDBC);
+        IGenericDBService dbService = null;
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(IGenericDBService.class)) {
+            dbService = (IGenericDBService) GlobalServiceRegister.getDefault().getService(
+                    IGenericDBService.class);
+        }
+        if(dbService != null){
+            extraTypes.addAll(dbService.getExtraTypes());
         }
         for(ERepositoryObjectType extraType : extraTypes){
             convert(newProject, factory.getMetadata(newProject, extraType, true), repositoryNode, contentType, true);

@@ -435,7 +435,7 @@ public class DatabaseWizard extends CheckLastVersionRepositoryWizard implements 
              * original. hywang
              */
 
-            if(ERepositoryObjectType.JDBC != null && ERepositoryObjectType.JDBC.getType().equals(getDBType())){
+            if(isTCOMType(getDBType())){
                 IGenericDBService dbService = null;
                 if (GlobalServiceRegister.getDefault().isServiceRegistered(IGenericDBService.class)) {
                     dbService = (IGenericDBService) GlobalServiceRegister.getDefault().getService(
@@ -565,6 +565,24 @@ public class DatabaseWizard extends CheckLastVersionRepositoryWizard implements 
         } else {
             return false;
         }
+    }
+    
+    private boolean isTCOMType(String dbType){
+        List<ERepositoryObjectType> extraTypes = new ArrayList<ERepositoryObjectType>();
+        IGenericDBService dbService = null;
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(IGenericDBService.class)) {
+            dbService = (IGenericDBService) GlobalServiceRegister.getDefault().getService(
+                    IGenericDBService.class);
+        }
+        if(dbService != null){
+            extraTypes.addAll(dbService.getExtraTypes());
+        }
+        for(ERepositoryObjectType type:extraTypes){
+            if(type.getType().equals(dbType)){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
