@@ -137,12 +137,12 @@ public class DatabaseWizardPage extends WizardPage {
         if(dbService == null){
             return;
         }
-        if(ERepositoryObjectType.JDBC != null){
+        if(!dbService.getExtraTypes().isEmpty()){
             dynamicParentForm = new Composite(parentContainer, SWT.NONE);
             dynamicParentForm.setLayoutData(data);
             dynamicParentForm.setLayout(new FormLayout());
             Map<String, Composite> map = dbService.creatDBDynamicComposite(dynamicParentForm, EComponentCategory.BASIC, !isRepositoryObjectEditable, connectionItem.getProperty(), 
-                    ERepositoryObjectType.JDBC.getType());
+                    "JDBC"); 
             dynamicForm = map.get("DynamicComposite");//$NON-NLS-1$
             dynamicContextForm = map.get("ContextComposite");//$NON-NLS-1$
             if(isTCOMDB(dbTypeForm.getDBType())){
