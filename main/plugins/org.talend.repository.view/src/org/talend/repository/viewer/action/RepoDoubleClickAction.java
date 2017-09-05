@@ -415,6 +415,9 @@ public class RepoDoubleClickAction extends Action {
                     && current.getClassForDoubleClick().getSimpleName()
                             .equals(obj.getObject().getProperty().getItem().eClass().getName())) {
                 return current;
+            }else if (nodeType != null && nodeType.equals(ERepositoryObjectType.METADATA_CONNECTIONS)
+                    && isDisguiseEdit(current, obj)) {
+                return current;
             }
         }
 
@@ -430,6 +433,13 @@ public class RepoDoubleClickAction extends Action {
         }
 
         return null;
+    }
+    
+    private boolean isDisguiseEdit(ITreeContextualAction current, RepositoryNode obj){
+        if(current.getClassForDoubleClick().getSimpleName().equals("DatabaseConnectionItem")) {//$NON-NLS-1$
+            return true;
+        }
+        return false;
     }
 
     private boolean isDITestCaseEditOrReadAction(ITreeContextualAction action) {

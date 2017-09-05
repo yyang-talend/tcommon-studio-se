@@ -35,6 +35,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
+import org.talend.commons.exception.ExceptionHandler;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.ui.runtime.image.ECoreImage;
 import org.talend.commons.ui.runtime.image.ImageProvider;
@@ -268,7 +269,7 @@ public class DatabaseWizard extends CheckLastVersionRepositoryWizard implements 
             break;
 
         case REPOSITORY_ELEMENT:
-            connection = (DatabaseConnection) ((ConnectionItem) node.getObject().getProperty().getItem()).getConnection();
+            connection = ((ConnectionItem) node.getObject().getProperty().getItem()).getConnection();
             connectionProperty = node.getObject().getProperty();
             connectionItem = (ConnectionItem) node.getObject().getProperty().getItem();
 
@@ -434,8 +435,8 @@ public class DatabaseWizard extends CheckLastVersionRepositoryWizard implements 
              * schema,see bug 0016636,using metadataConnection can be sure that all the values has been parse to
              * original. hywang
              */
-
-            if(isTCOMType(getDBType())){
+            deleteSwitchTypeNode();
+            if(isTCOMType(getDBType(connectionItem))){
                 IGenericDBService dbService = null;
                 if (GlobalServiceRegister.getDefault().isServiceRegistered(IGenericDBService.class)) {
                     dbService = (IGenericDBService) GlobalServiceRegister.getDefault().getService(
@@ -456,9 +457,9 @@ public class DatabaseWizard extends CheckLastVersionRepositoryWizard implements 
             }
             
             // MOD by gdbu 2011-3-24 bug 19528
-            EDatabaseTypeName dbType = EDatabaseTypeName.getTypeFromDbType(getDBType());
+            EDatabaseTypeName dbType = EDatabaseTypeName.getTypeFromDbType(getDBType(connectionItem));
             if (dbType != EDatabaseTypeName.GENERAL_JDBC) {
-                String driverClass = ExtractMetaDataUtils.getInstance().getDriverClassByDbType(getDBType());
+                String driverClass = ExtractMetaDataUtils.getInstance().getDriverClassByDbType(getDBType(connectionItem));
                 DatabaseConnection dbConnection = (DatabaseConnection) connectionItem.getConnection();
                 String dbVersion = dbConnection.getDbVersionString();
                 // feature TDI-22108
@@ -565,6 +566,26 @@ public class DatabaseWizard extends CheckLastVersionRepositoryWizard implements 
         } else {
             return false;
         }
+    }
+    
+    private void deleteSwitchTypeNode(){
+        if(isCreation()){
+            return;
+        }
+        if(originalConnectionItem == null){
+            return;
+        }
+        if(isTCOMType(getDBType(originalConnectionItem)) != isTCOMType(getDBType(connectionItem))){
+            creation = true;
+            try {
+                if(repositoryObject != null){
+                    repFactory.deleteObjectPhysical(repositoryObject);
+                }
+            } catch (PersistenceException e) {
+                ExceptionHandler.process(e);
+            }
+        }
+        
     }
     
     private boolean isTCOMType(String dbType){
@@ -855,8 +876,11 @@ public class DatabaseWizard extends CheckLastVersionRepositoryWizard implements 
             connectionItem.getProperty().setDescription(this.originalDescription);
             connectionItem.getProperty().setPurpose(this.originalPurpose);
             connectionItem.getProperty().setStatusCode(this.originalStatus);
-            DBConnectionContextUtils.setDatabaseConnectionParameter((DatabaseConnection) connectionItem.getConnection(),
-                    databaseWizardPage.getMetadataConnection());
+            
+            if(connectionItem.getConnection() instanceof DatabaseConnection){
+                DBConnectionContextUtils.setDatabaseConnectionParameter((DatabaseConnection) connectionItem.getConnection(),
+                        databaseWizardPage.getMetadataConnection());
+            }
         }
         return super.performCancel();
     }
@@ -1068,9 +1092,9 @@ public class DatabaseWizard extends CheckLastVersionRepositoryWizard implements 
         return null;
     }
     
-    private String getDBType(){
-        if(connection instanceof DatabaseConnection){
-            return ((DatabaseConnection)connection).getDatabaseType();
+    private String getDBType(ConnectionItem item){
+        if(item.getConnection() instanceof DatabaseConnection){
+            return ((DatabaseConnection)item.getConnection()).getDatabaseType();
         }
         IGenericDBService dbService = null;
         if (GlobalServiceRegister.getDefault().isServiceRegistered(IGenericDBService.class)) {
@@ -1078,7 +1102,7 @@ public class DatabaseWizard extends CheckLastVersionRepositoryWizard implements 
                     IGenericDBService.class);
         }
         if(dbService != null){
-            return dbService.getGenericConnectionType(connectionItem);
+            return dbService.getGenericConnectionType(item);
         }
         return null;
     }

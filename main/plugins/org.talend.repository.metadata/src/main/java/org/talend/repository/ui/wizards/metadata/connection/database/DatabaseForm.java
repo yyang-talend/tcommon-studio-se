@@ -271,8 +271,6 @@ public class DatabaseForm extends AbstractForm {
      */
     private UtilsButton checkButton;
 
-    private Group databaseSettingGroup;
-
     private Group hbaseSettingGroup;
 
     private LabelledCombo hbaseDistributionCombo;
@@ -824,13 +822,7 @@ public class DatabaseForm extends AbstractForm {
         // databaseSettingGroup = Form.createGroup(this, 1, Messages.getString("DatabaseForm.groupDatabaseSettings"),
         // 450); //$NON-NLS-1$
         //
-        databaseSettingGroup = new Group(dbConnectionArea, SWT.NONE);
-        GridLayout gridLayout1 = new GridLayout(1, false);
-        databaseSettingGroup.setLayout(gridLayout1);
-        GridData gridData1 = new GridData(SWT.FILL, SWT.FILL, true, true);
-        databaseSettingGroup.setLayoutData(gridData1);
-
-        scrolledComposite = new ScrolledComposite(databaseSettingGroup, SWT.V_SCROLL | SWT.H_SCROLL);
+        scrolledComposite = new ScrolledComposite(dbConnectionArea, SWT.V_SCROLL | SWT.H_SCROLL);
         scrolledComposite.setExpandHorizontal(true);
         scrolledComposite.setExpandVertical(true);
         scrolledComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -3714,15 +3706,14 @@ public class DatabaseForm extends AbstractForm {
         moveButtonFormData.top = new FormAttachment(checkGroup, 0, SWT.CENTER);
         FormData checkGroupFormData = new FormData();
         checkGroupFormData.left = new FormAttachment(0, 0);
-        checkGroupFormData.right = new FormAttachment(100, 0);
+        checkGroupFormData.right = new FormAttachment(moveButton, 0);
         checkGroup.setLayoutData(checkGroupFormData);
         GridLayout gridLayout = new GridLayout(1, false);
         checkGroup.setLayout(gridLayout);
 
-        Composite compositeCheckButton = Form.startNewGridLayout(checkGroup, 1, false, SWT.CENTER, SWT.BOTTOM);
-
+        Composite compositeCheckButton = Form.startNewGridLayout(checkGroup, 1, false, SWT.RIGHT, SWT.BOTTOM);
         unionBtnsCompsite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        checkButton = new UtilsButton(compositeCheckButton, Messages.getString("DatabaseForm.check"), WIDTH_BUTTON_PIXEL, //$NON-NLS-1$
+        checkButton = new UtilsButton(compositeCheckButton, Messages.getString("DatabaseForm.test"), WIDTH_BUTTON_PIXEL, //$NON-NLS-1$
                 HEIGHT_BUTTON_PIXEL);
         checkButton.setEnabled(false);
 
@@ -6254,7 +6245,6 @@ public class DatabaseForm extends AbstractForm {
         compositeDbSettings.layout();
         typeDbCompositeParent.layout();
         newParent.layout();
-        databaseSettingGroup.layout();
         compositeGroupDbSettings.layout();
     }
 
@@ -7757,7 +7747,6 @@ public class DatabaseForm extends AbstractForm {
         compositeDbSettings.layout();
         typeDbCompositeParent.layout();
         newParent.layout();
-        databaseSettingGroup.layout();
         compositeGroupDbSettings.layout();
 
     }
@@ -7836,7 +7825,6 @@ public class DatabaseForm extends AbstractForm {
         compositeDbSettings.layout();
         typeDbCompositeParent.layout();
         newParent.layout();
-        databaseSettingGroup.layout();
         compositeGroupDbSettings.layout();
         scrolledComposite.layout();
     }
@@ -7848,7 +7836,6 @@ public class DatabaseForm extends AbstractForm {
         typeDbCompositeParent.layout();
         compositeDbSettings.layout();
         newParent.layout();
-        databaseSettingGroup.layout();
         compositeGroupDbSettings.layout();
         scrolledComposite.layout();
     }

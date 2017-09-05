@@ -34,7 +34,7 @@ import org.talend.daikon.properties.presentation.Form;
  */
 public interface IGenericDBService extends IService{
     
-    public Map<String, Composite> creatDBDynamicComposite(Composite composite, EComponentCategory sectionCategory,
+    public Map<String, Composite> creatDBDynamicComposite(Composite composite, EComponentCategory sectionCategory, boolean isCreation,
             boolean isReadOnly,Property property, String typeName);
     
     public Connection createGenericConnection();
