@@ -436,6 +436,9 @@ public class RepoDoubleClickAction extends Action {
     }
     
     private boolean isDisguiseEdit(ITreeContextualAction current, RepositoryNode obj){
+        if(obj.getType() != ENodeType.REPOSITORY_ELEMENT){
+            return false;
+        }
         if(current.getClassForDoubleClick().getSimpleName().equals("DatabaseConnectionItem")) {//$NON-NLS-1$
             return true;
         }
