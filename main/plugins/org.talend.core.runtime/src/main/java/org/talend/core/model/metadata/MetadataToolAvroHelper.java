@@ -32,6 +32,7 @@ import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.metadata.types.JavaTypesManager;
 import org.talend.core.utils.TalendQuoteUtils;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.cwm.relational.RelationalFactory;
 import org.talend.daikon.avro.AvroUtils;
 import org.talend.daikon.avro.LogicalTypeUtils;
 import org.talend.daikon.avro.SchemaConstants;
@@ -518,14 +519,9 @@ public final class MetadataToolAvroHelper {
         col.setTalendType("id_Dynamic"); //$NON-NLS-1$
         return col;
     }
-
-    /**
-     * @param in A field from an incoming schema
-     * @return A MetadataColumn containing all the information from the Schema, including any information included the
-     * schema as JSON property annotations for Talend 6 generated schemas.
-     */
-    public static org.talend.core.model.metadata.builder.connection.MetadataColumn convertFromAvro(Schema.Field field) {
-        org.talend.core.model.metadata.builder.connection.MetadataColumn col = ConnectionFactory.eINSTANCE.createMetadataColumn();
+    
+    public static org.talend.core.model.metadata.builder.connection.MetadataColumn convertFromAvro(Schema.Field field,
+            org.talend.core.model.metadata.builder.connection.MetadataColumn col){
         Schema in = field.schema();
 
         // Set the defaults values to the name (the only information guaranteed to be available in every field).
@@ -554,21 +550,21 @@ public final class MetadataToolAvroHelper {
             col.setTalendType(JavaTypesManager.FLOAT.getId());
         } else if (AvroUtils.isSameType(nonnullable, AvroUtils._int())) {
             if (logicalType == LogicalTypes.date()) {
-             	col.setTalendType(JavaTypesManager.DATE.getId());
+                col.setTalendType(JavaTypesManager.DATE.getId());
                 TaggedValue tv = TaggedValueHelper.createTaggedValue(DiSchemaConstants.TALEND6_COLUMN_DATE_DATE, "true");
                 col.getTaggedValue().add(tv);
-        	} else {
-        		// The logical type time maps to this as well
-        		col.setTalendType(JavaTypesManager.INTEGER.getId());
-        	}
+            } else {
+                // The logical type time maps to this as well
+                col.setTalendType(JavaTypesManager.INTEGER.getId());
+            }
         } else if (AvroUtils.isSameType(nonnullable, AvroUtils._long())) {
             if (logicalType == LogicalTypes.timestampMillis()) {
-             	col.setTalendType(JavaTypesManager.DATE.getId());
+                col.setTalendType(JavaTypesManager.DATE.getId());
                 TaggedValue tv = TaggedValueHelper.createTaggedValue(DiSchemaConstants.TALEND6_COLUMN_DATE_TIMESTAMP, "true");
                 col.getTaggedValue().add(tv);
-        	} else {
-        		col.setTalendType(JavaTypesManager.LONG.getId());
-        	}
+            } else {
+                col.setTalendType(JavaTypesManager.LONG.getId());
+            }
         } else if (AvroUtils.isSameType(nonnullable, AvroUtils._short())) {
             col.setTalendType(JavaTypesManager.SHORT.getId());
         } else if (AvroUtils.isSameType(nonnullable, AvroUtils._string())) {
@@ -677,6 +673,27 @@ public final class MetadataToolAvroHelper {
         }
 
         return col;
+    
+    }
+
+    /**
+     * @param in A field from an incoming schema
+     * @return A MetadataColumn containing all the information from the Schema, including any information included the
+     * schema as JSON property annotations for Talend 6 generated schemas.
+     */
+    public static org.talend.core.model.metadata.builder.connection.MetadataColumn convertFromAvro(Schema.Field field) {
+        org.talend.core.model.metadata.builder.connection.MetadataColumn col = ConnectionFactory.eINSTANCE.createMetadataColumn();
+        return convertFromAvro(field, col);
+    }
+    
+    /**
+     * @param in A field from an incoming schema
+     * @return A MetadataColumn containing all the information from the Schema, including any information included the
+     * schema as JSON property annotations for Talend 6 generated schemas.
+     */
+    public static org.talend.core.model.metadata.builder.connection.MetadataColumn convertFromAvroToTdColumn(Schema.Field field) {
+        org.talend.core.model.metadata.builder.connection.MetadataColumn col = RelationalFactory.eINSTANCE.createTdColumn();
+        return convertFromAvro(field, col);
     }
 
     // /**
