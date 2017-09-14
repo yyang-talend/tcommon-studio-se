@@ -15,13 +15,13 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.properties.MigrationTask#getId <em>Id</em>}</li>
  *   <li>{@link org.talend.core.model.properties.MigrationTask#getBreaks <em>Breaks</em>}</li>
  *   <li>{@link org.talend.core.model.properties.MigrationTask#getVersion <em>Version</em>}</li>
  *   <li>{@link org.talend.core.model.properties.MigrationTask#getStatus <em>Status</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.talend.core.model.properties.PropertiesPackage#getMigrationTask()
  * @model

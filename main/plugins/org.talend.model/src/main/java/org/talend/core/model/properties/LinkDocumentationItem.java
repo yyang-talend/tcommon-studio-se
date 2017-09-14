@@ -14,12 +14,12 @@ package org.talend.core.model.properties;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.properties.LinkDocumentationItem#getName <em>Name</em>}</li>
  *   <li>{@link org.talend.core.model.properties.LinkDocumentationItem#getExtension <em>Extension</em>}</li>
  *   <li>{@link org.talend.core.model.properties.LinkDocumentationItem#getLink <em>Link</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.talend.core.model.properties.PropertiesPackage#getLinkDocumentationItem()
  * @model

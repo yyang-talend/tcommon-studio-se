@@ -14,10 +14,10 @@ package org.talend.core.model.properties;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.properties.CronTalendTrigger#getCronExpression <em>Cron Expression</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.talend.core.model.properties.PropertiesPackage#getCronTalendTrigger()
  * @model

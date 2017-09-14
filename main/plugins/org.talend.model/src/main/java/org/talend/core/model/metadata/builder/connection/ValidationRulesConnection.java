@@ -15,6 +15,7 @@ import org.eclipse.emf.common.util.EMap;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.ValidationRulesConnection#isIsSelect <em>Is Select</em>}</li>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.ValidationRulesConnection#isIsInsert <em>Is Insert</em>}</li>
@@ -33,7 +34,6 @@ import org.eclipse.emf.common.util.EMap;
  *   <li>{@link org.talend.core.model.metadata.builder.connection.ValidationRulesConnection#isIsDisallow <em>Is Disallow</em>}</li>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.ValidationRulesConnection#isIsRejectLink <em>Is Reject Link</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.talend.core.model.metadata.builder.connection.ConnectionPackage#getValidationRulesConnection()
  * @model

@@ -15,12 +15,12 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.properties.ReferenceItem#getState <em>State</em>}</li>
  *   <li>{@link org.talend.core.model.properties.ReferenceItem#getParent <em>Parent</em>}</li>
  *   <li>{@link org.talend.core.model.properties.ReferenceItem#isReloadFromFile <em>Reload From File</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.talend.core.model.properties.PropertiesPackage#getReferenceItem()
  * @model

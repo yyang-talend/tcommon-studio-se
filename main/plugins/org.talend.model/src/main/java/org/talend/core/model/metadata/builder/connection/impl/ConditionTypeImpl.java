@@ -24,13 +24,13 @@ import org.talend.core.model.metadata.builder.connection.Operator;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.ConditionTypeImpl#getInputColumn <em>Input Column</em>}</li>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.ConditionTypeImpl#getFunction <em>Function</em>}</li>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.ConditionTypeImpl#getOperator <em>Operator</em>}</li>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.ConditionTypeImpl#getValue <em>Value</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

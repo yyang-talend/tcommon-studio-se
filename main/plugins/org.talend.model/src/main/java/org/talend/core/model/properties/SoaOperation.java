@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.properties.SoaOperation#getId <em>Id</em>}</li>
  *   <li>{@link org.talend.core.model.properties.SoaOperation#getLabel <em>Label</em>}</li>
@@ -41,7 +42,6 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.talend.core.model.properties.SoaOperation#getReturnStyle <em>Return Style</em>}</li>
  *   <li>{@link org.talend.core.model.properties.SoaOperation#getBranch <em>Branch</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.talend.core.model.properties.PropertiesPackage#getSoaOperation()
  * @model

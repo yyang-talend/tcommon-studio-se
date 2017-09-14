@@ -14,13 +14,13 @@ import org.talend.designer.business.model.business.BusinessProcess;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.properties.BusinessProcessItem#getNotation <em>Notation</em>}</li>
  *   <li>{@link org.talend.core.model.properties.BusinessProcessItem#getSemantic <em>Semantic</em>}</li>
  *   <li>{@link org.talend.core.model.properties.BusinessProcessItem#getNotationHolder <em>Notation Holder</em>}</li>
  *   <li>{@link org.talend.core.model.properties.BusinessProcessItem#getSvgBusinessProcessItem <em>Svg Business Process Item</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.talend.core.model.properties.PropertiesPackage#getBusinessProcessItem()
  * @model

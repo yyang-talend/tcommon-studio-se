@@ -17,11 +17,11 @@ import org.talend.designer.core.model.utils.emf.talendfile.ContextType;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.properties.ContextItem#getContext <em>Context</em>}</li>
  *   <li>{@link org.talend.core.model.properties.ContextItem#getDefaultContext <em>Default Context</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.talend.core.model.properties.PropertiesPackage#getContextItem()
  * @model

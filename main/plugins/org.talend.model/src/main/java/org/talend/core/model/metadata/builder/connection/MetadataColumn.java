@@ -18,6 +18,7 @@ import orgomg.cwm.resource.record.Field;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.MetadataColumn#getSourceType <em>Source Type</em>}</li>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.MetadataColumn#getDefaultValue <em>Default Value</em>}</li>
@@ -32,7 +33,6 @@ import orgomg.cwm.resource.record.Field;
  *   <li>{@link org.talend.core.model.metadata.builder.connection.MetadataColumn#getRelatedEntity <em>Related Entity</em>}</li>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.MetadataColumn#getRelationshipType <em>Relationship Type</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.talend.core.model.metadata.builder.connection.ConnectionPackage#getMetadataColumn()
  * @model

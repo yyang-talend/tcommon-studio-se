@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.properties.ExecutionVirtualServer#getId <em>Id</em>}</li>
  *   <li>{@link org.talend.core.model.properties.ExecutionVirtualServer#getLabel <em>Label</em>}</li>
@@ -22,7 +23,6 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.talend.core.model.properties.ExecutionVirtualServer#isActive <em>Active</em>}</li>
  *   <li>{@link org.talend.core.model.properties.ExecutionVirtualServer#getExecutionServers <em>Execution Servers</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.talend.core.model.properties.PropertiesPackage#getExecutionVirtualServer()
  * @model

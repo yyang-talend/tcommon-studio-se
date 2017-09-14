@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.properties.ExecutionPlanPart#getId <em>Id</em>}</li>
  *   <li>{@link org.talend.core.model.properties.ExecutionPlanPart#getTask <em>Task</em>}</li>
@@ -33,7 +34,6 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.talend.core.model.properties.ExecutionPlanPart#isUseParallel <em>Use Parallel</em>}</li>
  *   <li>{@link org.talend.core.model.properties.ExecutionPlanPart#getMaxThreads <em>Max Threads</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.talend.core.model.properties.PropertiesPackage#getExecutionPlanPart()
  * @model

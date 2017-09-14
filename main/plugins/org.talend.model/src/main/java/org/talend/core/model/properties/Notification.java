@@ -16,13 +16,13 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.properties.Notification#getId <em>Id</em>}</li>
  *   <li>{@link org.talend.core.model.properties.Notification#getType <em>Type</em>}</li>
  *   <li>{@link org.talend.core.model.properties.Notification#getProps <em>Props</em>}</li>
  *   <li>{@link org.talend.core.model.properties.Notification#isEnabled <em>Enabled</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.talend.core.model.properties.PropertiesPackage#getNotification()
  * @model

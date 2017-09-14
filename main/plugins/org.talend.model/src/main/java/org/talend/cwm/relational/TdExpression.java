@@ -15,13 +15,13 @@ import orgomg.cwm.objectmodel.core.Expression;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.cwm.relational.TdExpression#getVersion <em>Version</em>}</li>
  *   <li>{@link org.talend.cwm.relational.TdExpression#getModificationDate <em>Modification Date</em>}</li>
  *   <li>{@link org.talend.cwm.relational.TdExpression#getName <em>Name</em>}</li>
  *   <li>{@link org.talend.cwm.relational.TdExpression#getExpressionVariableMap <em>Expression Variable Map</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.talend.cwm.relational.RelationalPackage#getTdExpression()
  * @model

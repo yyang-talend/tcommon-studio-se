@@ -20,11 +20,11 @@ import org.talend.core.model.metadata.builder.connection.EDIFACTColumn;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.EDIFACTColumnImpl#getEDIColumnName <em>EDI Column Name</em>}</li>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.EDIFACTColumnImpl#getEDIXpath <em>EDI Xpath</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

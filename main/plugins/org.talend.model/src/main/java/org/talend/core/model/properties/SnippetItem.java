@@ -15,12 +15,12 @@ import org.eclipse.emf.common.util.EList;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.properties.SnippetItem#getName <em>Name</em>}</li>
  *   <li>{@link org.talend.core.model.properties.SnippetItem#getContent <em>Content</em>}</li>
  *   <li>{@link org.talend.core.model.properties.SnippetItem#getVariables <em>Variables</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.talend.core.model.properties.PropertiesPackage#getSnippetItem()
  * @model

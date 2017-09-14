@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.properties.TaskExecutionHistory#getId <em>Id</em>}</li>
  *   <li>{@link org.talend.core.model.properties.TaskExecutionHistory#getBasicStatus <em>Basic Status</em>}</li>
@@ -60,7 +61,6 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.talend.core.model.properties.TaskExecutionHistory#getParentTaskExecId <em>Parent Task Exec Id</em>}</li>
  *   <li>{@link org.talend.core.model.properties.TaskExecutionHistory#getParentPlanExecId <em>Parent Plan Exec Id</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.talend.core.model.properties.PropertiesPackage#getTaskExecutionHistory()
  * @model

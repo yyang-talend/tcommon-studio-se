@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.properties.ExecutionTriggerable#getId <em>Id</em>}</li>
  *   <li>{@link org.talend.core.model.properties.ExecutionTriggerable#getTriggers <em>Triggers</em>}</li>
@@ -27,7 +28,6 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.talend.core.model.properties.ExecutionTriggerable#isProcessingState <em>Processing State</em>}</li>
  *   <li>{@link org.talend.core.model.properties.ExecutionTriggerable#getRequestId <em>Request Id</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.talend.core.model.properties.PropertiesPackage#getExecutionTriggerable()
  * @model interface="true" abstract="true"

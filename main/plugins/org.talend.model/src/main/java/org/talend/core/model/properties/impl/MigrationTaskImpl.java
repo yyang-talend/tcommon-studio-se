@@ -23,13 +23,13 @@ import org.talend.core.model.properties.PropertiesPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.properties.impl.MigrationTaskImpl#getId <em>Id</em>}</li>
  *   <li>{@link org.talend.core.model.properties.impl.MigrationTaskImpl#getBreaks <em>Breaks</em>}</li>
  *   <li>{@link org.talend.core.model.properties.impl.MigrationTaskImpl#getVersion <em>Version</em>}</li>
  *   <li>{@link org.talend.core.model.properties.impl.MigrationTaskImpl#getStatus <em>Status</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

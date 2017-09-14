@@ -24,11 +24,11 @@ import org.talend.core.model.metadata.builder.connection.SAPTableField;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.SAPTableFieldImpl#getBusinessName <em>Business Name</em>}</li>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.SAPTableFieldImpl#getRefTable <em>Ref Table</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

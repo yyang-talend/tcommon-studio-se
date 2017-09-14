@@ -90,6 +90,8 @@ public final class UserModuleAuthorizationType extends AbstractEnumerator
      * Returns the '<em><b>User Module Authorization Type</b></em>' literal with the specified literal value.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
+     * @param literal the literal.
+     * @return the matching enumerator or <code>null</code>.
      * @generated
      */
     public static UserModuleAuthorizationType get(String literal) {
@@ -106,6 +108,8 @@ public final class UserModuleAuthorizationType extends AbstractEnumerator
      * Returns the '<em><b>User Module Authorization Type</b></em>' literal with the specified name.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
+     * @param name the name.
+     * @return the matching enumerator or <code>null</code>.
      * @generated
      */
     public static UserModuleAuthorizationType getByName(String name) {
@@ -122,6 +126,8 @@ public final class UserModuleAuthorizationType extends AbstractEnumerator
      * Returns the '<em><b>User Module Authorization Type</b></em>' literal with the specified integer value.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
+     * @param value the integer value.
+     * @return the matching enumerator or <code>null</code>.
      * @generated
      */
     public static UserModuleAuthorizationType get(int value) {

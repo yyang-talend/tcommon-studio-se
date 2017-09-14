@@ -13,6 +13,7 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.properties.Item#getProperty <em>Property</em>}</li>
  *   <li>{@link org.talend.core.model.properties.Item#getState <em>State</em>}</li>
@@ -21,7 +22,6 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.talend.core.model.properties.Item#getFileExtension <em>File Extension</em>}</li>
  *   <li>{@link org.talend.core.model.properties.Item#isNeedVersion <em>Need Version</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.talend.core.model.properties.PropertiesPackage#getItem()
  * @model abstract="true"

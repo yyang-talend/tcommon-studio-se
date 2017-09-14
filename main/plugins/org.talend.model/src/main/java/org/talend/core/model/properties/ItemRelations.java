@@ -16,11 +16,11 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.properties.ItemRelations#getBaseItem <em>Base Item</em>}</li>
  *   <li>{@link org.talend.core.model.properties.ItemRelations#getRelatedItems <em>Related Items</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.talend.core.model.properties.PropertiesPackage#getItemRelations()
  * @model

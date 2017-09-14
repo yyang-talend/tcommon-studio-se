@@ -18,11 +18,11 @@ import org.talend.core.model.metadata.builder.connection.GenericSchemaConnection
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.GenericSchemaConnectionImpl#isMappingTypeUsed <em>Mapping Type Used</em>}</li>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.GenericSchemaConnectionImpl#getMappingTypeId <em>Mapping Type Id</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

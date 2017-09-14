@@ -15,13 +15,13 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.properties.ExecutionPlanPrm#getId <em>Id</em>}</li>
  *   <li>{@link org.talend.core.model.properties.ExecutionPlanPrm#getExecutionPlan <em>Execution Plan</em>}</li>
  *   <li>{@link org.talend.core.model.properties.ExecutionPlanPrm#getName <em>Name</em>}</li>
  *   <li>{@link org.talend.core.model.properties.ExecutionPlanPrm#getValue <em>Value</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.talend.core.model.properties.PropertiesPackage#getExecutionPlanPrm()
  * @model

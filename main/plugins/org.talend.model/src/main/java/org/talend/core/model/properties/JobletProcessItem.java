@@ -15,11 +15,11 @@ import org.talend.designer.joblet.model.JobletProcess;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.properties.JobletProcessItem#getJobletProcess <em>Joblet Process</em>}</li>
  *   <li>{@link org.talend.core.model.properties.JobletProcessItem#getIcon <em>Icon</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.talend.core.model.properties.PropertiesPackage#getJobletProcessItem()
  * @model

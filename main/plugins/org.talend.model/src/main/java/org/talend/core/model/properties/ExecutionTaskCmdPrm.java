@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.properties.ExecutionTaskCmdPrm#getId <em>Id</em>}</li>
  *   <li>{@link org.talend.core.model.properties.ExecutionTaskCmdPrm#isActive <em>Active</em>}</li>
@@ -22,7 +23,6 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.talend.core.model.properties.ExecutionTaskCmdPrm#getDescription <em>Description</em>}</li>
  *   <li>{@link org.talend.core.model.properties.ExecutionTaskCmdPrm#getExecutionTask <em>Execution Task</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.talend.core.model.properties.PropertiesPackage#getExecutionTaskCmdPrm()
  * @model

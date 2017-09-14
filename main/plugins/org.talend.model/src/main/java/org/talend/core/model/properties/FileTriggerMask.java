@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.properties.FileTriggerMask#getId <em>Id</em>}</li>
  *   <li>{@link org.talend.core.model.properties.FileTriggerMask#isActive <em>Active</em>}</li>
@@ -29,7 +30,6 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.talend.core.model.properties.FileTriggerMask#isCreated <em>Created</em>}</li>
  *   <li>{@link org.talend.core.model.properties.FileTriggerMask#isModified <em>Modified</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.talend.core.model.properties.PropertiesPackage#getFileTriggerMask()
  * @model

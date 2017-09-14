@@ -23,13 +23,13 @@ import orgomg.cwm.objectmodel.core.impl.ExpressionImpl;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.cwm.relational.impl.TdExpressionImpl#getVersion <em>Version</em>}</li>
  *   <li>{@link org.talend.cwm.relational.impl.TdExpressionImpl#getModificationDate <em>Modification Date</em>}</li>
  *   <li>{@link org.talend.cwm.relational.impl.TdExpressionImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.talend.cwm.relational.impl.TdExpressionImpl#getExpressionVariableMap <em>Expression Variable Map</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -290,8 +290,8 @@ public class TdExpressionImpl extends ExpressionImpl implements TdExpression {
         case RelationalPackage.TD_EXPRESSION__VERSION:
             return VERSION_EDEFAULT == null ? version != null : !VERSION_EDEFAULT.equals(version);
         case RelationalPackage.TD_EXPRESSION__MODIFICATION_DATE:
-            return MODIFICATION_DATE_EDEFAULT == null ? modificationDate != null : !MODIFICATION_DATE_EDEFAULT
-                    .equals(modificationDate);
+            return MODIFICATION_DATE_EDEFAULT == null ? modificationDate != null
+                    : !MODIFICATION_DATE_EDEFAULT.equals(modificationDate);
         case RelationalPackage.TD_EXPRESSION__NAME:
             return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
         case RelationalPackage.TD_EXPRESSION__EXPRESSION_VARIABLE_MAP:

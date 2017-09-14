@@ -17,13 +17,13 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.properties.UserRight#getId <em>Id</em>}</li>
  *   <li>{@link org.talend.core.model.properties.UserRight#getName <em>Name</em>}</li>
  *   <li>{@link org.talend.core.model.properties.UserRight#getDescription <em>Description</em>}</li>
  *   <li>{@link org.talend.core.model.properties.UserRight#getRolesRights <em>Roles Rights</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.talend.core.model.properties.PropertiesPackage#getUserRight()
  * @model

@@ -15,11 +15,11 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.properties.RoleRight#getRole <em>Role</em>}</li>
  *   <li>{@link org.talend.core.model.properties.RoleRight#getUserRight <em>User Right</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.talend.core.model.properties.PropertiesPackage#getRoleRight()
  * @model

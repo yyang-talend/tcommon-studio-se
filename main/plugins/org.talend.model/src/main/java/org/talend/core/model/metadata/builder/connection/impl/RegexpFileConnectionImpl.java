@@ -18,10 +18,10 @@ import org.talend.core.model.metadata.builder.connection.RegexpFileConnection;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.RegexpFileConnectionImpl#getFieldSeparatorType <em>Field Separator Type</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

@@ -745,11 +745,11 @@ public class MetadataColumnImpl extends AbstractMetadataObjectImpl implements Me
         if (newMultiplicity != multiplicity) {
             NotificationChain msgs = null;
             if (multiplicity != null)
-                msgs = ((InternalEObject) multiplicity).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
-                        - ConnectionPackage.METADATA_COLUMN__MULTIPLICITY, null, msgs);
+                msgs = ((InternalEObject) multiplicity).eInverseRemove(this,
+                        EOPPOSITE_FEATURE_BASE - ConnectionPackage.METADATA_COLUMN__MULTIPLICITY, null, msgs);
             if (newMultiplicity != null)
-                msgs = ((InternalEObject) newMultiplicity).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
-                        - ConnectionPackage.METADATA_COLUMN__MULTIPLICITY, null, msgs);
+                msgs = ((InternalEObject) newMultiplicity).eInverseAdd(this,
+                        EOPPOSITE_FEATURE_BASE - ConnectionPackage.METADATA_COLUMN__MULTIPLICITY, null, msgs);
             msgs = basicSetMultiplicity(newMultiplicity, msgs);
             if (msgs != null)
                 msgs.dispatch();
@@ -794,8 +794,8 @@ public class MetadataColumnImpl extends AbstractMetadataObjectImpl implements Me
         ScopeKind oldTargetScope = targetScope;
         targetScope = newTargetScope == null ? TARGET_SCOPE_EDEFAULT : newTargetScope;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ConnectionPackage.METADATA_COLUMN__TARGET_SCOPE,
-                    oldTargetScope, targetScope));
+            eNotify(new ENotificationImpl(this, Notification.SET, ConnectionPackage.METADATA_COLUMN__TARGET_SCOPE, oldTargetScope,
+                    targetScope));
     }
 
     /**
@@ -849,11 +849,11 @@ public class MetadataColumnImpl extends AbstractMetadataObjectImpl implements Me
         if (newType != type) {
             NotificationChain msgs = null;
             if (type != null)
-                msgs = ((InternalEObject) type).eInverseRemove(this, CorePackage.CLASSIFIER__STRUCTURAL_FEATURE,
-                        Classifier.class, msgs);
+                msgs = ((InternalEObject) type).eInverseRemove(this, CorePackage.CLASSIFIER__STRUCTURAL_FEATURE, Classifier.class,
+                        msgs);
             if (newType != null)
-                msgs = ((InternalEObject) newType).eInverseAdd(this, CorePackage.CLASSIFIER__STRUCTURAL_FEATURE,
-                        Classifier.class, msgs);
+                msgs = ((InternalEObject) newType).eInverseAdd(this, CorePackage.CLASSIFIER__STRUCTURAL_FEATURE, Classifier.class,
+                        msgs);
             msgs = basicSetType(newType, msgs);
             if (msgs != null)
                 msgs.dispatch();
@@ -979,11 +979,11 @@ public class MetadataColumnImpl extends AbstractMetadataObjectImpl implements Me
         if (newInitialValue != initialValue) {
             NotificationChain msgs = null;
             if (initialValue != null)
-                msgs = ((InternalEObject) initialValue).eInverseRemove(this, EOPPOSITE_FEATURE_BASE
-                        - ConnectionPackage.METADATA_COLUMN__INITIAL_VALUE, null, msgs);
+                msgs = ((InternalEObject) initialValue).eInverseRemove(this,
+                        EOPPOSITE_FEATURE_BASE - ConnectionPackage.METADATA_COLUMN__INITIAL_VALUE, null, msgs);
             if (newInitialValue != null)
-                msgs = ((InternalEObject) newInitialValue).eInverseAdd(this, EOPPOSITE_FEATURE_BASE
-                        - ConnectionPackage.METADATA_COLUMN__INITIAL_VALUE, null, msgs);
+                msgs = ((InternalEObject) newInitialValue).eInverseAdd(this,
+                        EOPPOSITE_FEATURE_BASE - ConnectionPackage.METADATA_COLUMN__INITIAL_VALUE, null, msgs);
             msgs = basicSetInitialValue(newInitialValue, msgs);
             if (msgs != null)
                 msgs.dispatch();
@@ -1122,7 +1122,7 @@ public class MetadataColumnImpl extends AbstractMetadataObjectImpl implements Me
         setOwner(newTable);
         if (eNotificationRequired()) {
             eNotify(new ENotificationImpl(this, Notification.SET, ConnectionPackage.METADATA_COLUMN__TABLE, oldOwner, newTable));
-        }// else no notification required
+        } // else no notification required
     }
 
     /**
@@ -1145,7 +1145,7 @@ public class MetadataColumnImpl extends AbstractMetadataObjectImpl implements Me
         if (eNotificationRequired()) {
             eNotify(new ENotificationImpl(this, Notification.SET, ConnectionPackage.METADATA_COLUMN__ORIGINAL_FIELD, oldName,
                     newOriginalField));
-        }// else no notification required
+        } // else no notification required
     }
 
     /**
@@ -1164,7 +1164,8 @@ public class MetadataColumnImpl extends AbstractMetadataObjectImpl implements Me
         String oldPattern = pattern;
         pattern = newPattern;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ConnectionPackage.METADATA_COLUMN__PATTERN, oldPattern, pattern));
+            eNotify(new ENotificationImpl(this, Notification.SET, ConnectionPackage.METADATA_COLUMN__PATTERN, oldPattern,
+                    pattern));
     }
 
     /**
@@ -1325,8 +1326,8 @@ public class MetadataColumnImpl extends AbstractMetadataObjectImpl implements Me
             return ((InternalEList<InternalEObject>) (InternalEList<?>) getCfMap()).basicAdd(otherEnd, msgs);
         case ConnectionPackage.METADATA_COLUMN__TYPE:
             if (type != null)
-                msgs = ((InternalEObject) type).eInverseRemove(this, CorePackage.CLASSIFIER__STRUCTURAL_FEATURE,
-                        Classifier.class, msgs);
+                msgs = ((InternalEObject) type).eInverseRemove(this, CorePackage.CLASSIFIER__STRUCTURAL_FEATURE, Classifier.class,
+                        msgs);
             return basicSetType((Classifier) otherEnd, msgs);
         case ConnectionPackage.METADATA_COLUMN__SLOT:
             return ((InternalEList<InternalEObject>) (InternalEList<?>) getSlot()).basicAdd(otherEnd, msgs);
@@ -1796,8 +1797,8 @@ public class MetadataColumnImpl extends AbstractMetadataObjectImpl implements Me
         case ConnectionPackage.METADATA_COLUMN__TABLE:
             return getTable() != null;
         case ConnectionPackage.METADATA_COLUMN__ORIGINAL_FIELD:
-            return ORIGINAL_FIELD_EDEFAULT == null ? getOriginalField() != null : !ORIGINAL_FIELD_EDEFAULT
-                    .equals(getOriginalField());
+            return ORIGINAL_FIELD_EDEFAULT == null ? getOriginalField() != null
+                    : !ORIGINAL_FIELD_EDEFAULT.equals(getOriginalField());
         case ConnectionPackage.METADATA_COLUMN__PATTERN:
             return PATTERN_EDEFAULT == null ? pattern != null : !PATTERN_EDEFAULT.equals(pattern);
         case ConnectionPackage.METADATA_COLUMN__DISPLAY_FIELD:
@@ -1807,8 +1808,8 @@ public class MetadataColumnImpl extends AbstractMetadataObjectImpl implements Me
         case ConnectionPackage.METADATA_COLUMN__RELATED_ENTITY:
             return RELATED_ENTITY_EDEFAULT == null ? relatedEntity != null : !RELATED_ENTITY_EDEFAULT.equals(relatedEntity);
         case ConnectionPackage.METADATA_COLUMN__RELATIONSHIP_TYPE:
-            return RELATIONSHIP_TYPE_EDEFAULT == null ? relationshipType != null : !RELATIONSHIP_TYPE_EDEFAULT
-                    .equals(relationshipType);
+            return RELATIONSHIP_TYPE_EDEFAULT == null ? relationshipType != null
+                    : !RELATIONSHIP_TYPE_EDEFAULT.equals(relationshipType);
         }
         return super.eIsSet(featureID);
     }

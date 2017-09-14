@@ -17,10 +17,10 @@ import org.talend.designer.core.model.utils.emf.talendfile.ParametersType;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.properties.StatAndLogsSettings#getParameters <em>Parameters</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.talend.core.model.properties.PropertiesPackage#getStatAndLogsSettings()
  * @model

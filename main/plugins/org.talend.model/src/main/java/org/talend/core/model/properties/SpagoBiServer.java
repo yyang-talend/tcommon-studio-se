@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.properties.SpagoBiServer#getEngineName <em>Engine Name</em>}</li>
  *   <li>{@link org.talend.core.model.properties.SpagoBiServer#getShortDescription <em>Short Description</em>}</li>
@@ -24,7 +25,6 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.talend.core.model.properties.SpagoBiServer#getPassword <em>Password</em>}</li>
  *   <li>{@link org.talend.core.model.properties.SpagoBiServer#getApplicationContext <em>Application Context</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.talend.core.model.properties.PropertiesPackage#getSpagoBiServer()
  * @model

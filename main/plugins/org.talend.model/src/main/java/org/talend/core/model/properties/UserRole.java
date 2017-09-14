@@ -16,6 +16,7 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.properties.UserRole#getId <em>Id</em>}</li>
  *   <li>{@link org.talend.core.model.properties.UserRole#getName <em>Name</em>}</li>
@@ -23,7 +24,6 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.talend.core.model.properties.UserRole#isFixed <em>Fixed</em>}</li>
  *   <li>{@link org.talend.core.model.properties.UserRole#getRolesRights <em>Roles Rights</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.talend.core.model.properties.PropertiesPackage#getUserRole()
  * @model

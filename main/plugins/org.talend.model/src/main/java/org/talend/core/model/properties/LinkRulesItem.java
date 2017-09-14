@@ -15,12 +15,12 @@ import org.eclipse.gmf.runtime.notation.LineType;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.properties.LinkRulesItem#getName <em>Name</em>}</li>
  *   <li>{@link org.talend.core.model.properties.LinkRulesItem#getExtension <em>Extension</em>}</li>
  *   <li>{@link org.talend.core.model.properties.LinkRulesItem#getLink <em>Link</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.talend.core.model.properties.PropertiesPackage#getLinkRulesItem()
  * @model

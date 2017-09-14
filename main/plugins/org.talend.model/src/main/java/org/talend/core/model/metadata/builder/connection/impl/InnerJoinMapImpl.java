@@ -25,11 +25,11 @@ import org.talend.core.model.metadata.builder.connection.ConnectionPackage;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.InnerJoinMapImpl#getTypedKey <em>Key</em>}</li>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.InnerJoinMapImpl#getTypedValue <em>Value</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */

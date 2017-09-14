@@ -15,12 +15,12 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.properties.Information#getLevel <em>Level</em>}</li>
  *   <li>{@link org.talend.core.model.properties.Information#getType <em>Type</em>}</li>
  *   <li>{@link org.talend.core.model.properties.Information#getText <em>Text</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.talend.core.model.properties.PropertiesPackage#getInformation()
  * @model

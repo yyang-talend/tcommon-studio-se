@@ -14,11 +14,11 @@ package org.talend.core.model.properties;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.properties.SQLPatternItem#isSystem <em>System</em>}</li>
  *   <li>{@link org.talend.core.model.properties.SQLPatternItem#getEltName <em>Elt Name</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.talend.core.model.properties.PropertiesPackage#getSQLPatternItem()
  * @model

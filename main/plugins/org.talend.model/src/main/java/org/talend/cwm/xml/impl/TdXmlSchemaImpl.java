@@ -22,10 +22,10 @@ import orgomg.cwm.resource.xml.impl.SchemaImpl;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.cwm.xml.impl.TdXmlSchemaImpl#getXsdFilePath <em>Xsd File Path</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
