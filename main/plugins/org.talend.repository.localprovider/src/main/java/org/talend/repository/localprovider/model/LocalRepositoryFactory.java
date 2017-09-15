@@ -2113,6 +2113,19 @@ public class LocalRepositoryFactory extends AbstractEMFRepositoryFactory impleme
 
         return itemResource;
     }
+    
+    private Resource create(IProject project, ConnectionItem item, IPath path) throws PersistenceException {
+        XmiResourceManager xmiResourceManager = ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider()
+                .getResourceManager();
+        Resource itemResource = null;
+        ERepositoryObjectType repObjType = ERepositoryObjectType.getType(item.getTypeName());
+        if (repObjType != null) {
+            itemResource = xmiResourceManager.createItemResource(project, item, path, repObjType, false);
+            MetadataManager.addContents(item, itemResource);
+            itemResource.getContents().add(item.getConnection());
+        }
+        return itemResource;
+    }
 
     private Resource create(IProject project, ConnectionItem item, ERepositoryObjectType type, IPath path)
             throws PersistenceException {
@@ -2432,6 +2445,9 @@ public class LocalRepositoryFactory extends AbstractEMFRepositoryFactory impleme
                 break;
             case PropertiesPackage.EDIFACT_CONNECTION_ITEM:
                 itemResource = save(resourceSet, (EDIFACTConnectionItem) item);
+                break;
+            case PropertiesPackage.CONNECTION_ITEM:
+                itemResource = save(resourceSet, (ConnectionItem)item);
                 break;
             default:
                 throw new UnsupportedOperationException();
@@ -2801,6 +2817,9 @@ public class LocalRepositoryFactory extends AbstractEMFRepositoryFactory impleme
                 break;
             case PropertiesPackage.EDIFACT_CONNECTION_ITEM:// gldu add for 19384
                 itemResource = create(project2, (EDIFACTConnectionItem) item, ERepositoryObjectType.METADATA_EDIFACT, path);
+                break;
+            case PropertiesPackage.CONNECTION_ITEM:
+                itemResource = create(project2, (ConnectionItem) item, path);
                 break;
             default:
 

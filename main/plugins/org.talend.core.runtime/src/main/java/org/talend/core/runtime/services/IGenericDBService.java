@@ -37,14 +37,6 @@ public interface IGenericDBService extends IService{
     public Map<String, Composite> creatDBDynamicComposite(Composite composite, EComponentCategory sectionCategory, boolean isCreation,
             boolean isReadOnly,Property property, String typeName);
     
-    public Connection createGenericConnection();
-    
-    public ConnectionItem createGenericConnectionItem();
-    
-    public String getGenericConnectionType(Item item);
-    
-    public void setGenericConnectionType(String type, Item item);
-    
     public void dbWizardPerformFinish(ConnectionItem item, Form form, boolean creation, IPath pathToSave, List<IMetadataTable> oldMetadataTable) throws CoreException;
     
     public Form getDynamicForm(Composite composite);
@@ -54,5 +46,9 @@ public interface IGenericDBService extends IService{
     public void resetConnectionItem(Composite composite, ConnectionItem connectionItem);
     
     public List<ERepositoryObjectType> getExtraTypes();
+    
+    public Connection createGenericConnection();
+    
+    public ConnectionItem createGenericConnectionItem();
     
 }
