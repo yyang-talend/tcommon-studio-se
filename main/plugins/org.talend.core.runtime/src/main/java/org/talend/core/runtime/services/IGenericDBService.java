@@ -20,10 +20,8 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.swt.widgets.Composite;
 import org.talend.core.IService;
 import org.talend.core.model.metadata.IMetadataTable;
-import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.process.EComponentCategory;
 import org.talend.core.model.properties.ConnectionItem;
-import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.ui.check.IChecker;
@@ -46,9 +44,5 @@ public interface IGenericDBService extends IService{
     public void resetConnectionItem(Composite composite, ConnectionItem connectionItem);
     
     public List<ERepositoryObjectType> getExtraTypes();
-    
-    public Connection createGenericConnection();
-    
-    public ConnectionItem createGenericConnectionItem();
     
 }
