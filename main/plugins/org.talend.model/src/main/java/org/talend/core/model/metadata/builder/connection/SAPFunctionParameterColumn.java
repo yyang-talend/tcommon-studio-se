@@ -12,7 +12,6 @@ package org.talend.core.model.metadata.builder.connection;
  *
  * <p>
  * The following features are supported:
- * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.SAPFunctionParameterColumn#getParameterType <em>Parameter Type</em>}</li>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.SAPFunctionParameterColumn#getStructureOrTableName <em>Structure Or Table Name</em>}</li>
@@ -21,6 +20,7 @@ package org.talend.core.model.metadata.builder.connection;
  *   <li>{@link org.talend.core.model.metadata.builder.connection.SAPFunctionParameterColumn#getValue <em>Value</em>}</li>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.SAPFunctionParameterColumn#getParameterTable <em>Parameter Table</em>}</li>
  * </ul>
+ * </p>
  *
  * @see org.talend.core.model.metadata.builder.connection.ConnectionPackage#getSAPFunctionParameterColumn()
  * @model

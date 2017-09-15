@@ -39,7 +39,6 @@ import org.talend.core.model.metadata.builder.connection.SAPIDocUnit;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
- * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.SAPConnectionImpl#getHost <em>Host</em>}</li>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.SAPConnectionImpl#getUsername <em>Username</em>}</li>
@@ -57,6 +56,7 @@ import org.talend.core.model.metadata.builder.connection.SAPIDocUnit;
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.SAPConnectionImpl#getBWInfoCubes <em>BW Info Cubes</em>}</li>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.SAPConnectionImpl#getBWInfoObjects <em>BW Info Objects</em>}</li>
  * </ul>
+ * </p>
  *
  * @generated
  */
@@ -805,8 +805,8 @@ public class SAPConnectionImpl extends ConnectionImpl implements SAPConnection {
         case ConnectionPackage.SAP_CONNECTION__FUNTIONS:
             return funtions != null && !funtions.isEmpty();
         case ConnectionPackage.SAP_CONNECTION__CURRENT_FUCNTION:
-            return CURRENT_FUCNTION_EDEFAULT == null ? currentFucntion != null
-                    : !CURRENT_FUCNTION_EDEFAULT.equals(currentFucntion);
+            return CURRENT_FUCNTION_EDEFAULT == null ? currentFucntion != null : !CURRENT_FUCNTION_EDEFAULT
+                    .equals(currentFucntion);
         case ConnectionPackage.SAP_CONNECTION__IDOCS:
             return iDocs != null && !iDocs.isEmpty();
         case ConnectionPackage.SAP_CONNECTION__JCO_VERSION:

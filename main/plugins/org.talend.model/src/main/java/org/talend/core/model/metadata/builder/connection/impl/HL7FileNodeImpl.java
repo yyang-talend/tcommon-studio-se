@@ -21,7 +21,6 @@ import org.talend.core.model.metadata.builder.connection.HL7FileNode;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
- * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.HL7FileNodeImpl#getFilePath <em>File Path</em>}</li>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.HL7FileNodeImpl#getOrder <em>Order</em>}</li>
@@ -30,6 +29,7 @@ import org.talend.core.model.metadata.builder.connection.HL7FileNode;
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.HL7FileNodeImpl#getRelatedColumn <em>Related Column</em>}</li>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.HL7FileNodeImpl#isRepeatable <em>Repeatable</em>}</li>
  * </ul>
+ * </p>
  *
  * @generated
  */
@@ -257,8 +257,8 @@ public class HL7FileNodeImpl extends EObjectImpl implements HL7FileNode {
         String oldDefaultValue = defaultValue;
         defaultValue = newDefaultValue;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ConnectionPackage.HL7_FILE_NODE__DEFAULT_VALUE, oldDefaultValue,
-                    defaultValue));
+            eNotify(new ENotificationImpl(this, Notification.SET, ConnectionPackage.HL7_FILE_NODE__DEFAULT_VALUE,
+                    oldDefaultValue, defaultValue));
     }
 
     /**

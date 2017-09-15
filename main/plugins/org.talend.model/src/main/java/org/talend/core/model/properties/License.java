@@ -15,7 +15,6 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
- * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.properties.License#getLicense <em>License</em>}</li>
  *   <li>{@link org.talend.core.model.properties.License#getCustomerName <em>Customer Name</em>}</li>
@@ -23,6 +22,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.talend.core.model.properties.License#getToken <em>Token</em>}</li>
  *   <li>{@link org.talend.core.model.properties.License#getDateTokenCheck <em>Date Token Check</em>}</li>
  * </ul>
+ * </p>
  *
  * @see org.talend.core.model.properties.PropertiesPackage#getLicense()
  * @model

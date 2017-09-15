@@ -18,7 +18,6 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
- * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.properties.Component#getId <em>Id</em>}</li>
  *   <li>{@link org.talend.core.model.properties.Component#getLabel <em>Label</em>}</li>
@@ -31,6 +30,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.talend.core.model.properties.Component#getFileDescriptor <em>File Descriptor</em>}</li>
  *   <li>{@link org.talend.core.model.properties.Component#getProjects <em>Projects</em>}</li>
  * </ul>
+ * </p>
  *
  * @see org.talend.core.model.properties.PropertiesPackage#getComponent()
  * @model

@@ -134,8 +134,6 @@ public final class InformationLevel extends AbstractEnumerator
      * Returns the '<em><b>Information Level</b></em>' literal with the specified literal value.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @param literal the literal.
-     * @return the matching enumerator or <code>null</code>.
      * @generated
      */
     public static InformationLevel get(String literal) {
@@ -152,8 +150,6 @@ public final class InformationLevel extends AbstractEnumerator
      * Returns the '<em><b>Information Level</b></em>' literal with the specified name.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @param name the name.
-     * @return the matching enumerator or <code>null</code>.
      * @generated
      */
     public static InformationLevel getByName(String name) {
@@ -170,8 +166,6 @@ public final class InformationLevel extends AbstractEnumerator
      * Returns the '<em><b>Information Level</b></em>' literal with the specified integer value.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @param value the integer value.
-     * @return the matching enumerator or <code>null</code>.
      * @generated
      */
     public static InformationLevel get(int value) {

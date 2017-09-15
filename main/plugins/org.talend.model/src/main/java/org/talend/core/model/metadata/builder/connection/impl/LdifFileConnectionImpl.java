@@ -32,7 +32,6 @@ import org.talend.core.model.metadata.builder.connection.SchemaAttribute;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
- * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.LdifFileConnectionImpl#getValue <em>Value</em>}</li>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.LdifFileConnectionImpl#getFilePath <em>File Path</em>}</li>
@@ -40,6 +39,7 @@ import org.talend.core.model.metadata.builder.connection.SchemaAttribute;
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.LdifFileConnectionImpl#isUseLimit <em>Use Limit</em>}</li>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.LdifFileConnectionImpl#getServer <em>Server</em>}</li>
  * </ul>
+ * </p>
  *
  * @generated
  */

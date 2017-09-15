@@ -13,6 +13,8 @@ import org.talend.core.model.metadata.builder.connection.PositionalFileConnectio
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Positional File Connection</b></em>'.
  * <!-- end-user-doc -->
+ * <p>
+ * </p>
  *
  * @generated
  */

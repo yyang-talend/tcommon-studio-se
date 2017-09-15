@@ -15,7 +15,6 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
- * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.properties.ExecutionPlanPartJobPrm#getId <em>Id</em>}</li>
  *   <li>{@link org.talend.core.model.properties.ExecutionPlanPartJobPrm#getExecutionPlanPart <em>Execution Plan Part</em>}</li>
@@ -24,6 +23,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.talend.core.model.properties.ExecutionPlanPartJobPrm#getCustomValue <em>Custom Value</em>}</li>
  *   <li>{@link org.talend.core.model.properties.ExecutionPlanPartJobPrm#getPartCustomValue <em>Part Custom Value</em>}</li>
  * </ul>
+ * </p>
  *
  * @see org.talend.core.model.properties.PropertiesPackage#getExecutionPlanPartJobPrm()
  * @model

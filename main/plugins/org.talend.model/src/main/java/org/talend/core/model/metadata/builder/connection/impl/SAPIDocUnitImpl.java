@@ -20,7 +20,6 @@ import org.talend.core.model.metadata.builder.connection.SAPIDocUnit;
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>SAPI Doc Unit</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
- * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.SAPIDocUnitImpl#getConnection <em>Connection</em>}</li>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.SAPIDocUnitImpl#getProgramId <em>Program Id</em>}</li>
@@ -30,6 +29,7 @@ import org.talend.core.model.metadata.builder.connection.SAPIDocUnit;
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.SAPIDocUnitImpl#isUseHtmlOutput <em>Use Html Output</em>}</li>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.SAPIDocUnitImpl#getHtmlFile <em>Html File</em>}</li>
  * </ul>
+ * </p>
  *
  * @generated
  */
@@ -301,8 +301,7 @@ public class SAPIDocUnitImpl extends AbstractMetadataObjectImpl implements SAPID
         String oldXmlFile = xmlFile;
         xmlFile = newXmlFile;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ConnectionPackage.SAPI_DOC_UNIT__XML_FILE, oldXmlFile,
-                    xmlFile));
+            eNotify(new ENotificationImpl(this, Notification.SET, ConnectionPackage.SAPI_DOC_UNIT__XML_FILE, oldXmlFile, xmlFile));
     }
 
     /**

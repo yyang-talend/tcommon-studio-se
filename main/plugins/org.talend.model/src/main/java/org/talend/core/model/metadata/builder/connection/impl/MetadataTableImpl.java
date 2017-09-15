@@ -57,7 +57,6 @@ import orgomg.cwmx.resource.express.SimpleDimension;
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Metadata Table</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
- * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.MetadataTableImpl#getOwnedElement <em>Owned Element</em>}</li>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.MetadataTableImpl#isIsAbstract <em>Is Abstract</em>}</li>
@@ -84,6 +83,7 @@ import orgomg.cwmx.resource.express.SimpleDimension;
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.MetadataTableImpl#getConnection <em>Connection</em>}</li>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.MetadataTableImpl#getAdditionalProperties <em>Additional Properties</em>}</li>
  * </ul>
+ * </p>
  *
  * @generated
  */

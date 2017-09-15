@@ -14,7 +14,6 @@ package org.talend.core.model.properties;
  *
  * <p>
  * The following features are supported:
- * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.properties.CronUITalendTrigger#getListDaysOfWeek <em>List Days Of Week</em>}</li>
  *   <li>{@link org.talend.core.model.properties.CronUITalendTrigger#getListDaysOfMonth <em>List Days Of Month</em>}</li>
@@ -23,6 +22,7 @@ package org.talend.core.model.properties;
  *   <li>{@link org.talend.core.model.properties.CronUITalendTrigger#getListHours <em>List Hours</em>}</li>
  *   <li>{@link org.talend.core.model.properties.CronUITalendTrigger#getListMinutes <em>List Minutes</em>}</li>
  * </ul>
+ * </p>
  *
  * @see org.talend.core.model.properties.PropertiesPackage#getCronUITalendTrigger()
  * @model

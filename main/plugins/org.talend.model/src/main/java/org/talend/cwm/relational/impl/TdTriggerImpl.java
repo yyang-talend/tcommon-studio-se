@@ -16,6 +16,8 @@ import orgomg.cwm.resource.relational.impl.TriggerImpl;
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Td Trigger</b></em>'.
  * <!-- end-user-doc -->
+ * <p>
+ * </p>
  *
  * @generated
  */

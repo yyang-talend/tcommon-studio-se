@@ -21,7 +21,6 @@ import org.talend.core.model.metadata.builder.connection.XMLFileNode;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
- * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.XMLFileNodeImpl#getXMLPath <em>XML Path</em>}</li>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.XMLFileNodeImpl#getRelatedColumn <em>Related Column</em>}</li>
@@ -30,6 +29,7 @@ import org.talend.core.model.metadata.builder.connection.XMLFileNode;
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.XMLFileNodeImpl#getOrder <em>Order</em>}</li>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.XMLFileNodeImpl#getType <em>Type</em>}</li>
  * </ul>
+ * </p>
  *
  * @generated
  */
@@ -192,8 +192,7 @@ public class XMLFileNodeImpl extends EObjectImpl implements XMLFileNode {
         String oldXMLPath = xmlPath;
         xmlPath = newXMLPath;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ConnectionPackage.XML_FILE_NODE__XML_PATH, oldXMLPath,
-                    xmlPath));
+            eNotify(new ENotificationImpl(this, Notification.SET, ConnectionPackage.XML_FILE_NODE__XML_PATH, oldXMLPath, xmlPath));
     }
 
     /**
@@ -236,8 +235,8 @@ public class XMLFileNodeImpl extends EObjectImpl implements XMLFileNode {
         String oldDefaultValue = defaultValue;
         defaultValue = newDefaultValue;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ConnectionPackage.XML_FILE_NODE__DEFAULT_VALUE, oldDefaultValue,
-                    defaultValue));
+            eNotify(new ENotificationImpl(this, Notification.SET, ConnectionPackage.XML_FILE_NODE__DEFAULT_VALUE,
+                    oldDefaultValue, defaultValue));
     }
 
     /**

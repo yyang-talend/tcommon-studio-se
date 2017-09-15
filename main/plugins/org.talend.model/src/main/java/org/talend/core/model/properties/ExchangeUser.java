@@ -16,12 +16,12 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
- * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.properties.ExchangeUser#getUsername <em>Username</em>}</li>
  *   <li>{@link org.talend.core.model.properties.ExchangeUser#getLogin <em>Login</em>}</li>
  *   <li>{@link org.talend.core.model.properties.ExchangeUser#getPassword <em>Password</em>}</li>
  * </ul>
+ * </p>
  *
  * @see org.talend.core.model.properties.PropertiesPackage#getExchangeUser()
  * @model

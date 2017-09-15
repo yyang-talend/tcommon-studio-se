@@ -22,10 +22,10 @@ import org.talend.cwm.relational.impl.TdTableImpl;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
- * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.SubscriberTableImpl#isSystem <em>System</em>}</li>
  * </ul>
+ * </p>
  *
  * @generated
  */

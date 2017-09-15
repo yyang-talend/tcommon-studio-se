@@ -117,8 +117,6 @@ public final class FolderType extends AbstractEnumerator
      * Returns the '<em><b>Folder Type</b></em>' literal with the specified literal value.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @param literal the literal.
-     * @return the matching enumerator or <code>null</code>.
      * @generated
      */
     public static FolderType get(String literal) {
@@ -135,8 +133,6 @@ public final class FolderType extends AbstractEnumerator
      * Returns the '<em><b>Folder Type</b></em>' literal with the specified name.
      * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-     * @param name the name.
-     * @return the matching enumerator or <code>null</code>.
      * @generated
      */
     public static FolderType getByName(String name) {
@@ -153,8 +149,6 @@ public final class FolderType extends AbstractEnumerator
      * Returns the '<em><b>Folder Type</b></em>' literal with the specified integer value.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @param value the integer value.
-     * @return the matching enumerator or <code>null</code>.
      * @generated
      */
     public static FolderType get(int value) {

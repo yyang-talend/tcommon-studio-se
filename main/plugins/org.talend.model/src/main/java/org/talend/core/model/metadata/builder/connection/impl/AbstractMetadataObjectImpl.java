@@ -20,7 +20,6 @@ import orgomg.cwm.objectmodel.core.impl.ModelElementImpl;
  * end-user-doc -->
  * <p>
  * The following features are implemented:
- * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.AbstractMetadataObjectImpl#getProperties <em>Properties</em>}</li>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.AbstractMetadataObjectImpl#getId <em>Id</em>}</li>
@@ -30,6 +29,7 @@ import orgomg.cwm.objectmodel.core.impl.ModelElementImpl;
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.AbstractMetadataObjectImpl#isSynchronised <em>Synchronised</em>}</li>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.AbstractMetadataObjectImpl#isDivergency <em>Divergency</em>}</li>
  * </ul>
+ * </p>
  *
  * @generated
  */
@@ -43,8 +43,8 @@ public abstract class AbstractMetadataObjectImpl extends ModelElementImpl implem
      * @generated
      * @ordered
      */
-    protected static final HashMap PROPERTIES_EDEFAULT = (HashMap) ConnectionFactory.eINSTANCE
-            .createFromString(ConnectionPackage.eINSTANCE.getMap(), ""); //$NON-NLS-1$
+    protected static final HashMap PROPERTIES_EDEFAULT = (HashMap) ConnectionFactory.eINSTANCE.createFromString(
+            ConnectionPackage.eINSTANCE.getMap(), ""); //$NON-NLS-1$
 
     /**
      * The cached value of the '{@link #getProperties() <em>Properties</em>}' attribute. <!-- begin-user-doc --> <!--
@@ -235,8 +235,8 @@ public abstract class AbstractMetadataObjectImpl extends ModelElementImpl implem
         String oldComment = comment;
         comment = newComment;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ConnectionPackage.ABSTRACT_METADATA_OBJECT__COMMENT, oldComment,
-                    comment));
+            eNotify(new ENotificationImpl(this, Notification.SET, ConnectionPackage.ABSTRACT_METADATA_OBJECT__COMMENT,
+                    oldComment, comment));
     }
 
     /**

@@ -15,12 +15,12 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
- * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.properties.ItemRelation#getId <em>Id</em>}</li>
  *   <li>{@link org.talend.core.model.properties.ItemRelation#getVersion <em>Version</em>}</li>
  *   <li>{@link org.talend.core.model.properties.ItemRelation#getType <em>Type</em>}</li>
  * </ul>
+ * </p>
  *
  * @see org.talend.core.model.properties.PropertiesPackage#getItemRelation()
  * @model

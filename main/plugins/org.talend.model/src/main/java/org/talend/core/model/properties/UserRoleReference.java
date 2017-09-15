@@ -17,11 +17,11 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
- * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.properties.UserRoleReference#getUser <em>User</em>}</li>
  *   <li>{@link org.talend.core.model.properties.UserRoleReference#getRole <em>Role</em>}</li>
  * </ul>
+ * </p>
  *
  * @see org.talend.core.model.properties.PropertiesPackage#getUserRoleReference()
  * @model

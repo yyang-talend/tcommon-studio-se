@@ -14,7 +14,6 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
- * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.properties.ItemState#getPath <em>Path</em>}</li>
  *   <li>{@link org.talend.core.model.properties.ItemState#isDeleted <em>Deleted</em>}</li>
@@ -23,6 +22,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.talend.core.model.properties.ItemState#getLockDate <em>Lock Date</em>}</li>
  *   <li>{@link org.talend.core.model.properties.ItemState#getCommitDate <em>Commit Date</em>}</li>
  * </ul>
+ * </p>
  *
  * @see org.talend.core.model.properties.PropertiesPackage#getItemState()
  * @model

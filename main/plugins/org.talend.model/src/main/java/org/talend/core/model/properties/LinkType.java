@@ -15,11 +15,11 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
- * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.properties.LinkType#getURI <em>URI</em>}</li>
  *   <li>{@link org.talend.core.model.properties.LinkType#isState <em>State</em>}</li>
  * </ul>
+ * </p>
  *
  * @see org.talend.core.model.properties.PropertiesPackage#getLinkType()
  * @model

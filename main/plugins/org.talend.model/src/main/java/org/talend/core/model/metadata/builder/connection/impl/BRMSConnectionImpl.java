@@ -29,7 +29,6 @@ import org.talend.core.model.metadata.builder.connection.XMLFileNode;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
- * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.BRMSConnectionImpl#getXmlField <em>Xml Field</em>}</li>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.BRMSConnectionImpl#getUrlName <em>Url Name</em>}</li>
@@ -41,6 +40,7 @@ import org.talend.core.model.metadata.builder.connection.XMLFileNode;
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.BRMSConnectionImpl#getLoop <em>Loop</em>}</li>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.BRMSConnectionImpl#getPackage <em>Package</em>}</li>
  * </ul>
+ * </p>
  *
  * @generated
  */

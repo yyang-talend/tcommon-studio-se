@@ -16,7 +16,6 @@ import org.talend.core.model.metadata.builder.connection.WSDLParameter;
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>WSDL Parameter</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
- * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.WSDLParameterImpl#getElement <em>Element</em>}</li>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.WSDLParameterImpl#getSource <em>Source</em>}</li>
@@ -25,6 +24,7 @@ import org.talend.core.model.metadata.builder.connection.WSDLParameter;
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.WSDLParameterImpl#getParameterInfo <em>Parameter Info</em>}</li>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.WSDLParameterImpl#getParameterInfoParent <em>Parameter Info Parent</em>}</li>
  * </ul>
+ * </p>
  *
  * @generated
  */
@@ -183,8 +183,7 @@ public class WSDLParameterImpl extends EObjectImpl implements WSDLParameter {
         String oldElement = element;
         element = newElement;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ConnectionPackage.WSDL_PARAMETER__ELEMENT, oldElement,
-                    element));
+            eNotify(new ENotificationImpl(this, Notification.SET, ConnectionPackage.WSDL_PARAMETER__ELEMENT, oldElement, element));
     }
 
     /**
@@ -388,8 +387,8 @@ public class WSDLParameterImpl extends EObjectImpl implements WSDLParameter {
         case ConnectionPackage.WSDL_PARAMETER__PARAMETER_INFO:
             return PARAMETER_INFO_EDEFAULT == null ? parameterInfo != null : !PARAMETER_INFO_EDEFAULT.equals(parameterInfo);
         case ConnectionPackage.WSDL_PARAMETER__PARAMETER_INFO_PARENT:
-            return PARAMETER_INFO_PARENT_EDEFAULT == null ? parameterInfoParent != null
-                    : !PARAMETER_INFO_PARENT_EDEFAULT.equals(parameterInfoParent);
+            return PARAMETER_INFO_PARENT_EDEFAULT == null ? parameterInfoParent != null : !PARAMETER_INFO_PARENT_EDEFAULT
+                    .equals(parameterInfoParent);
         }
         return super.eIsSet(featureID);
     }

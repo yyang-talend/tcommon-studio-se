@@ -15,13 +15,13 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
- * </p>
  * <ul>
  *   <li>{@link org.talend.core.model.properties.ExecutionTaskProperties#getId <em>Id</em>}</li>
  *   <li>{@link org.talend.core.model.properties.ExecutionTaskProperties#getName <em>Name</em>}</li>
  *   <li>{@link org.talend.core.model.properties.ExecutionTaskProperties#getValue <em>Value</em>}</li>
  *   <li>{@link org.talend.core.model.properties.ExecutionTaskProperties#getExecutionTask <em>Execution Task</em>}</li>
  * </ul>
+ * </p>
  *
  * @see org.talend.core.model.properties.PropertiesPackage#getExecutionTaskProperties()
  * @model
