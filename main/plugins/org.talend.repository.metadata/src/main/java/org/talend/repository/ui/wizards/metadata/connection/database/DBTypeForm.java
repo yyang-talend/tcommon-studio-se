@@ -245,8 +245,9 @@ public class DBTypeForm {
             if(dbService == null){
                 return;
             }
-            connection = ConnectionFactory.eINSTANCE.createConnection();//dbService.createGenericConnection();
-            connectionItem = PropertiesFactory.eINSTANCE.createConnectionItem();//dbService.createGenericConnectionItem();//
+            connection = ConnectionFactory.eINSTANCE.createConnection();
+            connectionItem = PropertiesFactory.eINSTANCE.createConnectionItem();
+            connection.setGeneric(true);
         }else{
             connection = ConnectionFactory.eINSTANCE.createDatabaseConnection(); 
             connectionItem = PropertiesFactory.eINSTANCE.createDatabaseConnectionItem();

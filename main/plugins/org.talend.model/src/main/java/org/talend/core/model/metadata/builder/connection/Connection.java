@@ -24,6 +24,7 @@ import orgomg.cwm.foundation.softwaredeployment.DataProvider;
  *   <li>{@link org.talend.core.model.metadata.builder.connection.Connection#getContextId <em>Context Id</em>}</li>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.Connection#getContextName <em>Context Name</em>}</li>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.Connection#getCompProperties <em>Comp Properties</em>}</li>
+ *   <li>{@link org.talend.core.model.metadata.builder.connection.Connection#isGeneric <em>Generic</em>}</li>
  * </ul>
  *
  * @see org.talend.core.model.metadata.builder.connection.ConnectionPackage#getConnection()
@@ -188,6 +189,31 @@ public interface Connection extends AbstractMetadataObject, DataProvider {
      * @generated
      */
     void setCompProperties(String value);
+
+    /**
+     * Returns the value of the '<em><b>Generic</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * <!-- begin-model-doc -->
+     * whether this connection is defined using a context or is standalone
+     * <!-- end-model-doc -->
+     * @return the value of the '<em>Generic</em>' attribute.
+     * @see #setGeneric(boolean)
+     * @see org.talend.core.model.metadata.builder.connection.ConnectionPackage#getConnection_Generic()
+     * @model
+     * @generated
+     */
+    boolean isGeneric();
+
+    /**
+     * Sets the value of the '{@link org.talend.core.model.metadata.builder.connection.Connection#isGeneric <em>Generic</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Generic</em>' attribute.
+     * @see #isGeneric()
+     * @generated
+     */
+    void setGeneric(boolean value);
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->

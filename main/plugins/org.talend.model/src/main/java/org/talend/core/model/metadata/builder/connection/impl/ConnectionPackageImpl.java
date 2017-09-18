@@ -754,6 +754,15 @@ public class ConnectionPackageImpl extends EPackageImpl implements ConnectionPac
     }
 
     /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getConnection_Generic() {
+        return (EAttribute) connectionEClass.getEStructuralFeatures().get(6);
+    }
+
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
@@ -4379,6 +4388,7 @@ public class ConnectionPackageImpl extends EPackageImpl implements ConnectionPac
         createEAttribute(connectionEClass, CONNECTION__CONTEXT_ID);
         createEAttribute(connectionEClass, CONNECTION__CONTEXT_NAME);
         createEAttribute(connectionEClass, CONNECTION__COMP_PROPERTIES);
+        createEAttribute(connectionEClass, CONNECTION__GENERIC);
 
         metadataColumnEClass = createEClass(METADATA_COLUMN);
         createEAttribute(metadataColumnEClass, METADATA_COLUMN__SOURCE_TYPE);
@@ -4996,6 +5006,8 @@ public class ConnectionPackageImpl extends EPackageImpl implements ConnectionPac
         initEAttribute(getConnection_ContextName(), ecorePackage.getEString(), "contextName", null, 0, 1, Connection.class,
                 !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getConnection_CompProperties(), ecorePackage.getEString(), "compProperties", null, 0, 1, Connection.class,
+                !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getConnection_Generic(), ecorePackage.getEBoolean(), "generic", null, 0, 1, Connection.class,
                 !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         addEOperation(connectionEClass, theCorePackage.getString(), "getConnectionTypeName", 0, 1, IS_UNIQUE, IS_ORDERED);
@@ -6263,6 +6275,8 @@ public class ConnectionPackageImpl extends EPackageImpl implements ConnectionPac
                 new String[] { "documentation", "whether this connection is defined using a context or is standalone" });
         addAnnotation(getConnection_ContextId(), source, new String[] { "documentation",
                 "Id of the context this connection is linked to, only used when ContextMode attribute is true" });
+        addAnnotation(getConnection_Generic(), source,
+                new String[] { "documentation", "whether this connection is defined using a context or is standalone" });
         addAnnotation(metadataColumnEClass, source, new String[] { "documentation",
                 "represents a metada column which contains source (such as DB) definitions as weel as Talend mappings" });
         addAnnotation(getMetadataColumn_SourceType(), source, new String[] { "documentation",
