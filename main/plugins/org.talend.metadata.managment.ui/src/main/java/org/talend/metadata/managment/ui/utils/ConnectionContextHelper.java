@@ -492,7 +492,7 @@ public final class ConnectionContextHelper {
         createParameters(varList, paramName, value, null);
     }
 
-    public static void createParameters(List<IContextParameter> varList, String paramName, String value, JavaType type) {
+    public static void createParameters(List<IContextParameter> varList, String paramName, Object value, JavaType type) {
         if (varList == null || paramName == null) {
             return;
         }
@@ -534,8 +534,11 @@ public final class ConnectionContextHelper {
         }
 
         contextParam.setPrompt(paramName + "?"); //$NON-NLS-1$
-        if (value != null) {
-            contextParam.setValue(value);
+        if (value != null && value instanceof String) {
+            contextParam.setValue((String)value);
+        }else if(value != null && value instanceof List){
+            String [] strvalue = (String[]) ((List)value).toArray(new String[0]);
+            contextParam.setValueList(strvalue);
         }
         contextParam.setComment(EMPTY);
         varList.add(contextParam);
