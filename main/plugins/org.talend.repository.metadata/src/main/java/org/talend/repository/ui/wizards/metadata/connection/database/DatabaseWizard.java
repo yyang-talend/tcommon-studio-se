@@ -435,6 +435,7 @@ public class DatabaseWizard extends CheckLastVersionRepositoryWizard implements 
                 }
                 try {
                     dbService.dbWizardPerformFinish(connectionItem, databaseWizardPage.getForm(), isCreation(), pathToSave, new ArrayList<IMetadataTable>());
+                    closeLockStrategy();
                 } catch (CoreException e) {
                     new ErrorDialogWidthDetailArea(getShell(), PID, Messages.getString("CommonWizard.persistenceException"), //$NON-NLS-1$
                             e.toString());
