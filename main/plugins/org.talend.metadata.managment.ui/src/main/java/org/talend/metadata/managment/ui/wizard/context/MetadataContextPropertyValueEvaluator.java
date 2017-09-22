@@ -40,7 +40,7 @@ public class MetadataContextPropertyValueEvaluator extends AbstractPropertyValue
         if (storedValue == null) {
             return storedValue;
         }
-        if (storedValue instanceof Schema || storedValue instanceof List || storedValue instanceof Enum
+        if (storedValue instanceof Schema || storedValue instanceof Enum
                 || storedValue instanceof Boolean) {
             return storedValue;
         }
@@ -51,7 +51,12 @@ public class MetadataContextPropertyValueEvaluator extends AbstractPropertyValue
         if (connection != null && connection.isContextMode() && isPropertySupportContext) {
             ContextType contextType = ConnectionContextHelper.getContextTypeForContextMode(connection,
                     connection.getContextName(), false);
-            storedValue = ContextParameterUtils.getOriginalValue(contextType, String.valueOf(storedValue));
+            if(storedValue instanceof List){
+                storedValue = ContextParameterUtils.getOriginalList(contextType, String.valueOf(storedValue));
+            }else{
+                storedValue = ContextParameterUtils.getOriginalValue(contextType, String.valueOf(storedValue));
+            }
+            
         }
         return getTypedValue(property, storedValue);
     }

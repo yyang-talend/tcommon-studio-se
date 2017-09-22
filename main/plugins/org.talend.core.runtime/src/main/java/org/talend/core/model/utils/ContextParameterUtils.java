@@ -13,6 +13,8 @@
 package org.talend.core.model.utils;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -32,6 +34,7 @@ import org.talend.core.model.context.UpdateContextVariablesHelper;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.types.ContextParameterJavaTypeManager;
 import org.talend.core.model.metadata.types.JavaType;
+import org.talend.core.model.metadata.types.JavaTypesManager;
 import org.talend.core.model.process.IContext;
 import org.talend.core.model.process.IContextManager;
 import org.talend.core.model.process.IContextParameter;
@@ -61,6 +64,8 @@ public final class ContextParameterUtils {
     private static final String LINE = "_"; //$NON-NLS-1$
 
     private static final String EMPTY = ""; //$NON-NLS-1$
+    
+    private static final List<String> EMPTY_LIST = new ArrayList<String>(); 
 
     private static final String NON_CONTEXT_PATTERN = "[^a-zA-Z0-9_]"; //$NON-NLS-1$
 
@@ -402,6 +407,7 @@ public final class ContextParameterUtils {
                 }
                 if (param != null) {
                     String value2 = param.getRawValue();
+                    
                     if (value2 != null) {
                         // return TalendTextUtils.removeQuotes(value2); //some value can't be removed for quote
                         return value2;
@@ -411,6 +417,36 @@ public final class ContextParameterUtils {
             }
         }
         return value;
+    }
+    
+    public static List<String> getOriginalList(ContextType contextType, final String value) {
+        if (value == null) {
+            return EMPTY_LIST;
+        }
+        if (contextType != null && ContextParameterUtils.isContainContextParam(value)) {
+            String var = ContextParameterUtils.getVariableFromCode(value);
+            if (var != null) {
+                ContextParameterType param = null;
+                for (ContextParameterType paramType : (List<ContextParameterType>) contextType.getContextParameter()) {
+                    if (paramType.getName().equals(var)) {
+                        param = paramType;
+                        break;
+                    }
+                }
+                if (param != null) {
+                    String value2 = param.getRawValue();
+                    
+                    if (value2 != null) {
+                        if(JavaTypesManager.VALUE_LIST.getId().equals(param.getType())){
+                            List<String> values = Arrays.asList(value2.split(","));
+                            return values;
+                        }
+                    }
+                }
+                return EMPTY_LIST;
+            }
+        }
+        return EMPTY_LIST;
     }
 
     /**
