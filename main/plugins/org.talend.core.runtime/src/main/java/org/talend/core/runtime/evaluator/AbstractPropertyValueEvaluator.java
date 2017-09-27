@@ -46,6 +46,15 @@ public abstract class AbstractPropertyValueEvaluator implements PropertyValueEva
                 return 0;
             }
         }
+        
+        if (GenericTypeUtils.isListStringType(property) && rawValue != null) {
+            return rawValue;
+        }
+        
+        if (GenericTypeUtils.isListType(property) && rawValue != null) {
+            return rawValue;
+        }
+        
         if (GenericTypeUtils.isEnumType(property)) {
             List<?> possibleValues = property.getPossibleValues();
             if (possibleValues != null) {
@@ -64,9 +73,7 @@ public abstract class AbstractPropertyValueEvaluator implements PropertyValueEva
                 }
             }
         }
-        if (GenericTypeUtils.isListStringType(property) && rawValue != null) {
-            return rawValue;
-        }
+        
         if (GenericTypeUtils.isStringType(property)) {
             return TalendQuoteUtils.removeQuotes(StringEscapeUtils.unescapeJava(stringValue));
         }
