@@ -56,7 +56,6 @@ import orgomg.cwm.objectmodel.core.Namespace;
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.ConnectionImpl#getContextId <em>Context Id</em>}</li>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.ConnectionImpl#getContextName <em>Context Name</em>}</li>
  *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.ConnectionImpl#getCompProperties <em>Comp Properties</em>}</li>
- *   <li>{@link org.talend.core.model.metadata.builder.connection.impl.ConnectionImpl#isGeneric <em>Generic</em>}</li>
  * </ul>
  *
  * @generated
@@ -290,26 +289,6 @@ public class ConnectionImpl extends AbstractMetadataObjectImpl implements Connec
      * @ordered
      */
     protected String compProperties = COMP_PROPERTIES_EDEFAULT;
-
-    /**
-     * The default value of the '{@link #isGeneric() <em>Generic</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see #isGeneric()
-     * @generated
-     * @ordered
-     */
-    protected static final boolean GENERIC_EDEFAULT = false;
-
-    /**
-     * The cached value of the '{@link #isGeneric() <em>Generic</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see #isGeneric()
-     * @generated
-     * @ordered
-     */
-    protected boolean generic = GENERIC_EDEFAULT;
 
     protected boolean readOnly = false;
 
@@ -743,27 +722,6 @@ public class ConnectionImpl extends AbstractMetadataObjectImpl implements Connec
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public boolean isGeneric() {
-        return generic;
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public void setGeneric(boolean newGeneric) {
-        boolean oldGeneric = generic;
-        generic = newGeneric;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, ConnectionPackage.CONNECTION__GENERIC, oldGeneric, generic));
-    }
-
-    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * 
      * @generated NOT
@@ -902,8 +860,6 @@ public class ConnectionImpl extends AbstractMetadataObjectImpl implements Connec
             return getContextName();
         case ConnectionPackage.CONNECTION__COMP_PROPERTIES:
             return getCompProperties();
-        case ConnectionPackage.CONNECTION__GENERIC:
-            return isGeneric();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -974,9 +930,6 @@ public class ConnectionImpl extends AbstractMetadataObjectImpl implements Connec
         case ConnectionPackage.CONNECTION__COMP_PROPERTIES:
             setCompProperties((String) newValue);
             return;
-        case ConnectionPackage.CONNECTION__GENERIC:
-            setGeneric((Boolean) newValue);
-            return;
         }
         super.eSet(featureID, newValue);
     }
@@ -1039,9 +992,6 @@ public class ConnectionImpl extends AbstractMetadataObjectImpl implements Connec
         case ConnectionPackage.CONNECTION__COMP_PROPERTIES:
             setCompProperties(COMP_PROPERTIES_EDEFAULT);
             return;
-        case ConnectionPackage.CONNECTION__GENERIC:
-            setGeneric(GENERIC_EDEFAULT);
-            return;
         }
         super.eUnset(featureID);
     }
@@ -1087,8 +1037,6 @@ public class ConnectionImpl extends AbstractMetadataObjectImpl implements Connec
             return CONTEXT_NAME_EDEFAULT == null ? contextName != null : !CONTEXT_NAME_EDEFAULT.equals(contextName);
         case ConnectionPackage.CONNECTION__COMP_PROPERTIES:
             return COMP_PROPERTIES_EDEFAULT == null ? compProperties != null : !COMP_PROPERTIES_EDEFAULT.equals(compProperties);
-        case ConnectionPackage.CONNECTION__GENERIC:
-            return generic != GENERIC_EDEFAULT;
         }
         return super.eIsSet(featureID);
     }
@@ -1239,8 +1187,6 @@ public class ConnectionImpl extends AbstractMetadataObjectImpl implements Connec
         result.append(contextName);
         result.append(", compProperties: ");
         result.append(compProperties);
-        result.append(", generic: ");
-        result.append(generic);
         result.append(')');
         return result.toString();
     }
