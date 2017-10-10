@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2016 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2017 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -20,11 +20,13 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.swt.widgets.Composite;
 import org.talend.core.IService;
 import org.talend.core.model.metadata.IMetadataTable;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.process.EComponentCategory;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.ui.check.IChecker;
+import org.talend.daikon.properties.Properties;
 import org.talend.daikon.properties.presentation.Form;
 
 /**
@@ -44,5 +46,7 @@ public interface IGenericDBService extends IService{
     public void resetConnectionItem(Composite composite, ConnectionItem connectionItem);
     
     public List<ERepositoryObjectType> getExtraTypes();
+    
+    public void convertPropertiesToDBElements(Properties props,Connection connection);
     
 }

@@ -194,10 +194,7 @@ public class CreateTableAction extends AbstractCreateTableAction {
                     return;
                 }
 
-                ERepositoryObjectType nodeType = node.getObjectType();
-                if(nodeType == null){
-                    nodeType = (ERepositoryObjectType) node.getProperties(EProperties.CONTENT_TYPE);
-                }
+                ERepositoryObjectType nodeType = (ERepositoryObjectType) node.getProperties(EProperties.CONTENT_TYPE);
                 if (ERepositoryObjectType.METADATA_CON_TABLE.equals(nodeType)
                         || ERepositoryObjectType.METADATA_CON_COLUMN.equals(nodeType)) {
                     setText(EDIT_LABEL);

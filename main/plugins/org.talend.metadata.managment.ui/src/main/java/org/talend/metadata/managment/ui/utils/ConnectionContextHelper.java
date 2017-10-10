@@ -282,7 +282,9 @@ public final class ConnectionContextHelper {
         Connection conn = connectionItem.getConnection();
 
         List<IContextParameter> varList = null;
-        if (conn instanceof DatabaseConnection) {
+        if(conn.getCompProperties() != null){
+            varList = ExtendedNodeConnectionContextUtils.getContextVariables(label, conn, paramSet);
+        }else if (conn instanceof DatabaseConnection) {
             varList = DBConnectionContextUtils.getDBVariables(label, (DatabaseConnection) conn, paramSet);
         } else if (conn instanceof FileConnection) {
             varList = FileConnectionContextUtils.getFileVariables(label, (FileConnection) conn, paramSet);
@@ -410,8 +412,9 @@ public final class ConnectionContextHelper {
         }
 
         Connection conn = connectionItem.getConnection();
-
-        if (conn instanceof DatabaseConnection) {
+        if(conn.getCompProperties() != null){
+            ExtendedNodeConnectionContextUtils.setConnectionPropertiesForContextMode(defaultContextName, conn, paramSet);
+        }else if (conn instanceof DatabaseConnection) {
             DBConnectionContextUtils.setPropertiesForContextMode(defaultContextName, (DatabaseConnection) conn, contextItem,
                     paramSet, map);
             // DBConnectionContextUtils.updateConnectionParam((DatabaseConnection) conn, map);
@@ -456,8 +459,9 @@ public final class ConnectionContextHelper {
             selItem = modelMap.keySet().iterator().next();
         }
         Connection conn = connectionItem.getConnection();
-
-        if (conn instanceof DatabaseConnection) {
+        if(conn.getCompProperties() != null){
+            ExtendedNodeConnectionContextUtils.setConnectionPropertiesForExistContextMode(conn, paramSet, modelMap);
+        }else if (conn instanceof DatabaseConnection) {
             DBConnectionContextUtils.setPropertiesForExistContextMode((DatabaseConnection) conn, paramSet, modelMap);
         } else if (conn instanceof FileConnection) {
             FileConnectionContextUtils.setPropertiesForExistContextMode((FileConnection) conn, paramSet, modelMap);
@@ -1965,7 +1969,9 @@ public final class ConnectionContextHelper {
             return;
         }
         Connection conn = connItem.getConnection();
-        if (conn instanceof DatabaseConnection) {
+        if(conn.getCompProperties() != null){
+            ExtendedNodeConnectionContextUtils.revertPropertiesForContextMode(conn, contextType);
+        }else if (conn instanceof DatabaseConnection) {
             DBConnectionContextUtils.revertPropertiesForContextMode((DatabaseConnection) conn, contextType);
         } else if (conn instanceof FileConnection) {
             FileConnectionContextUtils.revertPropertiesForContextMode((FileConnection) conn, contextType);

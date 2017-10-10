@@ -190,6 +190,31 @@ public final class ContextParameterUtils {
 
         }
     }
+    
+    public static List parseScriptContextCodeList(Object storedValue, IContext context) {
+        if (storedValue == null) {
+            return EMPTY_LIST;
+        }
+        if(!(storedValue instanceof List)){
+            return EMPTY_LIST;
+        }
+        String code = String.valueOf(storedValue);
+        if (!isContainContextParam(code)) {
+            return (List)storedValue;
+        } else {
+            String paraName = ContextParameterUtils.getVariableFromCode(code);
+            IContextParameter param = context.getContextParameter(paraName);
+            if (param != null) {
+                List value = Arrays.asList(param.getValueList());
+                if (value == null || code.equals(String.valueOf(value))) {
+                    return EMPTY_LIST;
+                }
+                return parseScriptContextCodeList(value, context);// Multi-layer
+            }
+
+        }
+        return EMPTY_LIST;
+    }
 
     private static String getContextString(String code) {
         if (code != null) {

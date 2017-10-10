@@ -111,7 +111,7 @@ public class RepositoryToComponentProperty {
         if (connection instanceof XmlFileConnection) {
             return getXmlFileValue((XmlFileConnection) connection, value);
         }
-        if (connection instanceof DatabaseConnection) {
+        if (connection.getCompProperties() == null && (connection instanceof DatabaseConnection)) {
             return getDatabaseValue((DatabaseConnection) connection, value, table, targetComponent);
         }
 

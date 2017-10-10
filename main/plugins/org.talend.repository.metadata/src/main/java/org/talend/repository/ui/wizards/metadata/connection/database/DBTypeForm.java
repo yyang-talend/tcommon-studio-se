@@ -245,9 +245,8 @@ public class DBTypeForm {
             if(dbService == null){
                 return;
             }
-            connection = ConnectionFactory.eINSTANCE.createConnection();
-            connectionItem = PropertiesFactory.eINSTANCE.createConnectionItem();
-            connection.setGeneric(true);
+            connection = ConnectionFactory.eINSTANCE.createDatabaseConnection();
+            connectionItem = PropertiesFactory.eINSTANCE.createDatabaseConnectionItem();
         }else{
             connection = ConnectionFactory.eINSTANCE.createDatabaseConnection(); 
             connectionItem = PropertiesFactory.eINSTANCE.createDatabaseConnectionItem();
@@ -275,18 +274,13 @@ public class DBTypeForm {
     }
     
     private String getConnectionDBType(){
-        if(wizardPage.isTCOMDB(dbType) || wizardPage.isTCOMDB(connectionItem.getTypeName())){
-            return connectionItem.getTypeName();
-        }
         return ((DatabaseConnection)connectionItem.getConnection()).getDatabaseType();
     }
 
     
     private void setConnectionDBType(String type){
-        if(wizardPage.isTCOMDB(type)){
+        if(connectionItem.getConnection() instanceof DatabaseConnection){
             connectionItem.setTypeName(type);
-            return;
-        }else if(connectionItem.getConnection() instanceof DatabaseConnection){
             ((DatabaseConnection)connectionItem.getConnection()).setDatabaseType(type);
         }
     }
