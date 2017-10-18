@@ -56,7 +56,6 @@ public class RecycleBinViewerFilter extends ViewerFilter {
             if (isUnderRecycleBinNode(node)) { // olny process the nodes are under Recycle Bin.
                 ERepositoryObjectType contextType = findRealContextType(node);
                 if (contextType != null) { // don't check the SubItems, like schema, query, etc.
-                    contextType = ERepositoryObjectType.METADATA_CONNECTIONS;
                     IRepositoryNode contextNode = node.getRoot().getRootRepositoryNode(contextType);
                     Set contentExtensions = navigatorContentService.findContentExtensionsByTriggerPoint(contextNode);
                     if (contentExtensions.isEmpty()) { // deactive or invisible
