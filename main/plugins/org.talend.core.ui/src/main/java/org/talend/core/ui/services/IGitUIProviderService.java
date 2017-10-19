@@ -19,6 +19,6 @@ public interface IGitUIProviderService extends IService {
     IDynamicProperty createProcessGitHistoryComposite(Composite parent, Object view, TabbedPropertySheetWidgetFactory factory,
             IRepositoryViewObject obj);
 
-    public String[] changeCredentials(Shell parent, Serializable uriIsh, boolean canStoreCredentials);
+    public String[] changeCredentials(Shell parent, Serializable uriIsh, String initUser, boolean canStoreCredentials);
 
 }
