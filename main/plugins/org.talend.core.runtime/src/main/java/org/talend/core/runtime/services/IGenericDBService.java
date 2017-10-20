@@ -22,6 +22,7 @@ import org.talend.core.IService;
 import org.talend.core.model.metadata.IMetadataTable;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.process.EComponentCategory;
+import org.talend.core.model.process.IElementParameter;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
@@ -48,5 +49,7 @@ public interface IGenericDBService extends IService{
     public List<ERepositoryObjectType> getExtraTypes();
     
     public void convertPropertiesToDBElements(Properties props,Connection connection);
+    
+    public String getMVNPath(IElementParameter tableParam, String value);
     
 }
