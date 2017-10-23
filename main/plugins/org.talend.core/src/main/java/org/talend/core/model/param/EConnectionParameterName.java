@@ -36,6 +36,7 @@ public enum EConnectionParameterName {
     HTTPS("https"), //$NON-NLS-1$
     DBPATH("DBPATH"),//$NON-NLS-1$
     
+    GENERIC_TABLENAME("tableSelection.tablename"),//$NON-NLS-1$
     GENERIC_USERNAME("connection.userPassword.userId"),//$NON-NLS-1$
     GENERIC_PASSWORD("connection.userPassword.password"),//$NON-NLS-1$
     GENERIC_URL("connection.jdbcUrl"),//$NON-NLS-1$
