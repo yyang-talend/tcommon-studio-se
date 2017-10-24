@@ -67,6 +67,8 @@ public class DBTypeForm {
     
     private String dbType;
     
+    private ConnectionItem oriConnItem;
+    
     public DBTypeForm(DatabaseWizardPage wizardPage, Composite parent, ConnectionItem connectionItem,int style, boolean readOnly, boolean isCreation) {
         this.parent = parent;
         this.wizardPage = wizardPage;
@@ -87,6 +89,9 @@ public class DBTypeForm {
         }
         addListerner();
         adaptFormToReadOnly();
+        if(!isCreation){
+            this.oriConnItem = connectionItem;
+        }
     }
     
     private void adaptFormToReadOnly() {
@@ -241,6 +246,11 @@ public class DBTypeForm {
                         IGenericDBService.class);
             }
             if(dbService == null){
+                return;
+            }
+            if(!isCreation && dbType.equals(oriConnItem.getTypeName())){
+                connectionItem = oriConnItem;
+                connection = oriConnItem.getConnection();
                 return;
             }
             connection = ConnectionFactory.eINSTANCE.createDatabaseConnection();
