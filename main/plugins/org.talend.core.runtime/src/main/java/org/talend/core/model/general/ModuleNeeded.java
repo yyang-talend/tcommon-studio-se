@@ -557,7 +557,7 @@ public class ModuleNeeded {
     public String getCustomMavenUri() {
         String originalURI = initURI();
         String customURI = libManagerService.getCustomMavenURI(originalURI);
-        if (!originalURI.equals(customURI)) {
+        if (originalURI != null && !originalURI.equals(customURI)) {
             return customURI;
         } else {
             return null;
