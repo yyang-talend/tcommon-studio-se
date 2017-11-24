@@ -629,8 +629,10 @@ public final class ConvertionHelper {
         String schema = metadataConnection.getSchema();
         String dbType = metadataConnection.getDbType();
         String url = metadataConnection.getUrl();
+        String jdbcName = EDatabaseTypeName.GENERAL_JDBC.getProduct();
         String generalJDBCDisplayName = EDatabaseConnTemplate.GENERAL_JDBC.getDBDisplayName();
-        if (generalJDBCDisplayName.equals(dbType) && url.contains("oracle")) {//$NON-NLS-1$
+        boolean isJDBC = jdbcName.equals(dbType) || generalJDBCDisplayName.equals(dbType);
+        if (isJDBC && url.contains("oracle")) {//$NON-NLS-1$
             schema = metadataConnection.getUsername().toUpperCase();
         }
         return schema;
