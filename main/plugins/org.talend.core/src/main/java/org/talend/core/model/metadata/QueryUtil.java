@@ -407,7 +407,7 @@ public class QueryUtil {
         if (node != null) { // for job settings extra.(feature 2710)
             IElementParameter param = node.getElementParameterFromField(EParameterFieldType.DBTABLE);
             if(param == null){
-                param = node.getElementParameter(EConnectionParameterName.GENERIC_TABLENAME.getDisplayName());
+                param = node.getElementParameterFromField(EParameterFieldType.NAME_SELECTION_REFERENCE);
             }
             if (param != null && param.isShow(node.getElementParameters())) {
                 return (String) param.getValue();
