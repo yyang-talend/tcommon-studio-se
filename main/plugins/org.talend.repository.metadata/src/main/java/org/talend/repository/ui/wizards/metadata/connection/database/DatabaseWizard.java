@@ -879,6 +879,7 @@ public class DatabaseWizard extends CheckLastVersionRepositoryWizard implements 
         this.connection = connectionItem.getConnection();
         this.connectionItem = connectionItem;
         this.connectionProperty = connectionItem.getProperty();
+        propertiesWizardPage.setProperty(this.connectionProperty);
     }
 
     /**
