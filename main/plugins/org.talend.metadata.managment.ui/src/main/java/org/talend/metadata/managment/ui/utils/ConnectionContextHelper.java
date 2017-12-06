@@ -127,6 +127,8 @@ public final class ConnectionContextHelper {
     public static final String DOT = "."; //$NON-NLS-1$
 
     public static IContextManager contextManager;
+    
+    public static ContextType context;
 
     /**
      * 

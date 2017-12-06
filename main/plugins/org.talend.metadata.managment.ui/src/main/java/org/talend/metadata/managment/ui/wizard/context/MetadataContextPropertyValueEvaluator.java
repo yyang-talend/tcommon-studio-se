@@ -49,8 +49,11 @@ public class MetadataContextPropertyValueEvaluator extends AbstractPropertyValue
             isPropertySupportContext = true;
         }
         if (connection != null && connection.isContextMode() && isPropertySupportContext) {
-            ContextType contextType = ConnectionContextHelper.getContextTypeForContextMode(connection,
-                    connection.getContextName(), false);
+            ContextType contextType = ConnectionContextHelper.context;
+            if(contextType == null){
+                contextType = ConnectionContextHelper.getContextTypeForContextMode(connection,
+                        connection.getContextName(), false);
+            }
             if(storedValue instanceof List){
                 storedValue = ContextParameterUtils.getOriginalList(contextType, String.valueOf(storedValue));
             }else{
