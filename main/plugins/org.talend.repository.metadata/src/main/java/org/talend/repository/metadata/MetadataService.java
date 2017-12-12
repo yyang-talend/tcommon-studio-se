@@ -236,7 +236,7 @@ public class MetadataService implements IMetadataService {
                 if (connItem != null && changed) {
                     // Open the Wizard
                     WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), relatedWizard);
-                    wizardDialog.setPageSize(600, 540);
+                    wizardDialog.setPageSize(780, 540);
                     wizardDialog.create();
                     if (wizardDialog.open() == wizardDialog.OK) {
                         return connItem;

@@ -18,6 +18,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.swt.widgets.Composite;
+import org.talend.components.api.properties.ComponentProperties;
 import org.talend.core.IService;
 import org.talend.core.model.metadata.IMetadataTable;
 import org.talend.core.model.metadata.builder.connection.Connection;
@@ -54,5 +55,7 @@ public interface IGenericDBService extends IService{
     public String getMVNPath(IElementParameter tableParam, String value);
     
     public IMetadataTable converTable(INode node, IMetadataTable iTable);
+    
+    public void setPropertyTaggedValue(ComponentProperties properties);
     
 }
