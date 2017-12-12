@@ -29,6 +29,7 @@ import org.eclipse.ui.PlatformUI;
 import org.talend.core.GlobalServiceRegister;
 import org.talend.core.IProviderService;
 import org.talend.core.PluginChecker;
+import org.talend.core.model.components.EComponentType;
 import org.talend.core.model.metadata.designerproperties.ComponentToRepositoryProperty;
 import org.talend.core.model.process.INode;
 import org.talend.core.model.properties.ConnectionItem;
@@ -130,7 +131,7 @@ public class MetadataService implements IMetadataService {
             realNode = (RepositoryNode) repoNode;
             IWizard relatedWizard = null;
             ERepositoryObjectType objectType = null;
-            if (creation) {
+            if (creation || node.getComponent().getComponentType() == EComponentType.GENERIC) {
                 objectType = realNode.getContentType();
             } else {
                 objectType = realNode.getObjectType();
