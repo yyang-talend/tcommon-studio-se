@@ -58,4 +58,6 @@ public interface IGenericDBService extends IService{
     
     public void setPropertyTaggedValue(ComponentProperties properties);
     
+    public void initReferencedComponent(IElementParameter refPara, String newValue);
+    
 }
