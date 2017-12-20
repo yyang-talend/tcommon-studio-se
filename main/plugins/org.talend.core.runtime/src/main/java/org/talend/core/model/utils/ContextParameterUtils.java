@@ -16,9 +16,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.oro.text.regex.MalformedPatternException;
@@ -191,6 +196,47 @@ public final class ContextParameterUtils {
         }
     }
     
+    public static String convertContext2Literal4AnyVar(final String code, final IContext context) {
+      if (code == null) {
+          return null;
+      }
+      
+      if (!containNewContext(code)) {
+          return code;
+      }
+      
+      Map<String, Object> varMap = getVarMapForScriptEngine(context);
+      
+      ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
+      engine.put("context", varMap);
+      Object result = code;
+      try {
+        String replacement = " ";
+        result = engine.eval(code.replace("\r\n", replacement).replace("\n", replacement).replace("\r", replacement));
+      } catch(Exception e) {
+        //ignore the exception
+      }
+      
+      return result.toString();
+    }
+    
+    private static Map<String, Object> getVarMapForScriptEngine(final IContext context) {
+      Map<String, Object> result = new HashMap<>();
+      
+      //TODO process the link case like : context.var1 = context.var2, context.var2 = "value", then get context.var1 = "value"
+      //Why we don't do it now? In fact, it's simple, but i think it's not necessary, sometimes, we do lots of code for only 1/10000000000 usage
+      List<IContextParameter> parameterList = context.getContextParameterList();
+      if(parameterList == null) {
+        return result;
+      }
+      
+      for(IContextParameter parameter : parameterList) {
+        result.put(parameter.getName(), parameter.getValue());
+      }
+      
+      return result;
+    }
+    
     public static List parseScriptContextCodeList(Object storedValue, IContext context) {
         if (storedValue == null) {
             return EMPTY_LIST;
@@ -215,7 +261,7 @@ public final class ContextParameterUtils {
         }
         return EMPTY_LIST;
     }
-
+    
     private static String getContextString(String code) {
         if (code != null) {
             if (containOldContext(code)) {
