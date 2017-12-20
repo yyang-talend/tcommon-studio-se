@@ -22,6 +22,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.script.Bindings;
+import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
@@ -196,6 +198,8 @@ public final class ContextParameterUtils {
         }
     }
     
+    private static ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
+    
     public static String convertContext2Literal4AnyVar(final String code, final IContext context) {
       if (code == null) {
           return null;
@@ -205,11 +209,22 @@ public final class ContextParameterUtils {
           return code;
       }
       
-      Map<String, Object> varMap = getVarMapForScriptEngine(context);
-      
-      ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
-      engine.put("context", varMap);
       Object result = code;
+      
+      if(engine == null) {
+        engine = new ScriptEngineManager().getEngineByName("JavaScript");
+      }
+      
+      if(engine == null) {
+        throw new RuntimeException("can't find the script engine");
+      }
+      
+      Bindings binding = engine.getBindings(ScriptContext.ENGINE_SCOPE);
+      if(binding!=null) {
+        binding.clear();
+        Map<String, Object> varMap = getVarMapForScriptEngine(context);
+        binding.put("context", varMap);
+      }
       try {
         String replacement = " ";
         result = engine.eval(code.replace("\r\n", replacement).replace("\n", replacement).replace("\r", replacement));
