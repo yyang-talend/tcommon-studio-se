@@ -52,12 +52,14 @@ public interface IGenericDBService extends IService{
     
     public void convertPropertiesToDBElements(Properties props,Connection connection);
     
-    public String getMVNPath(IElementParameter tableParam, String value);
+    public String getMVNPath(String value);
     
     public IMetadataTable converTable(INode node, IMetadataTable iTable);
     
     public void setPropertyTaggedValue(ComponentProperties properties);
     
     public void initReferencedComponent(IElementParameter refPara, String newValue);
+    
+    public Properties getComponentProperties(String typeName, String id);
     
 }
