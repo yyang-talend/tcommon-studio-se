@@ -1766,7 +1766,14 @@ public class LocalRepositoryFactory extends AbstractEMFRepositoryFactory impleme
         IProject fsProject = ResourceUtils.getProject(project);
         List<IRepositoryViewObject> allRepositoryViewObject = new ArrayList<IRepositoryViewObject>();
         for (IRepositoryViewObject objToMove : objToMoves) {
-            String folderName = ERepositoryObjectType.getFolderName(objToMove.getRepositoryObjectType()) + IPath.SEPARATOR
+            ERepositoryObjectType type = null;
+            if(objToMove.getRepositoryNode() != null){
+                type = objToMove.getRepositoryNode().getContentType();
+            }
+            if(type == null){
+                type = objToMove.getRepositoryObjectType();
+            }
+            String folderName = ERepositoryObjectType.getFolderName(type) + IPath.SEPARATOR
                     + newPath;
             IFolder folder = ResourceUtils.getFolder(fsProject, folderName, true);
             parentPath = folder.getFullPath();
