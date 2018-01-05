@@ -256,8 +256,9 @@ public final class ContextParameterUtils {
         if (storedValue == null) {
             return EMPTY_LIST;
         }
-        if(!(storedValue instanceof List)){
-            return EMPTY_LIST;
+        if(storedValue instanceof String){
+            List<String> values = Arrays.asList(((String)storedValue).split(";"));
+            return values;
         }
         String code = String.valueOf(storedValue);
         if (!isContainContextParam(code)) {
@@ -266,7 +267,7 @@ public final class ContextParameterUtils {
             String paraName = ContextParameterUtils.getVariableFromCode(code);
             IContextParameter param = context.getContextParameter(paraName);
             if (param != null) {
-                List value = Arrays.asList(param.getValueList());
+                String value = param.getValue();
                 if (value == null || code.equals(String.valueOf(value))) {
                     return EMPTY_LIST;
                 }
@@ -523,8 +524,8 @@ public final class ContextParameterUtils {
                     String value2 = param.getRawValue();
                     
                     if (value2 != null) {
-                        if(JavaTypesManager.VALUE_LIST.getId().equals(param.getType())){
-                            List<String> values = Arrays.asList(value2.split(","));
+                        if(JavaTypesManager.STRING.getId().equals(param.getType())){
+                            List<String> values = Arrays.asList(value2.split(";"));
                             return values;
                         }
                     }
