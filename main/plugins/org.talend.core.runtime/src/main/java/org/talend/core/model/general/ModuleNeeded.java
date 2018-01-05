@@ -356,6 +356,9 @@ public class ModuleNeeded {
     @Override
     public int hashCode() {
         int hashCode = 31;
+        if (this.getId() != null) {
+            hashCode *= this.getId().hashCode();
+        }
         if (this.getModuleName() != null) {
             hashCode *= this.getModuleName().hashCode();
         }

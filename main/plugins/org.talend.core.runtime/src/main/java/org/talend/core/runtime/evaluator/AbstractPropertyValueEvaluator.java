@@ -36,11 +36,44 @@ public abstract class AbstractPropertyValueEvaluator implements PropertyValueEva
             return new Boolean(stringValue);
         }
         if (GenericTypeUtils.isIntegerType(property) && rawValue != null) {
-            if (stringValue.isEmpty()) { // regard empty value as null for Integer type.
+            if (stringValue.isEmpty()) { // regard empty value as null
                 return null;
             }
             try {
                 return Integer.valueOf(stringValue);
+            } catch (Exception e) {
+                // value not existing anymore
+                // return any value to let the component work without exception
+                return 0;
+            }
+        } else if (GenericTypeUtils.isLongType(property) && rawValue != null) {
+            if (stringValue.isEmpty()) { // regard empty value as null
+                return null;
+            }
+            try {
+                return Long.valueOf(stringValue);
+            } catch (Exception e) {
+                // value not existing anymore
+                // return any value to let the component work without exception
+                return 0;
+            }
+        } else if (GenericTypeUtils.isFloatType(property) && rawValue != null) {
+            if (stringValue.isEmpty()) { // regard empty value as null
+                return null;
+            }
+            try {
+                return Float.valueOf(stringValue);
+            } catch (Exception e) {
+                // value not existing anymore
+                // return any value to let the component work without exception
+                return 0;
+            }
+        } else if (GenericTypeUtils.isDoubleType(property) && rawValue != null) {
+            if (stringValue.isEmpty()) { // regard empty value as null
+                return null;
+            }
+            try {
+                return Double.valueOf(stringValue);
             } catch (Exception e) {
                 // value not existing anymore
                 // return any value to let the component work without exception
@@ -61,7 +94,7 @@ public abstract class AbstractPropertyValueEvaluator implements PropertyValueEva
                 return TalendQuoteUtils.removeQuotes(stringValue);
             }
         }
-        
+
         if (GenericTypeUtils.isEnumType(property)) {
             List<?> possibleValues = property.getPossibleValues();
             if (possibleValues != null) {
