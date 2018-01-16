@@ -84,7 +84,7 @@ public class ImportItemsViewerLabelProvider extends LabelProvider {
                             IGenericDBService.class);
                 }
                 if(dbService != null && dbService.getExtraTypes().contains(itemType)){
-                    itemType = ERepositoryObjectType.METADATA_CONNECTIONS;
+                    itemType = dbService.getExtraDBType(itemType);
                 }
                 
                 Image image = null;

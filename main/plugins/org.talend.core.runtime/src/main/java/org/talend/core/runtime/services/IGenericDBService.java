@@ -62,4 +62,6 @@ public interface IGenericDBService extends IService{
     
     public Properties getComponentProperties(String typeName, String id);
     
+    public ERepositoryObjectType getExtraDBType(ERepositoryObjectType type);
+    
 }
