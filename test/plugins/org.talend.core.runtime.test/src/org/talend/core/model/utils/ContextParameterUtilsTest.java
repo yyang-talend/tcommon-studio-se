@@ -225,14 +225,14 @@ public class ContextParameterUtilsTest {
         
         List<String> l = new ArrayList<String>();
         l.add("context.jdbc1_drivers");
-        List v1 = ContextParameterUtils.parseScriptContextCodeList(l, testGroup);
+        List v1 = ContextParameterUtils.parseScriptContextCodeList(l, testGroup, true);
         assertTrue(v1.size() == 2);
         assertTrue(v1.get(0).equals("mvn:org.talend.libraries/mysql-connector-java-5.1.30-bin/6.0.0"));
         assertTrue(v1.get(1).equals("mvn:org.talend.libraries/mysql-connector-java-5.1.40-bin/6.0.0"));
         
         l = new ArrayList<String>();
         l.add("context.jdbc1_drivers2");
-        List v2 = ContextParameterUtils.parseScriptContextCodeList(l, testGroup);
+        List v2 = ContextParameterUtils.parseScriptContextCodeList(l, testGroup, true);
         assertTrue(v2.size() == 1);
         assertTrue(v2.get(0).equals("mvn:org.talend.libraries/mysql-connector-java-5.1.30-bin/6.0.0"));
     }

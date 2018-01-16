@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.core.model.utils;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,6 +37,7 @@ import org.apache.oro.text.regex.Perl5Matcher;
 import org.apache.oro.text.regex.Perl5Substitution;
 import org.apache.oro.text.regex.Util;
 import org.talend.commons.utils.PasswordEncryptUtil;
+import org.talend.core.GlobalServiceRegister;
 import org.talend.core.language.ECodeLanguage;
 import org.talend.core.model.context.ContextUtils;
 import org.talend.core.model.context.UpdateContextVariablesHelper;
@@ -45,6 +48,7 @@ import org.talend.core.model.metadata.types.JavaTypesManager;
 import org.talend.core.model.process.IContext;
 import org.talend.core.model.process.IContextManager;
 import org.talend.core.model.process.IContextParameter;
+import org.talend.core.runtime.services.IGenericDBService;
 import org.talend.core.utils.TalendQuoteUtils;
 import org.talend.designer.core.model.utils.emf.talendfile.ContextParameterType;
 import org.talend.designer.core.model.utils.emf.talendfile.ContextType;
@@ -252,13 +256,13 @@ public final class ContextParameterUtils {
       return result;
     }
     
-    public static List parseScriptContextCodeList(Object storedValue, IContext context) {
+    public static List parseScriptContextCodeList(Object storedValue, IContext context, boolean isDrivers) {
         if (storedValue == null) {
             return EMPTY_LIST;
         }
         if(storedValue instanceof String){
             List<String> values = Arrays.asList(((String)storedValue).split(";"));
-            return values;
+            return getMVNValues(values);
         }
         String code = String.valueOf(storedValue);
         if (!isContainContextParam(code)) {
@@ -271,11 +275,31 @@ public final class ContextParameterUtils {
                 if (value == null || code.equals(String.valueOf(value))) {
                     return EMPTY_LIST;
                 }
-                return parseScriptContextCodeList(value, context);// Multi-layer
+                return parseScriptContextCodeList(value, context, isDrivers);// Multi-layer
             }
 
         }
         return EMPTY_LIST;
+    }
+    
+    private static List<String> getMVNValues(List<String> values){
+        List<String> mvnValues = new ArrayList<>();
+        IGenericDBService dbService = null;
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(IGenericDBService.class)) {
+            dbService = (IGenericDBService) GlobalServiceRegister.getDefault().getService(
+                    IGenericDBService.class);
+        }
+        for(String value : values){
+            try {
+                new URL(value);
+                mvnValues.add(value);
+            } catch (MalformedURLException e) {
+                if(dbService != null){
+                    mvnValues.add(dbService.getMVNPath(value));
+                }
+            }
+        }
+        return mvnValues;
     }
     
     private static String getContextString(String code) {
