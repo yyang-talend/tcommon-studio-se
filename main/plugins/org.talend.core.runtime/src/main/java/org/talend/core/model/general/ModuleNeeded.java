@@ -84,8 +84,8 @@ public class ModuleNeeded {
 
     public static final String UNKNOWN = "Unknown";
 
-    ILibraryManagerService libManagerService = (ILibraryManagerService) GlobalServiceRegister.getDefault().getService(
-            ILibraryManagerService.class);
+    ILibraryManagerService libManagerService = (ILibraryManagerService) GlobalServiceRegister.getDefault()
+            .getService(ILibraryManagerService.class);
 
     /**
      * DOC smallet ModuleNeeded class global comment. Detailled comment <br/>
@@ -227,13 +227,17 @@ public class ModuleNeeded {
 
     public void setModuleName(String moduleName) {
         if (moduleName != null) {
-            String mn = moduleName.replace(QUOTATION_MARK, "").replace(SINGLE_QUOTE, ""); //$NON-NLS-1$ //$NON-NLS-2$
-            if (mn.indexOf("\\") != -1 || (mn.indexOf("/") != -1 && mn.endsWith(".jar"))) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                mn = new Path(mn).lastSegment();
-            }else if(mn.indexOf("/") != -1){
-                mn = mn.split("/")[1]+".jar";//$NON-NLS-1$
+            this.moduleName = MavenUrlHelper.generateModuleNameByMavenURI(moduleName);
+            if (this.moduleName != null) {
+                // in case we passed as parameter a full mvn uri as module name
+                this.mavenUri = moduleName;
+            } else {
+                String mn = moduleName.replace(QUOTATION_MARK, "").replace(SINGLE_QUOTE, ""); //$NON-NLS-1$ //$NON-NLS-2$
+                if (mn.indexOf("\\") != -1 || mn.indexOf("/") != -1) { //$NON-NLS-1$ //$NON-NLS-2$
+                    mn = new Path(mn).lastSegment();
+                }
+                this.moduleName = mn;
             }
-            this.moduleName = mn;
         } else {
             this.moduleName = moduleName;
         }
@@ -248,8 +252,8 @@ public class ModuleNeeded {
     }
 
     public ELibraryInstallStatus getStatus() {
-        ILibraryManagerService libManagerService = (ILibraryManagerService) GlobalServiceRegister.getDefault().getService(
-                ILibraryManagerService.class);
+        ILibraryManagerService libManagerService = (ILibraryManagerService) GlobalServiceRegister.getDefault()
+                .getService(ILibraryManagerService.class);
         libManagerService.checkModuleStatus(this);
         String mvnUriStatusKey = getMavenUri();
         this.status = ModuleStatusProvider.getStatus(mvnUriStatusKey);
@@ -257,8 +261,8 @@ public class ModuleNeeded {
     }
 
     public ELibraryInstallStatus getDeployStatus() {
-        ILibraryManagerService libManagerService = (ILibraryManagerService) GlobalServiceRegister.getDefault().getService(
-                ILibraryManagerService.class);
+        ILibraryManagerService libManagerService = (ILibraryManagerService) GlobalServiceRegister.getDefault()
+                .getService(ILibraryManagerService.class);
         libManagerService.checkModuleStatus(this);
         String mvnUriStatusKey = getMavenUri();
 
