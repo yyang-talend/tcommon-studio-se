@@ -428,6 +428,11 @@ public class DatabaseWizard extends CheckLastVersionRepositoryWizard implements 
              * original. hywang
              */
             deleteSwitchTypeNode();
+            // use the context group of selected on check button to check the selection in perform finish.
+            String contextName = null;
+            if (databaseWizardPage.getSelectedContextType() != null) {
+                contextName = databaseWizardPage.getSelectedContextType().getName();
+            }
             if(isTCOMType(getDBType(connectionItem))){
                 IGenericDBService dbService = null;
                 if (GlobalServiceRegister.getDefault().isServiceRegistered(IGenericDBService.class)) {
@@ -438,7 +443,7 @@ public class DatabaseWizard extends CheckLastVersionRepositoryWizard implements 
                     return false;
                 }
                 try {
-                    dbService.dbWizardPerformFinish(connectionItem, databaseWizardPage.getForm(), isCreation(), pathToSave, new ArrayList<IMetadataTable>());
+                    dbService.dbWizardPerformFinish(connectionItem, databaseWizardPage.getForm(), isCreation(), pathToSave, new ArrayList<IMetadataTable>(),contextName);
                     closeLockStrategy();
                 } catch (CoreException e) {
                     new ErrorDialogWidthDetailArea(getShell(), PID, Messages.getString("CommonWizard.persistenceException"), //$NON-NLS-1$
@@ -490,11 +495,7 @@ public class DatabaseWizard extends CheckLastVersionRepositoryWizard implements 
         
             // ~19528
 
-            // use the context group of selected on check button to check the selection in perform finish.
-            String contextName = null;
-            if (databaseWizardPage.getSelectedContextType() != null) {
-                contextName = databaseWizardPage.getSelectedContextType().getName();
-            }
+        
             IMetadataConnection metadataConnection = null;
             if (contextName == null) {
                 metadataConnection = ConvertionHelper.convert(connection, true);

@@ -40,7 +40,7 @@ public interface IGenericDBService extends IService{
     public Map<String, Composite> creatDBDynamicComposite(Composite composite, EComponentCategory sectionCategory, boolean isCreation,
             boolean isReadOnly,Property property, String typeName);
     
-    public void dbWizardPerformFinish(ConnectionItem item, Form form, boolean creation, IPath pathToSave, List<IMetadataTable> oldMetadataTable) throws CoreException;
+    public void dbWizardPerformFinish(ConnectionItem item, Form form, boolean creation, IPath pathToSave, List<IMetadataTable> oldMetadataTable,String contextName) throws CoreException;
     
     public Form getDynamicForm(Composite composite);
     
