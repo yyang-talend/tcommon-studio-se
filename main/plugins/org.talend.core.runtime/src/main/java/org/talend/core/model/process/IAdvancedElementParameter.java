@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.core.model.process;
 
+import org.eclipse.swt.events.FocusListener;
+
 /**
  * extended EP for advanced features and UI interactions.
  * 
@@ -20,4 +22,5 @@ public interface IAdvancedElementParameter extends IElementParameter {
     // placeholder
     String getMessage();
     void setMessage(String message);
+    FocusListener getFocusListener(); 
 }
