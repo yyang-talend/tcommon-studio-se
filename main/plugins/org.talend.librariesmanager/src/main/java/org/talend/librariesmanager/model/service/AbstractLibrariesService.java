@@ -136,7 +136,7 @@ public abstract class AbstractLibrariesService implements ILibrariesService {
         }
         final File sourceFile = new File(decode);
 
-        localLibraryManager.deploy(sourceFile.toURI(), mavenUri, updateNexusJar, null);
+        localLibraryManager.deploy(sourceFile.toURI(), mavenUri, updateNexusJar);
 
         refreshLocal(new String[] { sourceFile.getName() });
         if (refresh) {
