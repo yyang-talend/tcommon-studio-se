@@ -263,6 +263,7 @@ public class LibrariesService implements ILibrariesService {
         getLibrariesService().deployLibrary(source, mavenUri, refresh);
     }
 
+    @Override
     public void deployLibrary(URL source, String mavenUri, boolean refresh, boolean updateNexusJar) throws IOException {
         getLibrariesService().deployLibrary(source, mavenUri, refresh, updateNexusJar);
     }
