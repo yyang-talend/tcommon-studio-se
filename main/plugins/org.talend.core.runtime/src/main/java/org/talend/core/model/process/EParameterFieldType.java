@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2017 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -115,13 +115,14 @@ public enum EParameterFieldType {
 
     UNIFIED_COMPONENTS,
 
-    TACOKIT_GUESS_SCHEMA;
+    TACOKIT_GUESS_SCHEMA,
+    TACOKIT_BUTTON;
 
     public String getName() {
         return toString();
     }
 
-    public static EParameterFieldType getFieldTypeByName(String name) {
+    public static EParameterFieldType getFieldTypeByName(final String name) {
         for (int i = 0; i < EParameterFieldType.values().length; i++) {
             if (EParameterFieldType.values()[i].getName().equals(name)) {
                 return EParameterFieldType.values()[i];

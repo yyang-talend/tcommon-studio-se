@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2017 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -46,6 +46,7 @@ import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.emf.common.util.EMap;
+import org.ops4j.pax.url.mvn.Handler;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
@@ -82,6 +83,7 @@ import org.talend.designer.maven.utils.PomUtil;
 import org.talend.librariesmanager.maven.MavenArtifactsHandler;
 import org.talend.librariesmanager.model.ExtensionModuleManager;
 import org.talend.librariesmanager.model.ModulesNeededProvider;
+import org.talend.librariesmanager.nexus.utils.NexusDownloader;
 import org.talend.librariesmanager.prefs.LibrariesManagerUtils;
 import org.talend.osgi.hook.notification.JarMissingObservable;
 
@@ -145,6 +147,11 @@ public class LocalLibraryManager implements ILibraryManagerService, IChangedLibr
 
     @Override
     public void deploy(URI jarFileUri, String mavenUri, IProgressMonitor... monitorWrap) {
+      deploy(jarFileUri, mavenUri, true, monitorWrap);
+    }
+
+    @Override
+    public void deploy(URI jarFileUri, String mavenUri, boolean updateNexusJar, IProgressMonitor... monitorWrap) {
         if (jarFileUri.isOpaque()) {
             return;
         }
@@ -152,7 +159,7 @@ public class LocalLibraryManager implements ILibraryManagerService, IChangedLibr
         if (file == null || !file.exists()) {
             return;
         }
-        install(file, mavenUri, true, monitorWrap);
+        install(file, mavenUri, updateNexusJar, monitorWrap);
         // deploy to configuration/lib/java if tac still use the svn lib
         try {
             if (isSvnLibSetup()) {
@@ -438,6 +445,11 @@ public class LocalLibraryManager implements ILibraryManagerService, IChangedLibr
     @Override
     public File resolveJar(final NexusServerBean customNexusServer, String uri) throws Exception, IOException {
         File resolvedFile = null;
+        //
+        NexusDownloader nexusDownloader = new NexusDownloader();
+        nexusDownloader.setTalendlibServer(customNexusServer);
+        nexusDownloader.download(new URL(null, uri, new Handler()), null);
+
         resolvedFile = TalendMavenResolver.resolve(uri);
         if (resolvedFile != null) {
             // reset module status
@@ -990,7 +1002,12 @@ public class LocalLibraryManager implements ILibraryManagerService, IChangedLibr
                         if (platformPath != null) {
                             resolvedJar = new File(platformPath);
                         }
-                    } else {
+                    }
+                    /**
+                     * if not found from moduleLocation, need to try to find it from lib/java, since the moduleLocation
+                     * may be not exist for some reasons
+                     */
+                    if (resolvedJar == null) {
                         // check the lib/java
                         List<File> jarFiles;
                         try {
