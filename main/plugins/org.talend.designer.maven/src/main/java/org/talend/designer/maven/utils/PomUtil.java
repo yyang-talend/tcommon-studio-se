@@ -823,14 +823,10 @@ public class PomUtil {
             if (backFile.exists()) {
                 if (pomFile.exists()) {
                     isChanged = !IOUtils.contentEquals(backFile.getContents(), pomFile.getContents());
-                    if (isChanged) {
+                    if (!isChanged) {
                         pomFile.delete(true, false, null);
+                        backFile.copy(pomFile.getFullPath(), true, null);
                     }
-                } else {
-                    isChanged = true;
-                }
-                if (isChanged) {
-                    backFile.copy(pomFile.getFullPath(), true, null);
                 }
             }
         } catch (CoreException | IOException e) {
