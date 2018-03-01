@@ -115,9 +115,16 @@ public abstract class AbstractPropertyValueEvaluator implements PropertyValueEva
         }
         
         if (GenericTypeUtils.isStringType(property)) {
-            return TalendQuoteUtils.removeQuotes(StringEscapeUtils.unescapeJava(stringValue));
+            return TalendQuoteUtils.removeQuotes((property.getTaggedValue(ALREADY_BE_UNESCAPE_JAVA_STRING_VALUE) == null) ? StringEscapeUtils.unescapeJava(stringValue) : stringValue);
         }
         return rawValue;
     }
+    
+    /**
+     * We use this for a string property tag key to show the property's string value is already be unescape java string value. 
+     * So no need to call StringEscapeUtils.unescapeJava(stringValue).
+     * 
+     */
+    private static final String ALREADY_BE_UNESCAPE_JAVA_STRING_VALUE = "ALREADY_BE_UNESCAPE_JAVA_STRING_VALUE";
 
 }
