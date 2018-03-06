@@ -25,6 +25,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -241,5 +242,22 @@ public final class FileUtils {
         File tmpFolder = new File(System.getProperty("user.dir"), "temp/" + folderName); //$NON-NLS-1$  //$NON-NLS-2$
         tmpFolder.mkdirs();
         return tmpFolder;
+    }
+
+    public static void createProjectFile(String projectName, File tmpProjectFile) throws Exception {
+        tmpProjectFile.createNewFile();
+        PrintStream ps = new PrintStream(new FileOutputStream(tmpProjectFile));
+        ps.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+        ps.println("<projectDescription>");
+        ps.println("\t<name>" + projectName + "</name>");
+        ps.println("\t<comment></comment>");
+        ps.println("\t<projects></projects>");
+        ps.println("\t<buildSpec></buildSpec>");
+        ps.println("\t<natures>");
+        ps.println("\t\t<nature>org.talend.core.talendnature</nature>");
+        ps.println("\t</natures>");
+        ps.println("</projectDescription>");
+        ps.flush();
+        ps.close();
     }
 }
