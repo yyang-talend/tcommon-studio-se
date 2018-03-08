@@ -266,18 +266,10 @@ public final class FileUtils {
             ps.flush();
         } finally {
             if (fos != null) {
-                try {
-                    fos.close();
-                } catch (Exception e) {
-                    throw e;
-                }
+                fos.close();
             }
-            if(ps != null) {
-                try {
-                    ps.close();
-                }catch(Exception e) {
-                    throw e;
-                }
+            if (ps != null) {
+                ps.close();
             }
         }
     }
