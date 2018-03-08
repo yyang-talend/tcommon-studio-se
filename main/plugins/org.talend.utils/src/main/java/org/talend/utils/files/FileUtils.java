@@ -243,7 +243,9 @@ public final class FileUtils {
         tmpFolder.mkdirs();
         return tmpFolder;
     }
-
+    /**
+     * DOC xlwang Comment method "createProjectFile".
+     */
     public static void createProjectFile(String projectName, File tmpProjectFile) throws Exception {
         tmpProjectFile.createNewFile();
         PrintStream ps = new PrintStream(new FileOutputStream(tmpProjectFile));
