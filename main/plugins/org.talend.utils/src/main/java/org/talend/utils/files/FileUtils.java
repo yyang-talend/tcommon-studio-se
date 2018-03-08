@@ -248,18 +248,37 @@ public final class FileUtils {
      */
     public static void createProjectFile(String projectName, File tmpProjectFile) throws Exception {
         tmpProjectFile.createNewFile();
-        PrintStream ps = new PrintStream(new FileOutputStream(tmpProjectFile));
-        ps.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        ps.println("<projectDescription>");
-        ps.println("\t<name>" + projectName + "</name>");
-        ps.println("\t<comment></comment>");
-        ps.println("\t<projects></projects>");
-        ps.println("\t<buildSpec></buildSpec>");
-        ps.println("\t<natures>");
-        ps.println("\t\t<nature>org.talend.core.talendnature</nature>");
-        ps.println("\t</natures>");
-        ps.println("</projectDescription>");
-        ps.flush();
-        ps.close();
+        FileOutputStream fos = null;
+        PrintStream ps = null;
+        try {
+            fos = new FileOutputStream(tmpProjectFile);
+            ps = new PrintStream(fos);
+            ps.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+            ps.println("<projectDescription>");
+            ps.println("\t<name>" + projectName + "</name>");
+            ps.println("\t<comment></comment>");
+            ps.println("\t<projects></projects>");
+            ps.println("\t<buildSpec></buildSpec>");
+            ps.println("\t<natures>");
+            ps.println("\t\t<nature>org.talend.core.talendnature</nature>");
+            ps.println("\t</natures>");
+            ps.println("</projectDescription>");
+            ps.flush();
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (Exception e) {
+                    throw e;
+                }
+            }
+            if(ps != null) {
+                try {
+                    ps.close();
+                }catch(Exception e) {
+                    throw e;
+                }
+            }
+        }
     }
 }
