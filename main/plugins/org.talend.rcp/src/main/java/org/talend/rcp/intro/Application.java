@@ -36,7 +36,6 @@ import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.PlatformUI;
 import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
@@ -244,8 +243,8 @@ public class Application implements IApplication {
             // other products will simply reuse the default presentation factory.
             if (brandingService.isPoweredbyTalend()) {
                 // setup the presentation factory, which is defined in the plugin.xml of the org.talend.rcp
-                store.putValue(IWorkbenchPreferenceConstants.PRESENTATION_FACTORY_ID,
-                        "org.talend.rcp.presentationfactory"); //$NON-NLS-1$
+                // store.putValue(IWorkbenchPreferenceConstants.PRESENTATION_FACTORY_ID,
+                // "org.talend.rcp.presentationfactory"); //$NON-NLS-1$
             }
             // clean the clearPersistedState if branding or project type change
             String lastProjectType = store.getString("last_started_project_type");
