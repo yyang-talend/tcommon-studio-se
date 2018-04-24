@@ -36,163 +36,164 @@
          id="org.eclipse.m2e.archetype.common"
          download-size="1844"
          install-size="2076"
-         version="1.5.0.20140605-2032"/>
+         version="1.8.0.20170516-2042"/>
 
    <plugin
          id="org.eclipse.m2e.maven.indexer"
          download-size="1103"
          install-size="1306"
-         version="1.5.0.20140605-2032"/>
+         version="1.8.0.20170516-2042"/>
 
    <plugin
          id="org.eclipse.m2e.model.edit"
          download-size="385"
          install-size="1338"
-         version="1.5.0.20140606-0033"
+         version="1.8.0.20170516-2043"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.m2e.core"
          download-size="554"
          install-size="1318"
-         version="1.5.0.20140606-0033"
+         version="1.8.0.20170516-2043"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.m2e.launching"
          download-size="111"
          install-size="222"
-         version="1.5.0.20140606-0033"
+         version="1.8.0.20170516-2043"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.m2e.jdt"
          download-size="112"
          install-size="255"
-         version="1.5.0.20140606-0033"
+         version="1.8.0.20170516-2043"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.m2e.editor"
          download-size="292"
          install-size="583"
-         version="1.5.0.20140606-0033"
+         version="1.8.0.20170516-2043"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.m2e.editor.xml"
          download-size="230"
          install-size="500"
-         version="1.5.0.20140606-0033"
+         version="1.8.0.20170516-2043"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.m2e.maven.runtime"
          download-size="5480"
          install-size="6167"
-         version="1.5.0.20140605-2032"/>
+         version="1.8.0.20170516-2042"/>
 
    <plugin
          id="org.eclipse.m2e.maven.runtime.slf4j.simple"
          download-size="18"
          install-size="25"
-         version="1.5.0.20140605-2032"/>
+         version="1.8.0.20170516-2042"/>
 
    <plugin
          id="org.eclipse.m2e.refactoring"
          download-size="74"
          install-size="155"
-         version="1.5.0.20140606-0033"
+         version="1.8.0.20170516-2043"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.m2e.lifecyclemapping.defaults"
          download-size="9"
          install-size="17"
-         version="1.5.0.20140606-0033"/>
+         version="1.8.0.20170516-2043"/>
 
    <plugin
          id="org.eclipse.m2e.core.ui"
          download-size="750"
          install-size="1585"
-         version="1.5.0.20140606-0033"
+         version="1.8.0.20170516-2043"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.m2e.scm"
          download-size="67"
          install-size="139"
-         version="1.5.0.20140606-0033"
+         version="1.8.0.20170516-2043"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.m2e.jdt.ui"
          download-size="28"
          install-size="60"
-         version="1.5.0.20140606-0033"
+         version="1.8.0.20170516-2043"
+         fragment="true"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.m2e.profiles.core"
          download-size="22"
          install-size="43"
-         version="1.5.0.20140606-0033"
+         version="1.8.0.20170516-2043"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.m2e.profiles.ui"
          download-size="43"
          install-size="93"
-         version="1.5.0.20140606-0033"
+         version="1.8.0.20170516-2043"
          unpack="false"/>
 
    <plugin
          id="org.slf4j.api"
          download-size="0"
          install-size="0"
-         version="1.7.2.v20121108-1250"
+         version="1.7.10.v20170428-1633"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.emf.ecore"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="2.13.0.v20170609-0707"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.emf.ecore.xmi"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="2.13.0.v20170609-0707"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.emf.edit"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="2.12.0.v20170609-0928"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.emf.ecore.edit"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="2.9.0.v20170609-0928"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.jem.util"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="2.1.201.v201707201954"
          unpack="false"/>
 
    <plugin
          id="com.google.guava"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="21.0.0.v20170206-1425"
          unpack="false"/>
 
    <plugin
