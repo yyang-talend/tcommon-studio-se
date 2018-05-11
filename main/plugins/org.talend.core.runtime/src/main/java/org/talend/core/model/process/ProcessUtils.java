@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
 import org.talend.commons.exception.ExceptionHandler;
@@ -975,4 +976,123 @@ public final class ProcessUtils {
         return false;
     }
 
+    public static boolean isEsbJob(String processId, String version) {
+        if (processId == null || version == null) {
+            return false;
+        }
+
+        return isEsbJobInternal(processId, version, new HashSet<String>());
+    }
+
+    private static boolean isEsbJobInternal(String processId, String version, Set<String> processedJobs) {
+        if (processId == null || version == null) {
+            return false;
+        }
+
+        final String jobKey = processId + "_v_" + version;
+        if (processedJobs.contains(jobKey)) {
+            return false;
+        }
+        processedJobs.add(jobKey);
+
+
+        IRepositoryViewObject jobObject;
+        try {
+            jobObject = findJob(processId, version);
+        } catch (PersistenceException e) {
+            return false;
+        }
+        if (jobObject == null) {
+            return false;
+        }
+
+        NodeType node;
+        final String[] esbComponents = {"tESBConsumer", "tESBProviderRequest", "tRouteInput"};
+
+        // Check if the job contains 'ESB components'
+        for (Object o : ((ProcessItem) (jobObject.getProperty().getItem())).getProcess().getNode()) {
+            node = (NodeType)o;
+            for (String esbComponentName : esbComponents) {
+                if (esbComponentName.equals(node.getComponentName())) {
+                    return true;
+                }
+            }
+        }
+
+
+        //Check if subjobs of the given job contain ESB components
+        for (Object o : ((ProcessItem) (jobObject.getProperty().getItem())).getProcess().getNode()) {
+            node = (NodeType)o;
+            if ("tRunJob".equals(node.getComponentName())) {
+                String childJobId = null;
+                String childJobVersion = null;
+                List<ElementParameterType> eleParams = (List<ElementParameterType>) node.getElementParameter();
+                for (ElementParameterType elementParameter : eleParams) {
+                    if ("PROCESS:PROCESS_TYPE_PROCESS".equals(elementParameter.getName())) {
+                        childJobId = elementParameter.getValue();
+                    } else if ("PROCESS:PROCESS_TYPE_VERSION".equals(elementParameter.getName())) {
+                        childJobVersion = elementParameter.getValue();
+                    }
+                }
+                if (isEsbJobInternal(childJobId, childJobVersion, processedJobs)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+
+    private static IRepositoryViewObject findJob(String jobId, String jobVersion) throws PersistenceException {
+        IProxyRepositoryFactory factory = CoreRuntimePlugin.getInstance().getProxyRepositoryFactory();
+        if (factory == null) {
+            return null;
+        }
+
+        Project currentProject = ProjectManager.getInstance().getCurrentProject();
+        List<IRepositoryViewObject> jobs = factory.getAll(currentProject, ERepositoryObjectType.PROCESS);
+
+
+        // 1. At first let's look into current project
+        if (RelationshipItemBuilder.LATEST_VERSION.equals(jobVersion)) {
+            IRepositoryViewObject result =  factory.getLastVersion(jobId);
+            if (result != null) {
+                return result;
+            }
+        } else {
+            if (jobs != null) {
+                for (IRepositoryViewObject job : jobs) {
+                    if (job.getId().equals(jobId)) {
+                        return factory.getSpecificVersion(currentProject, job.getId(), jobVersion, false);
+                    }
+                }
+            }
+        }
+
+
+        // 2. Now, lets' look through reference projects
+        List<Project> projects = ProjectManager.getInstance().getAllReferencedProjects();
+        if (projects == null) {
+            return null;
+        }
+
+        for (Project p : projects) {
+            jobs = factory.getAll(p, ERepositoryObjectType.PROCESS);
+            if (jobs == null) {
+                continue;
+            }
+            for (IRepositoryViewObject job : jobs) {
+                if (job.getId().equals(jobId)) {
+                    if (RelationshipItemBuilder.LATEST_VERSION.equals(jobVersion)) {
+                        return factory.getLastVersion(p, job.getId());
+                    } else {
+                        return factory.getSpecificVersion(p, job.getId(), jobVersion, false);
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
 }
