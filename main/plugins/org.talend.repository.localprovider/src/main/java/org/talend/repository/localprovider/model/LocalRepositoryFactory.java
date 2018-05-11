@@ -155,6 +155,7 @@ import org.talend.core.repository.model.VersionList;
 import org.talend.core.repository.recyclebin.RecycleBinManager;
 import org.talend.core.repository.ui.view.RepositoryLabelProvider;
 import org.talend.core.repository.utils.AbstractResourceChangesService;
+import org.talend.core.repository.utils.ProjectDataJsonProvider;
 import org.talend.core.repository.utils.ResourceFilenameHelper;
 import org.talend.core.repository.utils.RoutineUtils;
 import org.talend.core.repository.utils.TDQServiceRegister;
@@ -168,6 +169,7 @@ import org.talend.repository.localprovider.exceptions.IncorrectFileException;
 import org.talend.repository.localprovider.i18n.Messages;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.RepositoryConstants;
+
 import orgomg.cwm.foundation.businessinformation.BusinessinformationPackage;
 
 /**
@@ -832,6 +834,16 @@ public class LocalRepositoryFactory extends AbstractEMFRepositoryFactory impleme
         if (projectResource.isTrackingModification() && !projectResource.isModified()) {
             return;
         }
+        ProjectDataJsonProvider.saveProjectData(project.getEmfProject());
+
+        project.getEmfProject().setImplicitContextSettings(null);
+        project.getEmfProject().setStatAndLogsSettings(null);
+        project.getEmfProject().getTechnicalStatus().clear();
+        project.getEmfProject().getDocumentationStatus().clear();
+        //project.getEmfProject().getItemsRelations().clear();
+       // project.getEmfProject().getDeletedFolders().clear();
+        
+        removeContentsFromProject(projectResource, PropertiesPackage.eINSTANCE.getImplicitContextSettings());
         // folder
         removeContentsFromProject(projectResource, PropertiesPackage.eINSTANCE.getFolderItem());
         // item state
@@ -852,9 +864,10 @@ public class LocalRepositoryFactory extends AbstractEMFRepositoryFactory impleme
             }
         }
 
-        xmiResourceManager.saveResource(projectResource);
+        xmiResourceManager.saveResource(projectResource);  
+        ProjectDataJsonProvider.loadProjectData(project.getEmfProject());
     }
-
+    
     private void removeContentsFromProject(Resource projectResource, EClassifier type) {
         Collection<Object> contents = EcoreUtil.getObjectsByType(projectResource.getContents(), type);
         if (!contents.isEmpty()) {
