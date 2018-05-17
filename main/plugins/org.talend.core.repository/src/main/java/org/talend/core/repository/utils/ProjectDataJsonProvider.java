@@ -38,19 +38,24 @@ import org.talend.designer.core.model.utils.emf.talendfile.impl.TalendFileFactor
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ProjectDataJsonProvider {
 
     public static final String CONFIGURATION_FOLDER_NAME = ".settings"; //$NON-NLS-1$
-    public static final String PROJECT_FILE_NAME = "project.settings"; //$NON-NLS-1$ 
+    public static final String PROJECTSETTING_FILE_NAME = "project.settings"; //$NON-NLS-1$ 
+    public static final String RELATIONSHIPS_FILE_NAME = "relationship.index"; //$NON-NLS-1$ 
+    public static final String RECYLEBIN_FILE_NAME = "recycle_bin.index"; //$NON-NLS-1$ 
 
     public static void saveProjectData(Project project) throws PersistenceException {
         saveProjectSettings(project);
+        saveRelationShips(project);
     }
 
     public static void loadProjectData(Project project) throws PersistenceException {
         loadProjectSettings(project);
+        loadRelationShips(project);
     }
     
     private static void saveProjectSettings(Project project) throws PersistenceException {
@@ -59,7 +64,7 @@ public class ProjectDataJsonProvider {
         projectSetting.setStatAndLogsSettingJson(getStatAndLogsSettingJson(project.getStatAndLogsSettings()));
         projectSetting.setTechnicalStatus(getTechnicalStatusJson(project.getTechnicalStatus()));
         projectSetting.setDocumentationStatus(getDocumentationJson(project.getDocumentationStatus()));
-        File file = getConfigurationFile(project);
+        File file = getConfigurationFile(project, PROJECTSETTING_FILE_NAME);
         try {
             if (!file.exists()) {
                 file.createNewFile();
@@ -73,7 +78,7 @@ public class ProjectDataJsonProvider {
     
     private static void loadProjectSettings (Project project) throws PersistenceException {
         try {
-            File file = getConfigurationFile(project);
+            File file = getConfigurationFile(project, PROJECTSETTING_FILE_NAME);
             ProjectSettings projectSetting = null;
             if (file.exists()) {
                 projectSetting = new ObjectMapper().readValue(file, ProjectSettings.class);
@@ -88,13 +93,49 @@ public class ProjectDataJsonProvider {
             throw new PersistenceException(e);
         }
     }
+    
+    private static void saveRelationShips(Project project) throws PersistenceException {
+        File file = getConfigurationFile(project, RELATIONSHIPS_FILE_NAME);
+        try {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, project.getItemsRelations());
+        } catch (Exception e) {
+            throw new PersistenceException(e);
+        }
+    }
 
-    private static File getConfigurationFile(Project project) throws PersistenceException {
-        IProject iProject = ResourceUtils.getProject(project.getTechnicalLabel());
-        IFolder folder = iProject.getFolder(CONFIGURATION_FOLDER_NAME);
-        IFile file = folder.getFile(PROJECT_FILE_NAME);
-        File propertiesFile = new File(file.getLocationURI());
-        return propertiesFile;
+    private static void loadRelationShips(Project project) throws PersistenceException {
+        TypeReference<List<ItemRelationsJson>> typeReference = new TypeReference<List<ItemRelationsJson>>() {
+            // no need to overwrite
+        };
+        try {
+            File file = getConfigurationFile(project, RELATIONSHIPS_FILE_NAME);
+            List<ItemRelationsJson> itemRelationsJsons = null;
+            if (file.exists()) {
+                itemRelationsJsons = new ObjectMapper().readValue(file, typeReference);
+            }
+            if (itemRelationsJsons != null && itemRelationsJsons.size() > 0) {
+                for (ItemRelationsJson json : itemRelationsJsons) {
+                    project.getItemsRelations().add(json.toEmfObject());
+                }
+            }
+        } catch (Exception e) {
+            throw new PersistenceException(e);
+        }
+    }
+    
+    private static File getConfigurationFile (Project project, String fileName) throws PersistenceException {
+        if (PROJECTSETTING_FILE_NAME.equals(fileName) || RELATIONSHIPS_FILE_NAME.equals(fileName)) {
+            IProject iProject = ResourceUtils.getProject(project.getTechnicalLabel());project.getUrl();
+            IFolder folder = iProject.getFolder(CONFIGURATION_FOLDER_NAME);
+            IFile file = folder.getFile(fileName);
+            File propertiesFile = new File(file.getLocationURI());
+            return propertiesFile;
+        }
+        return null;
     }
 
     protected static ImplicitContextSettingJson getImplicitContextSettingJson(ImplicitContextSettings implicitContextSettings) {

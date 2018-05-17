@@ -33,6 +33,8 @@ import org.talend.core.language.ECodeLanguage;
 import org.talend.core.model.general.Project;
 import org.talend.core.model.general.TalendNature;
 import org.talend.core.model.properties.ImplicitContextSettings;
+import org.talend.core.model.properties.ItemRelation;
+import org.talend.core.model.properties.ItemRelations;
 import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.model.properties.StatAndLogsSettings;
 import org.talend.core.model.properties.Status;
@@ -60,6 +62,10 @@ public class ProjectDataJsonProviderTest {
     private int technicalStatusCount = 5;
 
     private int documentationStatusCount = 4;
+
+    private int itemRelationsCount = 10;
+
+    private int itemRelationCount = 8;
 
     @Before
     public void beforeTest() throws PersistenceException, CoreException {
@@ -102,6 +108,7 @@ public class ProjectDataJsonProviderTest {
 
         fillTechnicalStatus(sampleProject);
         fillDocumentationStatus(sampleProject);
+        fillItemRelations(sampleProject);
     }
 
     private void checkResult(Project project) {
@@ -127,6 +134,23 @@ public class ProjectDataJsonProviderTest {
             Status status = (Status) documentationStatusList.get(i);
             assertEquals(status.getCode(), "code" + i);
             assertEquals(status.getLabel(), "label" + i);
+        }
+        EList itemRelationsList = sampleProject.getEmfProject().getItemsRelations();
+        assertEquals(itemRelationsCount, itemRelationsList.size());
+        for (int i = 0; i < itemRelationsCount; i++) {
+            ItemRelations itemRelations = (ItemRelations) itemRelationsList.get(i);
+            ItemRelation baseItem = itemRelations.getBaseItem();
+            assertEquals(baseItem.getId(), "base_id" + i);
+            assertEquals(baseItem.getType(), "base_type" + i);
+            assertEquals(baseItem.getVersion(), "base_version" + i);
+            EList itemRelationList = itemRelations.getRelatedItems();
+            assertEquals(itemRelationCount, itemRelationList.size());
+            for (int j = 0; j < itemRelationList.size(); j++) {
+                ItemRelation item = (ItemRelation) itemRelationList.get(j);
+                assertEquals(item.getId(), "id" + j);
+                assertEquals(item.getType(), "type" + j);
+                assertEquals(item.getVersion(), "version" + j);
+            }
         }
     }
 
@@ -214,6 +238,25 @@ public class ProjectDataJsonProviderTest {
             status.setCode("code" + i);
             status.setLabel("label" + i);
             project.getEmfProject().getDocumentationStatus().add(status);
+        }
+    }
+
+    private void fillItemRelations(Project project) {
+        for (int i = 0; i < itemRelationsCount; i++) {
+            ItemRelations itemRelations = PropertiesFactoryImpl.eINSTANCE.createItemRelations();
+            ItemRelation baseItem = PropertiesFactoryImpl.eINSTANCE.createItemRelation();
+            baseItem.setId("base_id" + i);
+            baseItem.setType("base_type" + i);
+            baseItem.setVersion("base_version" + i);
+            itemRelations.setBaseItem(baseItem);
+            for (int j = 0; j < itemRelationCount; j++) {
+                ItemRelation item = PropertiesFactoryImpl.eINSTANCE.createItemRelation();
+                item.setId("id" + j);
+                item.setType("type" + j);
+                item.setVersion("version" + j);
+                itemRelations.getRelatedItems().add(item);
+            }
+            project.getEmfProject().getItemsRelations().add(itemRelations);
         }
     }
 
