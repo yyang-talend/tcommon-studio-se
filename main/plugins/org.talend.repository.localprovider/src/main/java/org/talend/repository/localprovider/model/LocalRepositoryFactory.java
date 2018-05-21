@@ -867,7 +867,8 @@ public class LocalRepositoryFactory extends AbstractEMFRepositoryFactory impleme
         }
 
         xmiResourceManager.saveResource(projectResource);  
-        ProjectDataJsonProvider.loadProjectData(project.getEmfProject());
+        IProject iProject = ResourceUtils.getProject(project.getTechnicalLabel());
+        ProjectDataJsonProvider.loadProjectData(project.getEmfProject(), iProject);
     }
     
     private void removeContentsFromProject(Resource projectResource, EClassifier type) {
