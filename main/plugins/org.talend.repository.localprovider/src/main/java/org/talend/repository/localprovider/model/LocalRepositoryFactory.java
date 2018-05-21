@@ -844,8 +844,6 @@ public class LocalRepositoryFactory extends AbstractEMFRepositoryFactory impleme
         project.getEmfProject().getTechnicalStatus().clear();
         project.getEmfProject().getDocumentationStatus().clear();
         project.getEmfProject().getItemsRelations().clear();
-        
-        removeContentsFromProject(projectResource, PropertiesPackage.eINSTANCE.getImplicitContextSettings());
         // folder
         removeContentsFromProject(projectResource, PropertiesPackage.eINSTANCE.getFolderItem());
         // item state
