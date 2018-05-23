@@ -19,9 +19,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import org.eclipse.emf.common.util.EList;
+
 import org.talend.commons.exception.ExceptionHandler;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.VersionUtils;
@@ -59,6 +58,7 @@ import org.talend.designer.core.model.utils.emf.talendfile.MetadataType;
 import org.talend.designer.core.model.utils.emf.talendfile.NodeType;
 import org.talend.designer.core.model.utils.emf.talendfile.ProcessType;
 import org.talend.designer.core.model.utils.emf.talendfile.RoutinesParameterType;
+import org.talend.designer.core.model.utils.emf.talendfile.impl.NodeTypeImpl;
 import org.talend.designer.runprocess.ItemCacheManager;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IProxyRepositoryFactory;
@@ -72,10 +72,14 @@ public final class ProcessUtils {
 
     private static List<IProcess> fakeProcesses = new ArrayList<>();
 
+    private static EsbJobFlags esbJobFlags = new EsbJobFlags();
+
     private static IHadoopClusterService hadoopClusterService = null;
     static {
         hadoopClusterService = HadoopRepositoryUtil.getHadoopClusterService();
     }
+
+
 
     public static void clearFakeProcesses() {
         for (IProcess p : fakeProcesses) {
@@ -976,123 +980,129 @@ public final class ProcessUtils {
         return false;
     }
 
+    public static void clearEsbJobFlags() {
+        esbJobFlags.clear();
+    }
+
     public static boolean isEsbJob(String processId, String version) {
         if (processId == null || version == null) {
             return false;
         }
 
-        return isEsbJobInternal(processId, version, new HashSet<String>());
-    }
-
-    private static boolean isEsbJobInternal(String processId, String version, Set<String> processedJobs) {
-        if (processId == null || version == null) {
-            return false;
+        if (esbJobFlags.contains(processId, version)) {
+            return esbJobFlags.isEsbJob(processId, version);
         }
 
-        final String jobKey = processId + "_v_" + version;
-        if (processedJobs.contains(jobKey)) {
-            return false;
-        }
-        processedJobs.add(jobKey);
 
-
-        IRepositoryViewObject jobObject;
-        try {
-            jobObject = findJob(processId, version);
-        } catch (PersistenceException e) {
-            return false;
-        }
+        ProcessItem jobObject = ItemCacheManager.getProcessItem(processId, version);
         if (jobObject == null) {
+            esbJobFlags.putJob(processId, version, false);
             return false;
         }
 
-        NodeType node;
-        final String[] esbComponents = {"tESBConsumer", "tESBProviderRequest", "tRouteInput"};
+        List<NodeTypeImpl> nodes = jobObject.getProcess().getNode();
 
         // Check if the job contains 'ESB components'
-        for (Object o : ((ProcessItem) (jobObject.getProperty().getItem())).getProcess().getNode()) {
-            node = (NodeType)o;
-            for (String esbComponentName : esbComponents) {
-                if (esbComponentName.equals(node.getComponentName())) {
-                    return true;
+        for(NodeTypeImpl node : nodes) {
+            if (isEsbComponentName(node.getComponentName())) {
+                esbJobFlags.putJob(processId, version, true);
+                return true;
+            }
+        }
+
+        // Check if joblets contain ESB components
+        IJobletProviderService jobletService = (IJobletProviderService) GlobalServiceRegister.getDefault().getService(
+                IJobletProviderService.class);
+        for(NodeTypeImpl node : nodes) {
+            if ("aJoblet".equals(node.getComponentName())) {
+                ProcessType jobletProcess = jobletService.getJobletProcess(node);
+                if (jobletProcess != null) {
+                    List<NodeTypeImpl> jobletNodes  = jobletProcess.getNode();
+                    for (NodeTypeImpl jobletNode : jobletNodes) {
+                        if (isEsbComponentName(jobletNode.getComponentName())) {
+                            esbJobFlags.putJob(processId, version, true);
+                            return true;
+                        }
+                    }
+                    for (NodeTypeImpl jobletNode : jobletNodes) {
+                        if ("tRunJob".equals(jobletNode.getComponentName()) && isSubjobEsb(node)) {
+                            esbJobFlags.putJob(processId, version, true);
+                            return true;
+                        }
+                    }
                 }
             }
         }
 
 
         //Check if subjobs of the given job contain ESB components
-        for (Object o : ((ProcessItem) (jobObject.getProperty().getItem())).getProcess().getNode()) {
-            node = (NodeType)o;
-            if ("tRunJob".equals(node.getComponentName())) {
-                String childJobId = null;
-                String childJobVersion = null;
-                List<ElementParameterType> eleParams = (List<ElementParameterType>) node.getElementParameter();
-                for (ElementParameterType elementParameter : eleParams) {
-                    if ("PROCESS:PROCESS_TYPE_PROCESS".equals(elementParameter.getName())) {
-                        childJobId = elementParameter.getValue();
-                    } else if ("PROCESS:PROCESS_TYPE_VERSION".equals(elementParameter.getName())) {
-                        childJobVersion = elementParameter.getValue();
-                    }
-                }
-                if (isEsbJobInternal(childJobId, childJobVersion, processedJobs)) {
-                    return true;
-                }
+        for(NodeTypeImpl node : nodes) {
+            if ("tRunJob".equals(node.getComponentName()) && isSubjobEsb(node)) {
+                esbJobFlags.putJob(processId, version, true);
+                return true;
             }
         }
 
+        esbJobFlags.putJob(processId, version, false);
         return false;
     }
 
 
-    private static IRepositoryViewObject findJob(String jobId, String jobVersion) throws PersistenceException {
-        IProxyRepositoryFactory factory = CoreRuntimePlugin.getInstance().getProxyRepositoryFactory();
-        if (factory == null) {
-            return null;
-        }
-
-        Project currentProject = ProjectManager.getInstance().getCurrentProject();
-        List<IRepositoryViewObject> jobs = factory.getAll(currentProject, ERepositoryObjectType.PROCESS);
-
-
-        // 1. At first let's look into current project
-        if (RelationshipItemBuilder.LATEST_VERSION.equals(jobVersion)) {
-            IRepositoryViewObject result =  factory.getLastVersion(jobId);
-            if (result != null) {
-                return result;
-            }
-        } else {
-            if (jobs != null) {
-                for (IRepositoryViewObject job : jobs) {
-                    if (job.getId().equals(jobId)) {
-                        return factory.getSpecificVersion(currentProject, job.getId(), jobVersion, false);
-                    }
-                }
+    private static boolean isSubjobEsb(NodeTypeImpl subjobNode) {
+        String childJobId = null;
+        String childJobVersion = null;
+        List<ElementParameterType> eleParams = (List<ElementParameterType>) subjobNode.getElementParameter();
+        for (ElementParameterType elementParameter : eleParams) {
+            if ("PROCESS:PROCESS_TYPE_PROCESS".equals(elementParameter.getName())) {
+                childJobId = elementParameter.getValue();
+            } else if ("PROCESS:PROCESS_TYPE_VERSION".equals(elementParameter.getName())) {
+                childJobVersion = elementParameter.getValue();
             }
         }
-
-
-        // 2. Now, lets' look through reference projects
-        List<Project> projects = ProjectManager.getInstance().getAllReferencedProjects();
-        if (projects == null) {
-            return null;
+        if (isEsbJob(childJobId, childJobVersion)) {
+            esbJobFlags.putJob(childJobId, childJobVersion, true);
+            return true;
         }
+        return  false;
+    }
 
-        for (Project p : projects) {
-            jobs = factory.getAll(p, ERepositoryObjectType.PROCESS);
-            if (jobs == null) {
-                continue;
-            }
-            for (IRepositoryViewObject job : jobs) {
-                if (job.getId().equals(jobId)) {
-                    if (RelationshipItemBuilder.LATEST_VERSION.equals(jobVersion)) {
-                        return factory.getLastVersion(p, job.getId());
-                    } else {
-                        return factory.getSpecificVersion(p, job.getId(), jobVersion, false);
-                    }
-                }
+    private static boolean isEsbComponentName(String componentName) {
+        final String[] esbComponents = {"tESBConsumer", "tESBProviderRequest", "tRouteInput"};
+        for (String esbComponentName : esbComponents) {
+            if (esbComponentName.equals(componentName)) {
+                return true;
             }
         }
+        return false;
+    }
 
-        return null;
+
+    private static class EsbJobFlags {
+
+        private Map<String, Boolean> esbJobFlags = new HashMap<String, Boolean>();
+
+        private String jobKey(String processId, String version) {
+            return processId + "_v_" + version;
+        }
+
+        public boolean contains(String processId, String version) {
+            return  esbJobFlags.containsKey(jobKey(processId, version));
+        }
+
+        public boolean isEsbJob(String processId, String version) {
+            if (contains(processId, version)) {
+                return  esbJobFlags.get(jobKey(processId,version));
+            } else {
+                return false;
+            }
+        }
+
+        public void putJob(String processId, String version, boolean isEsbJob) {
+            esbJobFlags.put(jobKey(processId, version), isEsbJob);
+        }
+
+        public void clear() {
+            esbJobFlags.clear();
+        }
     }
 }
