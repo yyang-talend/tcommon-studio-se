@@ -53,6 +53,7 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
@@ -812,12 +813,31 @@ public class LocalRepositoryFactory extends AbstractEMFRepositoryFactory impleme
         return project;
     }
 
+    @SuppressWarnings("serial")
     @Override
     public void saveProject(Project project) throws PersistenceException {
+        Set<String> transientReferenceSet = new HashSet<String>();
+        transientReferenceSet.add(PropertiesPackage.eINSTANCE.getProject_Folders().getName());
+        transientReferenceSet.add(PropertiesPackage.eINSTANCE.getProject_AvailableRefProject().getName());
+        transientReferenceSet.add(PropertiesPackage.eINSTANCE.getProject_TechnicalStatus().getName());
+        transientReferenceSet.add(PropertiesPackage.eINSTANCE.getProject_DocumentationStatus().getName());
+        transientReferenceSet.add(PropertiesPackage.eINSTANCE.getProject_StatAndLogsSettings().getName());
+        transientReferenceSet.add(PropertiesPackage.eINSTANCE.getProject_ImplicitContextSettings().getName());
+        transientReferenceSet.add(PropertiesPackage.eINSTANCE.getProject_ItemsRelations().getName());
         for (EReference reference : project.getEmfProject().eClass().getEAllReferences()) {
-            if (reference.getName().equals("folders") || reference.getName().equals("availableRefProject")) {
+            if (transientReferenceSet.contains(reference.getName())) {
                 if (!reference.isTransient()) {
                     reference.setTransient(true);
+                }
+            }
+        }
+
+        Set<String> transientAttributeSet = new HashSet<String>();
+        transientAttributeSet.add(PropertiesPackage.eINSTANCE.getProject_DeletedFolders().getName());
+        for (EAttribute attribute : project.getEmfProject().eClass().getEAllAttributes()) {
+            if (transientAttributeSet.contains(attribute.getName())) {
+                if (!attribute.isTransient()) {
+                    attribute.setTransient(true);
                 }
             }
         }
@@ -837,13 +857,7 @@ public class LocalRepositoryFactory extends AbstractEMFRepositoryFactory impleme
         if (projectResource.isTrackingModification() && !projectResource.isModified()) {
             return;
         }
-        ProjectDataJsonProvider.saveProjectData(project.getEmfProject());
 
-        project.getEmfProject().setImplicitContextSettings(null);
-        project.getEmfProject().setStatAndLogsSettings(null);
-        project.getEmfProject().getTechnicalStatus().clear();
-        project.getEmfProject().getDocumentationStatus().clear();
-        project.getEmfProject().getItemsRelations().clear();
         // folder
         removeContentsFromProject(projectResource, PropertiesPackage.eINSTANCE.getFolderItem());
         // item state
@@ -865,8 +879,7 @@ public class LocalRepositoryFactory extends AbstractEMFRepositoryFactory impleme
         }
 
         xmiResourceManager.saveResource(projectResource);  
-        IProject iProject = ResourceUtils.getProject(project.getTechnicalLabel());
-        ProjectDataJsonProvider.loadProjectData(project.getEmfProject(), iProject);
+        ProjectDataJsonProvider.saveProjectData(project.getEmfProject());
     }
     
     private void removeContentsFromProject(Resource projectResource, EClassifier type) {

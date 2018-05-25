@@ -29,11 +29,13 @@ import org.talend.core.model.properties.Project;
 import org.talend.core.model.properties.StatAndLogsSettings;
 import org.talend.core.model.properties.Status;
 import org.talend.core.model.properties.impl.PropertiesFactoryImpl;
+import org.talend.core.repository.recyclebin.RecycleBinManager;
 import org.talend.designer.core.model.utils.emf.talendfile.ElementParameterType;
 import org.talend.designer.core.model.utils.emf.talendfile.ElementValueType;
 import org.talend.designer.core.model.utils.emf.talendfile.ParametersType;
 import org.talend.designer.core.model.utils.emf.talendfile.RoutinesParameterType;
 import org.talend.designer.core.model.utils.emf.talendfile.impl.TalendFileFactoryImpl;
+import org.talend.model.recyclebin.RecycleBin;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -44,18 +46,39 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class ProjectDataJsonProvider {
 
     public static final String CONFIGURATION_FOLDER_NAME = ".settings"; //$NON-NLS-1$
+
     public static final String PROJECTSETTING_FILE_NAME = "project.settings"; //$NON-NLS-1$
+
     public static final String RELATIONSHIPS_FILE_NAME = "relationship.index"; //$NON-NLS-1$
-    public static final String RECYLEBIN_FILE_NAME = "recycle_bin.index"; //$NON-NLS-1$
 
     public static void saveProjectData(Project project) throws PersistenceException {
         saveProjectSettings(project);
         saveRelationShips(project);
+        RecycleBinManager.getInstance().saveRecycleBin(project);
     }
 
     public static void loadProjectData(Project project, IProject iProject) throws PersistenceException {
         loadProjectSettings(project, iProject);
         loadRelationShips(project, iProject);
+        // Force reload from file
+        RecycleBinManager.getInstance().clearCache(project);
+        RecycleBin recycleBin = RecycleBinManager.getInstance().getRecycleBin(project);
+        for (int i = 0; i < recycleBin.getDeletedFolders().size(); i++) {
+            String folder = (String) recycleBin.getDeletedFolders().get(i);
+            if (!project.getDeletedFolders().contains(folder)) {
+                project.getDeletedFolders().add(folder);
+            }
+        }
+        
+        //TODO --KK
+        // List<String> removedList = new ArrayList<String>();
+        // for (int i = 0; i < project.getDeletedFolders().size(); i++) {
+        // String folder = (String) project.getDeletedFolders().get(i);
+        // if (!recycleBin.getDeletedFolders().contains(folder)) {
+        // removedList.add(folder);
+        // }
+        // }
+        // project.getDeletedFolders().removeAll(removedList);
     }
 
     private static void saveProjectSettings(Project project) throws PersistenceException {
@@ -242,27 +265,6 @@ public class ProjectDataJsonProvider {
         if (itemRelationsList != null && itemRelationsList.size() > 0) {
             for (ItemRelationsJson json : itemRelationsList) {
                 project.getItemsRelations().add(json.toEmfObject());
-            }
-        }
-    }
-
-    protected static List<String> getDeleteFoldersJson(EList deleteFolders) {
-        if (deleteFolders.size() > 0) {
-            List<String> list = new ArrayList<String>(deleteFolders.size());
-            for (int i = 0; i < deleteFolders.size(); i++) {
-                String folder = (String) deleteFolders.get(i);
-                list.add(folder);
-            }
-            return list;
-        }
-        return null;
-    }
-
-    protected static void loadDeleteFolders(List<String> deleteFoldersList, Project project) {
-        project.getDeletedFolders().clear();
-        if (deleteFoldersList != null && deleteFoldersList.size() > 0) {
-            for (String folder : deleteFoldersList) {
-                project.getDeletedFolders().add(folder);
             }
         }
     }

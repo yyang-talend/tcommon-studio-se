@@ -66,6 +66,8 @@ public class ProjectDataJsonProviderTest {
     private int itemRelationsCount = 10;
 
     private int itemRelationCount = 8;
+    
+    private int deleteFolderCount = 5;
 
     @Before
     public void beforeTest() throws PersistenceException, CoreException {
@@ -109,6 +111,7 @@ public class ProjectDataJsonProviderTest {
         fillTechnicalStatus(sampleProject);
         fillDocumentationStatus(sampleProject);
         fillItemRelations(sampleProject);
+        fillDeleteFolders(sampleProject);
     }
 
     private void checkResult(Project project) {
@@ -151,6 +154,12 @@ public class ProjectDataJsonProviderTest {
                 assertEquals(item.getType(), "type" + j);
                 assertEquals(item.getVersion(), "version" + j);
             }
+        }
+        EList deleteFolders = sampleProject.getEmfProject().getDeletedFolders();
+        assertEquals(deleteFolderCount, deleteFolders.size());
+        for (int i = 0; i < deleteFolders.size(); i++) {
+            String deleteFolder = (String) deleteFolders.get(i);
+            assertEquals(deleteFolder, "deleteFolder_" + i);
         }
     }
 
@@ -257,6 +266,12 @@ public class ProjectDataJsonProviderTest {
                 itemRelations.getRelatedItems().add(item);
             }
             project.getEmfProject().getItemsRelations().add(itemRelations);
+        }
+    }
+    
+    private void fillDeleteFolders(Project project) {
+        for (int i = 0; i < deleteFolderCount; i++) {
+            project.getEmfProject().getDeletedFolders().add("deleteFolder_" + i);
         }
     }
 

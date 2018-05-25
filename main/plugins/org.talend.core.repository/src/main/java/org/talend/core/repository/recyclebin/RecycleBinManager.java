@@ -77,18 +77,22 @@ public class RecycleBinManager {
     }
 
     public void clearCache(Project project) {
+        clearCache(project.getEmfProject());
+    }
+
+    public void clearCache(org.talend.core.model.properties.Project project) {
         String projectTechnicalLabel = project.getTechnicalLabel();
         projectRecyclebins.remove(projectTechnicalLabel);
     }
 
     public void clearIndex(Project project) {
-        loadRecycleBin(project);
+        loadRecycleBin(project.getEmfProject());
         projectRecyclebins.get(project.getTechnicalLabel()).getDeletedItems().clear();
-        saveRecycleBin(project);
+        saveRecycleBin(project.getEmfProject());
     }
 
     public List<IRepositoryViewObject> getDeletedObjects(Project project) {
-        loadRecycleBin(project);
+        loadRecycleBin(project.getEmfProject());
         List<IRepositoryViewObject> deletedObjects = new ArrayList<IRepositoryViewObject>();
         final EList<TalendItem> deletedItems = projectRecyclebins.get(project.getTechnicalLabel()).getDeletedItems();
         List<TalendItem> notDeletedItems = new ArrayList<TalendItem>();
@@ -96,9 +100,8 @@ public class RecycleBinManager {
             try {
                 final ERepositoryObjectType type = ERepositoryObjectType.getType(deletedItem.getType());
                 // ignore the generated doc in recycle bin
-                if (type != null
-                        && (type.equals(ERepositoryObjectType.JOB_DOC) || type.equals(ERepositoryObjectType.JOBLET_DOC) || type
-                                .equals(ERepositoryObjectType.valueOf("ROUTE_DOC")))) { //$NON-NLS-1$
+                if (type != null && (type.equals(ERepositoryObjectType.JOB_DOC) || type.equals(ERepositoryObjectType.JOBLET_DOC)
+                        || type.equals(ERepositoryObjectType.valueOf("ROUTE_DOC")))) { //$NON-NLS-1$
                     continue;
                 }
                 IRepositoryViewObject object = ProxyRepositoryFactory.getInstance().getLastVersion(project, deletedItem.getId(),
@@ -136,7 +139,7 @@ public class RecycleBinManager {
     }
 
     public void addToRecycleBin(Project project, Item item, boolean skipAutoSave) {
-        loadRecycleBin(project);
+        loadRecycleBin(project.getEmfProject());
         boolean contains = false;
         for (TalendItem deletedItem : projectRecyclebins.get(project.getTechnicalLabel()).getDeletedItems()) {
             if (item.getProperty().getId().equals(deletedItem.getId())) {
@@ -161,7 +164,7 @@ public class RecycleBinManager {
     }
 
     public void removeFromRecycleBin(Project project, Item item, boolean skipAutoSave) {
-        loadRecycleBin(project);
+        loadRecycleBin(project.getEmfProject());
         TalendItem itemToDelete = null;
         for (TalendItem deletedItem : projectRecyclebins.get(project.getTechnicalLabel()).getDeletedItems()) {
             if (item.getProperty().getId().equals(deletedItem.getId())) {
@@ -178,11 +181,15 @@ public class RecycleBinManager {
     }
 
     public RecycleBin getRecycleBin(Project project) {
+        return getRecycleBin(project.getEmfProject());
+    }
+
+    public RecycleBin getRecycleBin(org.talend.core.model.properties.Project project) {
         loadRecycleBin(project);
         return projectRecyclebins.get(project.getTechnicalLabel());
     }
 
-    private void loadRecycleBin(Project project) {
+    private void loadRecycleBin(org.talend.core.model.properties.Project project) {
         if (projectRecyclebins.get(project.getTechnicalLabel()) != null) {
             // already loaded, nothing to do. Don't do any force reload
             return;
@@ -215,6 +222,10 @@ public class RecycleBinManager {
     }
 
     public void saveRecycleBin(Project project) {
+        saveRecycleBin(project.getEmfProject());
+    }
+
+    public void saveRecycleBin(org.talend.core.model.properties.Project project) {
         if (projectRecyclebins.get(project.getTechnicalLabel()) == null) {
             loadRecycleBin(project);
         }
@@ -224,19 +235,24 @@ public class RecycleBinManager {
                 resource = createRecycleBinResource(project);
             }
             resource.getContents().clear();
-            projectRecyclebins.get(project.getTechnicalLabel()).setLastUpdate(new Date());
-            resource.getContents().add(projectRecyclebins.get(project.getTechnicalLabel()));
+            RecycleBin recycleBin = projectRecyclebins.get(project.getTechnicalLabel());
+            recycleBin.setLastUpdate(new Date());
+            recycleBin.getDeletedFolders().clear();
+            for (int i = 0; i < project.getDeletedFolders().size(); i++) {
+                recycleBin.getDeletedFolders().add((String) project.getDeletedFolders().get(i));
+            }
+            resource.getContents().add(recycleBin);
             EmfHelper.saveResource(resource);
         } catch (PersistenceException e) {
             ExceptionHandler.process(e);
         }
     }
 
-    private Resource getResource(Project project) {
+    private Resource getResource(org.talend.core.model.properties.Project project) {
         if (projectRecyclebins.get(project.getTechnicalLabel()) == null
                 || projectRecyclebins.get(project.getTechnicalLabel()).eResource() == null) {
 
-            IProject eclipseProject = ProjectManager.getInstance().getResourceProject(project.getEmfProject());
+            IProject eclipseProject = ProjectManager.getInstance().getResourceProject(project);
             if (eclipseProject.getFile(TALEND_RECYCLE_BIN_INDEX).exists()) {
                 return createRecycleBinResource(project);
             }
@@ -245,9 +261,8 @@ public class RecycleBinManager {
         return projectRecyclebins.get(project.getTechnicalLabel()).eResource();
     }
 
-    private Resource createRecycleBinResource(Project project) {
-        IProject eclipseProject = ProjectManager.getInstance().getResourceProject(project.getEmfProject());
-
+    private Resource createRecycleBinResource(org.talend.core.model.properties.Project project) {
+        IProject eclipseProject = ProjectManager.getInstance().getResourceProject(project);
         return createRecycleBinResource(eclipseProject.getFullPath().append(TALEND_RECYCLE_BIN_INDEX));
     }
 
