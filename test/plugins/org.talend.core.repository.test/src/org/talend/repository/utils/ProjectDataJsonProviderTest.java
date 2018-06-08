@@ -40,6 +40,7 @@ import org.talend.core.model.properties.StatAndLogsSettings;
 import org.talend.core.model.properties.Status;
 import org.talend.core.model.properties.User;
 import org.talend.core.model.properties.impl.PropertiesFactoryImpl;
+import org.talend.core.repository.utils.ProjectDataJsonProvider;
 import org.talend.core.repository.utils.XmiResourceManager;
 import org.talend.designer.core.model.utils.emf.talendfile.ElementParameterType;
 import org.talend.designer.core.model.utils.emf.talendfile.ElementValueType;
@@ -66,7 +67,7 @@ public class ProjectDataJsonProviderTest {
     private int itemRelationsCount = 10;
 
     private int itemRelationCount = 8;
-    
+
     private int deleteFolderCount = 5;
 
     @Before
@@ -85,7 +86,7 @@ public class ProjectDataJsonProviderTest {
         LocalRepositoryFactory localRepositoryFactory = new LocalRepositoryFactory();
         localRepositoryFactory.saveProject(sampleProject);
 
-        checkResult(sampleProject);
+        checkResult(sampleProject, ProjectDataJsonProvider.LOAD_CONTENT_ALL);
     }
 
     @Test
@@ -98,7 +99,42 @@ public class ProjectDataJsonProviderTest {
         org.talend.core.model.properties.Project emfProject = xrm.loadProject(physProject);
         sampleProject = new Project(emfProject);
 
-        checkResult(sampleProject);
+        checkResult(sampleProject, ProjectDataJsonProvider.LOAD_CONTENT_ALL);
+    }
+
+    @Test
+    public void testLoadProjectContent() throws Exception {
+        LocalRepositoryFactory localRepositoryFactory = new LocalRepositoryFactory();
+        localRepositoryFactory.saveProject(sampleProject);
+
+        IProject physProject = ResourceUtils.getProject(sampleProject);
+        org.talend.core.model.properties.Project tempProject = PropertiesFactoryImpl.eINSTANCE.createProject();
+        tempProject.setTechnicalLabel(sampleProject.getTechnicalLabel());
+        ProjectDataJsonProvider.loadProjectData(tempProject, physProject, ProjectDataJsonProvider.LOAD_CONTENT_PROJECTSETTING);
+
+        checkResult(new Project(tempProject), ProjectDataJsonProvider.LOAD_CONTENT_PROJECTSETTING);
+        assertEquals(0, tempProject.getItemsRelations().size());
+        assertEquals(0, tempProject.getDeletedFolders().size());
+
+        tempProject = PropertiesFactoryImpl.eINSTANCE.createProject();
+        tempProject.setTechnicalLabel(sampleProject.getTechnicalLabel());
+        ProjectDataJsonProvider.loadProjectData(tempProject, physProject,
+                ProjectDataJsonProvider.LOAD_CONTENT_PROJECTSETTING | ProjectDataJsonProvider.LOAD_CONTENT_RELATIONSHIPS);
+
+        checkResult(new Project(tempProject),
+                ProjectDataJsonProvider.LOAD_CONTENT_PROJECTSETTING | ProjectDataJsonProvider.LOAD_CONTENT_RELATIONSHIPS);
+        assertEquals(itemRelationsCount, tempProject.getItemsRelations().size());
+        assertEquals(0, tempProject.getDeletedFolders().size());
+
+        tempProject = PropertiesFactoryImpl.eINSTANCE.createProject();
+        tempProject.setTechnicalLabel(sampleProject.getTechnicalLabel());
+        ProjectDataJsonProvider.loadProjectData(tempProject, physProject, ProjectDataJsonProvider.LOAD_CONTENT_PROJECTSETTING
+                | ProjectDataJsonProvider.LOAD_CONTENT_RELATIONSHIPS | ProjectDataJsonProvider.LOAD_CONTENT_RECYCLEBIN);
+
+        checkResult(new Project(tempProject), ProjectDataJsonProvider.LOAD_CONTENT_PROJECTSETTING
+                | ProjectDataJsonProvider.LOAD_CONTENT_RELATIONSHIPS | ProjectDataJsonProvider.LOAD_CONTENT_RECYCLEBIN);
+        assertEquals(itemRelationsCount, tempProject.getItemsRelations().size());
+        assertEquals(deleteFolderCount, tempProject.getDeletedFolders().size());
     }
 
     private void prepareProjectData() {
@@ -114,52 +150,58 @@ public class ProjectDataJsonProviderTest {
         fillDeleteFolders(sampleProject);
     }
 
-    private void checkResult(Project project) {
-        ImplicitContextSettings implicitContextSettings = sampleProject.getEmfProject().getImplicitContextSettings();
-        assertNotNull(implicitContextSettings);
-        checkParametersType(implicitContextSettings.getParameters());
+    private void checkResult(Project project, int checkContent) {
+        if ((checkContent & ProjectDataJsonProvider.LOAD_CONTENT_PROJECTSETTING) > 0) {
+            ImplicitContextSettings implicitContextSettings = sampleProject.getEmfProject().getImplicitContextSettings();
+            assertNotNull(implicitContextSettings);
+            checkParametersType(implicitContextSettings.getParameters());
 
-        StatAndLogsSettings statAndLogsSettings = sampleProject.getEmfProject().getStatAndLogsSettings();
-        assertNotNull(statAndLogsSettings);
-        checkParametersType(statAndLogsSettings.getParameters());
+            StatAndLogsSettings statAndLogsSettings = sampleProject.getEmfProject().getStatAndLogsSettings();
+            assertNotNull(statAndLogsSettings);
+            checkParametersType(statAndLogsSettings.getParameters());
 
-        EList technicalStatusList = sampleProject.getEmfProject().getTechnicalStatus();
-        assertEquals(technicalStatusCount, technicalStatusList.size());
-        for (int i = 0; i < technicalStatusList.size(); i++) {
-            Status status = (Status) technicalStatusList.get(i);
-            assertEquals(status.getCode(), "code" + i);
-            assertEquals(status.getLabel(), "label" + i);
-        }
+            EList technicalStatusList = sampleProject.getEmfProject().getTechnicalStatus();
+            assertEquals(technicalStatusCount, technicalStatusList.size());
+            for (int i = 0; i < technicalStatusList.size(); i++) {
+                Status status = (Status) technicalStatusList.get(i);
+                assertEquals(status.getCode(), "code" + i);
+                assertEquals(status.getLabel(), "label" + i);
+            }
 
-        EList documentationStatusList = sampleProject.getEmfProject().getDocumentationStatus();
-        assertEquals(documentationStatusCount, documentationStatusList.size());
-        for (int i = 0; i < documentationStatusList.size(); i++) {
-            Status status = (Status) documentationStatusList.get(i);
-            assertEquals(status.getCode(), "code" + i);
-            assertEquals(status.getLabel(), "label" + i);
-        }
-        EList itemRelationsList = sampleProject.getEmfProject().getItemsRelations();
-        assertEquals(itemRelationsCount, itemRelationsList.size());
-        for (int i = 0; i < itemRelationsCount; i++) {
-            ItemRelations itemRelations = (ItemRelations) itemRelationsList.get(i);
-            ItemRelation baseItem = itemRelations.getBaseItem();
-            assertEquals(baseItem.getId(), "base_id" + i);
-            assertEquals(baseItem.getType(), "base_type" + i);
-            assertEquals(baseItem.getVersion(), "base_version" + i);
-            EList itemRelationList = itemRelations.getRelatedItems();
-            assertEquals(itemRelationCount, itemRelationList.size());
-            for (int j = 0; j < itemRelationList.size(); j++) {
-                ItemRelation item = (ItemRelation) itemRelationList.get(j);
-                assertEquals(item.getId(), "id" + j);
-                assertEquals(item.getType(), "type" + j);
-                assertEquals(item.getVersion(), "version" + j);
+            EList documentationStatusList = sampleProject.getEmfProject().getDocumentationStatus();
+            assertEquals(documentationStatusCount, documentationStatusList.size());
+            for (int i = 0; i < documentationStatusList.size(); i++) {
+                Status status = (Status) documentationStatusList.get(i);
+                assertEquals(status.getCode(), "code" + i);
+                assertEquals(status.getLabel(), "label" + i);
             }
         }
-        EList deleteFolders = sampleProject.getEmfProject().getDeletedFolders();
-        assertEquals(deleteFolderCount, deleteFolders.size());
-        for (int i = 0; i < deleteFolders.size(); i++) {
-            String deleteFolder = (String) deleteFolders.get(i);
-            assertEquals(deleteFolder, "deleteFolder_" + i);
+        if ((checkContent & ProjectDataJsonProvider.LOAD_CONTENT_RELATIONSHIPS) > 0) {
+            EList itemRelationsList = sampleProject.getEmfProject().getItemsRelations();
+            assertEquals(itemRelationsCount, itemRelationsList.size());
+            for (int i = 0; i < itemRelationsCount; i++) {
+                ItemRelations itemRelations = (ItemRelations) itemRelationsList.get(i);
+                ItemRelation baseItem = itemRelations.getBaseItem();
+                assertEquals(baseItem.getId(), "base_id" + i);
+                assertEquals(baseItem.getType(), "base_type" + i);
+                assertEquals(baseItem.getVersion(), "base_version" + i);
+                EList itemRelationList = itemRelations.getRelatedItems();
+                assertEquals(itemRelationCount, itemRelationList.size());
+                for (int j = 0; j < itemRelationList.size(); j++) {
+                    ItemRelation item = (ItemRelation) itemRelationList.get(j);
+                    assertEquals(item.getId(), "id" + j);
+                    assertEquals(item.getType(), "type" + j);
+                    assertEquals(item.getVersion(), "version" + j);
+                }
+            }
+        }
+        if ((checkContent & ProjectDataJsonProvider.LOAD_CONTENT_RECYCLEBIN) > 0) {
+            EList deleteFolders = sampleProject.getEmfProject().getDeletedFolders();
+            assertEquals(deleteFolderCount, deleteFolders.size());
+            for (int i = 0; i < deleteFolders.size(); i++) {
+                String deleteFolder = (String) deleteFolders.get(i);
+                assertEquals(deleteFolder, "deleteFolder_" + i);
+            }
         }
     }
 
@@ -268,7 +310,7 @@ public class ProjectDataJsonProviderTest {
             project.getEmfProject().getItemsRelations().add(itemRelations);
         }
     }
-    
+
     private void fillDeleteFolders(Project project) {
         for (int i = 0; i < deleteFolderCount; i++) {
             project.getEmfProject().getDeletedFolders().add("deleteFolder_" + i);

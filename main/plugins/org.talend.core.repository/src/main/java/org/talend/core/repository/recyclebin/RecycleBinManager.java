@@ -35,6 +35,7 @@ import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.constants.FileConstants;
 import org.talend.core.repository.model.ProjectRepositoryNode;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.repository.utils.URIHelper;
@@ -51,8 +52,6 @@ import org.talend.repository.ProjectManager;
 public class RecycleBinManager {
 
     private static Map<String, RecycleBin> projectRecyclebins;
-
-    public static final String TALEND_RECYCLE_BIN_INDEX = "recycle_bin.index"; //$NON-NLS-1$
 
     private static RecycleBinManager manager;
 
@@ -253,7 +252,7 @@ public class RecycleBinManager {
                 || projectRecyclebins.get(project.getTechnicalLabel()).eResource() == null) {
 
             IProject eclipseProject = ProjectManager.getInstance().getResourceProject(project);
-            if (eclipseProject.getFile(TALEND_RECYCLE_BIN_INDEX).exists()) {
+            if (eclipseProject.getFile(FileConstants.TALEND_RECYCLE_BIN_INDEX).exists()) {
                 return createRecycleBinResource(project);
             }
             return null;
@@ -263,7 +262,7 @@ public class RecycleBinManager {
 
     private Resource createRecycleBinResource(org.talend.core.model.properties.Project project) {
         IProject eclipseProject = ProjectManager.getInstance().getResourceProject(project);
-        return createRecycleBinResource(eclipseProject.getFullPath().append(TALEND_RECYCLE_BIN_INDEX));
+        return createRecycleBinResource(eclipseProject.getFullPath().append(FileConstants.TALEND_RECYCLE_BIN_INDEX));
     }
 
     public Resource createRecycleBinResource(IPath recycleBinIndexPath) {

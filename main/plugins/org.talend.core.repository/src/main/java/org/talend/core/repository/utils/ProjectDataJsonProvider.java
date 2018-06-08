@@ -16,9 +16,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.workbench.resources.ResourceUtils;
@@ -29,6 +31,7 @@ import org.talend.core.model.properties.Project;
 import org.talend.core.model.properties.StatAndLogsSettings;
 import org.talend.core.model.properties.Status;
 import org.talend.core.model.properties.impl.PropertiesFactoryImpl;
+import org.talend.core.repository.constants.FileConstants;
 import org.talend.core.repository.recyclebin.RecycleBinManager;
 import org.talend.designer.core.model.utils.emf.talendfile.ElementParameterType;
 import org.talend.designer.core.model.utils.emf.talendfile.ElementValueType;
@@ -45,11 +48,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ProjectDataJsonProvider {
 
-    public static final String CONFIGURATION_FOLDER_NAME = ".settings"; //$NON-NLS-1$
+    public static int LOAD_CONTENT_PROJECTSETTING = 1;
 
-    public static final String PROJECTSETTING_FILE_NAME = "project.settings"; //$NON-NLS-1$
+    public static int LOAD_CONTENT_RELATIONSHIPS = 2;
 
-    public static final String RELATIONSHIPS_FILE_NAME = "relationship.index"; //$NON-NLS-1$
+    public static int LOAD_CONTENT_RECYCLEBIN = 4;
+
+    public static int LOAD_CONTENT_ALL = 7;
 
     public static void saveProjectData(Project project) throws PersistenceException {
         saveProjectSettings(project);
@@ -57,28 +62,34 @@ public class ProjectDataJsonProvider {
         RecycleBinManager.getInstance().saveRecycleBin(project);
     }
 
-    public static void loadProjectData(Project project, IProject iProject) throws PersistenceException {
-        loadProjectSettings(project, iProject);
-        loadRelationShips(project, iProject);
-        // Force reload from file
-        RecycleBinManager.getInstance().clearCache(project);
-        RecycleBin recycleBin = RecycleBinManager.getInstance().getRecycleBin(project);
-        for (int i = 0; i < recycleBin.getDeletedFolders().size(); i++) {
-            String folder = (String) recycleBin.getDeletedFolders().get(i);
-            if (!project.getDeletedFolders().contains(folder)) {
-                project.getDeletedFolders().add(folder);
-            }
+    public static void loadProjectData(Project project, IContainer projectContainer, int loadContent)
+            throws PersistenceException {
+        if ((loadContent & LOAD_CONTENT_PROJECTSETTING) > 0) {
+            loadProjectSettings(project, projectContainer);
         }
-        
-        //TODO --KK
-        // List<String> removedList = new ArrayList<String>();
-        // for (int i = 0; i < project.getDeletedFolders().size(); i++) {
-        // String folder = (String) project.getDeletedFolders().get(i);
-        // if (!recycleBin.getDeletedFolders().contains(folder)) {
-        // removedList.add(folder);
-        // }
-        // }
-        // project.getDeletedFolders().removeAll(removedList);
+        if ((loadContent & LOAD_CONTENT_RELATIONSHIPS) > 0) {
+            loadRelationShips(project, projectContainer);
+        }
+        if ((loadContent & LOAD_CONTENT_RECYCLEBIN) > 0) {
+            // Force reload from file
+            RecycleBinManager.getInstance().clearCache(project);
+            RecycleBin recycleBin = RecycleBinManager.getInstance().getRecycleBin(project);
+            for (int i = 0; i < recycleBin.getDeletedFolders().size(); i++) {
+                String folder = (String) recycleBin.getDeletedFolders().get(i);
+                if (!project.getDeletedFolders().contains(folder)) {
+                    project.getDeletedFolders().add(folder);
+                }
+            }
+            // TODO --KK, After migration task finished, should open this
+            // List<String> removedList = new ArrayList<String>();
+            // for (int i = 0; i < project.getDeletedFolders().size(); i++) {
+            // String folder = (String) project.getDeletedFolders().get(i);
+            // if (!recycleBin.getDeletedFolders().contains(folder)) {
+            // removedList.add(folder);
+            // }
+            // }
+            // project.getDeletedFolders().removeAll(removedList);
+        }
     }
 
     private static void saveProjectSettings(Project project) throws PersistenceException {
@@ -87,7 +98,7 @@ public class ProjectDataJsonProvider {
         projectSetting.setStatAndLogsSettingJson(getStatAndLogsSettingJson(project.getStatAndLogsSettings()));
         projectSetting.setTechnicalStatus(getTechnicalStatusJson(project.getTechnicalStatus()));
         projectSetting.setDocumentationStatus(getDocumentationJson(project.getDocumentationStatus()));
-        File file = getSavingConfigurationFile(project.getTechnicalLabel(), PROJECTSETTING_FILE_NAME);
+        File file = getSavingConfigurationFile(project.getTechnicalLabel(), FileConstants.PROJECTSETTING_FILE_NAME);
         try {
             if (!file.exists()) {
                 file.createNewFile();
@@ -98,10 +109,22 @@ public class ProjectDataJsonProvider {
             throw new PersistenceException(e);
         }
     }
+    
+    public static void copyProjectSetting(Project sourceProject, Project targetProject) {
+        ImplicitContextSettingJson implicitContextSettingJson = getImplicitContextSettingJson(sourceProject.getImplicitContextSettings());
+        StatAndLogsSettingJson statAndLogsSettingJson = getStatAndLogsSettingJson(sourceProject.getStatAndLogsSettings());
+        List<StatusJson> technicalStatusJson = getTechnicalStatusJson(sourceProject.getTechnicalStatus());
+        List<StatusJson> documentationJson = getDocumentationJson(sourceProject.getDocumentationStatus());
+        
+        targetProject.setImplicitContextSettings(getImplicitContextSettings(implicitContextSettingJson));
+        targetProject.setStatAndLogsSettings(getStatAndLogsSettings(statAndLogsSettingJson));
+        loadTechnicalStatus(technicalStatusJson, targetProject);
+        loadDocumentationStatus(documentationJson, targetProject);
+    }
 
-    private static void loadProjectSettings(Project project, IProject iProject) throws PersistenceException {
+    private static void loadProjectSettings(Project project, IContainer projectContainer) throws PersistenceException {
         try {
-            File file = getLoadingConfigurationFile(iProject, PROJECTSETTING_FILE_NAME);
+            File file = getLoadingConfigurationFile(projectContainer, FileConstants.PROJECTSETTING_FILE_NAME);
             ProjectSettings projectSetting = null;
             if (file != null && file.exists()) {
                 projectSetting = new ObjectMapper().readValue(file, ProjectSettings.class);
@@ -118,7 +141,7 @@ public class ProjectDataJsonProvider {
     }
 
     private static void saveRelationShips(Project project) throws PersistenceException {
-        File file = getSavingConfigurationFile(project.getTechnicalLabel(), RELATIONSHIPS_FILE_NAME);
+        File file = getSavingConfigurationFile(project.getTechnicalLabel(), FileConstants.RELATIONSHIPS_FILE_NAME);
         try {
             if (!file.exists()) {
                 file.createNewFile();
@@ -130,12 +153,12 @@ public class ProjectDataJsonProvider {
         }
     }
 
-    private static void loadRelationShips(Project project, IProject iProject) throws PersistenceException {
+    private static void loadRelationShips(Project project, IContainer projectContainer) throws PersistenceException {
         TypeReference<List<ItemRelationsJson>> typeReference = new TypeReference<List<ItemRelationsJson>>() {
             // no need to overwrite
         };
         try {
-            File file = getLoadingConfigurationFile(iProject, RELATIONSHIPS_FILE_NAME);
+            File file = getLoadingConfigurationFile(projectContainer, FileConstants.RELATIONSHIPS_FILE_NAME);
             List<ItemRelationsJson> itemRelationsJsons = null;
             if (file != null && file.exists()) {
                 itemRelationsJsons = new ObjectMapper().readValue(file, typeReference);
@@ -152,7 +175,7 @@ public class ProjectDataJsonProvider {
 
     private static File getSavingConfigurationFile(String technicalLabel, String fileName) throws PersistenceException {
         IProject iProject = ResourceUtils.getProject(technicalLabel);
-        IFolder folder = iProject.getFolder(CONFIGURATION_FOLDER_NAME);
+        IFolder folder = iProject.getFolder(FileConstants.CONFIGURATION_FOLDER_NAME);
         if (!folder.exists()) {
             ResourceUtils.createFolder(folder);
         }
@@ -160,10 +183,11 @@ public class ProjectDataJsonProvider {
         return new File(file.getLocationURI());
     }
 
-    private static File getLoadingConfigurationFile(IProject iProject, String fileName) throws PersistenceException {
-        if (iProject != null) {
-            if (PROJECTSETTING_FILE_NAME.equals(fileName) || RELATIONSHIPS_FILE_NAME.equals(fileName)) {
-                IFolder folder = iProject.getFolder(CONFIGURATION_FOLDER_NAME);
+    private static File getLoadingConfigurationFile(IContainer projectContainer, String fileName) throws PersistenceException {
+        if (projectContainer != null) {
+            if (FileConstants.PROJECTSETTING_FILE_NAME.equals(fileName)
+                    || FileConstants.RELATIONSHIPS_FILE_NAME.equals(fileName)) {
+                IFolder folder = projectContainer.getFolder(new Path(FileConstants.CONFIGURATION_FOLDER_NAME));
                 if (folder != null) {
                     IFile file = folder.getFile(fileName);
                     if (file != null) {
@@ -183,7 +207,7 @@ public class ProjectDataJsonProvider {
         return null;
     }
 
-    protected static ImplicitContextSettings getImplicitContextSettings(ImplicitContextSettingJson implicitContextSettingJson) {
+    public static ImplicitContextSettings getImplicitContextSettings(ImplicitContextSettingJson implicitContextSettingJson) {
         if (implicitContextSettingJson != null) {
             return implicitContextSettingJson.toEmfObject();
         }

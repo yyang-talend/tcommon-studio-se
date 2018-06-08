@@ -116,7 +116,7 @@ public class XmiResourceManager {
                 PropertiesPackage.eINSTANCE.getProject());
         emfProject.eResource().setTrackingModification(true);
 
-        ProjectDataJsonProvider.loadProjectData(emfProject, project);
+        ProjectDataJsonProvider.loadProjectData(emfProject, project, ProjectDataJsonProvider.LOAD_CONTENT_ALL);
 
         return emfProject;
     }
