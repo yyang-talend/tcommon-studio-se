@@ -1943,6 +1943,14 @@ public final class ProxyRepositoryFactory implements IProxyRepositoryFactory {
                     }
                 }
 
+                ICoreService coreService = getCoreService();
+                if (coreService != null) {
+                    currentMonitor = subMonitor.newChild(1, SubMonitor.SUPPRESS_NONE);
+                    currentMonitor.beginTask(Messages.getString("ProxyRepositoryFactory.synchronizeLibraries"), 1); //$NON-NLS-1$
+                    coreService.syncLibraries(currentMonitor);
+                    TimeMeasure.step("SyncLibraries", "sync components libraries"); //$NON-NLS-1$
+                }
+
                 currentMonitor = subMonitor.newChild(1, SubMonitor.SUPPRESS_NONE);
                 currentMonitor.beginTask("Execute before logon migrations tasks", 1); //$NON-NLS-1$
                 ProjectManager.getInstance().getMigrationRecords().clear();
@@ -1988,7 +1996,6 @@ public final class ProxyRepositoryFactory implements IProxyRepositoryFactory {
                     throw new OperationCanceledException(""); //$NON-NLS-1$
                 }
                 
-                ICoreService coreService = getCoreService();
                 if (coreService != null) {
                     // clean workspace
                     currentMonitor.beginTask(Messages.getString("ProxyRepositoryFactory.cleanWorkspace"), 1); //$NON-NLS-1$
@@ -2459,5 +2466,13 @@ public final class ProxyRepositoryFactory implements IProxyRepositoryFactory {
     @Override
     public byte[] getReferenceSettingContent(Project project, String branch) throws PersistenceException {
         return repositoryFactoryFromProvider.getReferenceSettingContent(project, branch);
+    }
+
+    public boolean isRepositoryBusy() {
+        return repositoryFactoryFromProvider.isRepositoryBusy();
+    }
+
+    public RepositoryWorkUnit getWorkUnitInProgress() {
+        return repositoryFactoryFromProvider.getWorkUnitInProgress();
     }
 }
