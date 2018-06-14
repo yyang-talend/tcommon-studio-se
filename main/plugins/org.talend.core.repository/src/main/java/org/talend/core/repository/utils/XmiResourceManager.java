@@ -234,16 +234,6 @@ public class XmiResourceManager {
         }
         return getResourceSet().createResource(uri);
     }
-    
-    public Resource createTempProjectSettingResource() {
-        URI uri = null;
-        try {
-            uri = URI.createPlatformResourceURI(Platform.getInstallLocation().getURL().getFile(), true);
-        } catch (Exception e) {
-            ExceptionHandler.process(e);
-        }
-        return getResourceSet().createResource(uri);
-    }
 
     private URI getProjectResourceUri(IProject project) {
         URI uri = URIHelper.convert(project.getFullPath().append(getProjectFilename()));

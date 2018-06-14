@@ -119,18 +119,6 @@ public class ProjectDataJsonProvider {
             throw new PersistenceException(e);
         }
     }
-    
-    public static void copyProjectSetting(Project sourceProject, Project targetProject) {
-        ImplicitContextSettingJson implicitContextSettingJson = getImplicitContextSettingJson(sourceProject.getImplicitContextSettings());
-        StatAndLogsSettingJson statAndLogsSettingJson = getStatAndLogsSettingJson(sourceProject.getStatAndLogsSettings());
-        List<StatusJson> technicalStatusJson = getTechnicalStatusJson(sourceProject.getTechnicalStatus());
-        List<StatusJson> documentationJson = getDocumentationJson(sourceProject.getDocumentationStatus());
-        
-        targetProject.setImplicitContextSettings(getImplicitContextSettings(implicitContextSettingJson));
-        targetProject.setStatAndLogsSettings(getStatAndLogsSettings(statAndLogsSettingJson));
-        loadTechnicalStatus(technicalStatusJson, targetProject);
-        loadDocumentationStatus(documentationJson, targetProject);
-    }
 
     private static void loadProjectSettings(Project project, IContainer projectContainer) throws PersistenceException {
         try {
