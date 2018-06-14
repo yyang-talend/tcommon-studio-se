@@ -86,7 +86,7 @@ public class ProjectDataJsonProviderTest {
         LocalRepositoryFactory localRepositoryFactory = new LocalRepositoryFactory();
         localRepositoryFactory.saveProject(sampleProject);
 
-        checkResult(sampleProject, ProjectDataJsonProvider.LOAD_CONTENT_ALL);
+        checkResult(sampleProject, ProjectDataJsonProvider.CONTENT_ALL);
     }
 
     @Test
@@ -99,7 +99,7 @@ public class ProjectDataJsonProviderTest {
         org.talend.core.model.properties.Project emfProject = xrm.loadProject(physProject);
         sampleProject = new Project(emfProject);
 
-        checkResult(sampleProject, ProjectDataJsonProvider.LOAD_CONTENT_ALL);
+        checkResult(sampleProject, ProjectDataJsonProvider.CONTENT_ALL);
     }
 
     @Test
@@ -110,29 +110,29 @@ public class ProjectDataJsonProviderTest {
         IProject physProject = ResourceUtils.getProject(sampleProject);
         org.talend.core.model.properties.Project tempProject = PropertiesFactoryImpl.eINSTANCE.createProject();
         tempProject.setTechnicalLabel(sampleProject.getTechnicalLabel());
-        ProjectDataJsonProvider.loadProjectData(tempProject, physProject, ProjectDataJsonProvider.LOAD_CONTENT_PROJECTSETTING);
+        ProjectDataJsonProvider.loadProjectData(tempProject, physProject, ProjectDataJsonProvider.CONTENT_PROJECTSETTING);
 
-        checkResult(new Project(tempProject), ProjectDataJsonProvider.LOAD_CONTENT_PROJECTSETTING);
+        checkResult(new Project(tempProject), ProjectDataJsonProvider.CONTENT_PROJECTSETTING);
         assertEquals(0, tempProject.getItemsRelations().size());
         assertEquals(0, tempProject.getDeletedFolders().size());
 
         tempProject = PropertiesFactoryImpl.eINSTANCE.createProject();
         tempProject.setTechnicalLabel(sampleProject.getTechnicalLabel());
         ProjectDataJsonProvider.loadProjectData(tempProject, physProject,
-                ProjectDataJsonProvider.LOAD_CONTENT_PROJECTSETTING | ProjectDataJsonProvider.LOAD_CONTENT_RELATIONSHIPS);
+                ProjectDataJsonProvider.CONTENT_PROJECTSETTING | ProjectDataJsonProvider.CONTENT_RELATIONSHIPS);
 
         checkResult(new Project(tempProject),
-                ProjectDataJsonProvider.LOAD_CONTENT_PROJECTSETTING | ProjectDataJsonProvider.LOAD_CONTENT_RELATIONSHIPS);
+                ProjectDataJsonProvider.CONTENT_PROJECTSETTING | ProjectDataJsonProvider.CONTENT_RELATIONSHIPS);
         assertEquals(itemRelationsCount, tempProject.getItemsRelations().size());
         assertEquals(0, tempProject.getDeletedFolders().size());
 
         tempProject = PropertiesFactoryImpl.eINSTANCE.createProject();
         tempProject.setTechnicalLabel(sampleProject.getTechnicalLabel());
-        ProjectDataJsonProvider.loadProjectData(tempProject, physProject, ProjectDataJsonProvider.LOAD_CONTENT_PROJECTSETTING
-                | ProjectDataJsonProvider.LOAD_CONTENT_RELATIONSHIPS | ProjectDataJsonProvider.LOAD_CONTENT_RECYCLEBIN);
+        ProjectDataJsonProvider.loadProjectData(tempProject, physProject, ProjectDataJsonProvider.CONTENT_PROJECTSETTING
+                | ProjectDataJsonProvider.CONTENT_RELATIONSHIPS | ProjectDataJsonProvider.CONTENT_RECYCLEBIN);
 
-        checkResult(new Project(tempProject), ProjectDataJsonProvider.LOAD_CONTENT_PROJECTSETTING
-                | ProjectDataJsonProvider.LOAD_CONTENT_RELATIONSHIPS | ProjectDataJsonProvider.LOAD_CONTENT_RECYCLEBIN);
+        checkResult(new Project(tempProject), ProjectDataJsonProvider.CONTENT_PROJECTSETTING
+                | ProjectDataJsonProvider.CONTENT_RELATIONSHIPS | ProjectDataJsonProvider.CONTENT_RECYCLEBIN);
         assertEquals(itemRelationsCount, tempProject.getItemsRelations().size());
         assertEquals(deleteFolderCount, tempProject.getDeletedFolders().size());
     }
@@ -151,7 +151,7 @@ public class ProjectDataJsonProviderTest {
     }
 
     private void checkResult(Project project, int checkContent) {
-        if ((checkContent & ProjectDataJsonProvider.LOAD_CONTENT_PROJECTSETTING) > 0) {
+        if ((checkContent & ProjectDataJsonProvider.CONTENT_PROJECTSETTING) > 0) {
             ImplicitContextSettings implicitContextSettings = sampleProject.getEmfProject().getImplicitContextSettings();
             assertNotNull(implicitContextSettings);
             checkParametersType(implicitContextSettings.getParameters());
@@ -176,7 +176,7 @@ public class ProjectDataJsonProviderTest {
                 assertEquals(status.getLabel(), "label" + i);
             }
         }
-        if ((checkContent & ProjectDataJsonProvider.LOAD_CONTENT_RELATIONSHIPS) > 0) {
+        if ((checkContent & ProjectDataJsonProvider.CONTENT_RELATIONSHIPS) > 0) {
             EList itemRelationsList = sampleProject.getEmfProject().getItemsRelations();
             assertEquals(itemRelationsCount, itemRelationsList.size());
             for (int i = 0; i < itemRelationsCount; i++) {
@@ -195,7 +195,7 @@ public class ProjectDataJsonProviderTest {
                 }
             }
         }
-        if ((checkContent & ProjectDataJsonProvider.LOAD_CONTENT_RECYCLEBIN) > 0) {
+        if ((checkContent & ProjectDataJsonProvider.CONTENT_RECYCLEBIN) > 0) {
             EList deleteFolders = sampleProject.getEmfProject().getDeletedFolders();
             assertEquals(deleteFolderCount, deleteFolders.size());
             for (int i = 0; i < deleteFolders.size(); i++) {

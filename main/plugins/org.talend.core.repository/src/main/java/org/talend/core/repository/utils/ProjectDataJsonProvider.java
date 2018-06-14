@@ -48,29 +48,39 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ProjectDataJsonProvider {
 
-    public static int LOAD_CONTENT_PROJECTSETTING = 1;
+    public static int CONTENT_PROJECTSETTING = 1;
 
-    public static int LOAD_CONTENT_RELATIONSHIPS = 2;
+    public static int CONTENT_RELATIONSHIPS = 2;
 
-    public static int LOAD_CONTENT_RECYCLEBIN = 4;
+    public static int CONTENT_RECYCLEBIN = 4;
 
-    public static int LOAD_CONTENT_ALL = 7;
-
+    public static int CONTENT_ALL = 7;
+    
     public static void saveProjectData(Project project) throws PersistenceException {
-        saveProjectSettings(project);
-        saveRelationShips(project);
-        RecycleBinManager.getInstance().saveRecycleBin(project);
+        saveProjectData(project, CONTENT_ALL);
+    }
+
+    public static void saveProjectData(Project project, int saveContent) throws PersistenceException {
+        if ((saveContent & CONTENT_PROJECTSETTING) > 0) {
+            saveProjectSettings(project);
+        }
+        if ((saveContent & CONTENT_RELATIONSHIPS) > 0) {
+            saveRelationShips(project);
+        }
+        if ((saveContent & CONTENT_RECYCLEBIN) > 0) {
+            RecycleBinManager.getInstance().saveRecycleBin(project);
+        }
     }
 
     public static void loadProjectData(Project project, IContainer projectContainer, int loadContent)
             throws PersistenceException {
-        if ((loadContent & LOAD_CONTENT_PROJECTSETTING) > 0) {
+        if ((loadContent & CONTENT_PROJECTSETTING) > 0) {
             loadProjectSettings(project, projectContainer);
         }
-        if ((loadContent & LOAD_CONTENT_RELATIONSHIPS) > 0) {
+        if ((loadContent & CONTENT_RELATIONSHIPS) > 0) {
             loadRelationShips(project, projectContainer);
         }
-        if ((loadContent & LOAD_CONTENT_RECYCLEBIN) > 0) {
+        if ((loadContent & CONTENT_RECYCLEBIN) > 0) {
             // Force reload from file
             RecycleBinManager.getInstance().clearCache(project);
             RecycleBin recycleBin = RecycleBinManager.getInstance().getRecycleBin(project);

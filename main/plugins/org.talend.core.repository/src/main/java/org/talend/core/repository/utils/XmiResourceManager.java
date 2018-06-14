@@ -116,7 +116,7 @@ public class XmiResourceManager {
                 PropertiesPackage.eINSTANCE.getProject());
         emfProject.eResource().setTrackingModification(true);
 
-        ProjectDataJsonProvider.loadProjectData(emfProject, project, ProjectDataJsonProvider.LOAD_CONTENT_ALL);
+        ProjectDataJsonProvider.loadProjectData(emfProject, project, ProjectDataJsonProvider.CONTENT_ALL);
 
         return emfProject;
     }
@@ -226,6 +226,16 @@ public class XmiResourceManager {
     }
 
     public Resource createTempProjectResource() {
+        URI uri = null;
+        try {
+            uri = URI.createPlatformResourceURI(Platform.getInstallLocation().getURL().getFile(), true);
+        } catch (Exception e) {
+            ExceptionHandler.process(e);
+        }
+        return getResourceSet().createResource(uri);
+    }
+    
+    public Resource createTempProjectSettingResource() {
         URI uri = null;
         try {
             uri = URI.createPlatformResourceURI(Platform.getInstallLocation().getURL().getFile(), true);
