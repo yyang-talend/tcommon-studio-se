@@ -169,6 +169,11 @@ public abstract class AbstractMavenProcessorPom extends CreateMavenBundleTemplat
             Map<String, Object> templateParameters = PomUtil.getTemplateParameters(jobProcessor.getProperty());
             PomUtil.checkParent(model, this.getPomFile(), templateParameters);
             setupShade(model);
+            if(jobProcessor.getArguments()!=null && jobProcessor.getArguments().containsKey("INCLUDE_EXT_RESOURCES")) {
+                org.apache.maven.model.Resource extRes = new  org.apache.maven.model.Resource();
+                extRes.setDirectory("src/main/ext-resources");
+                model.getBuild().getResources().add(extRes);
+            }            
             addDependencies(model);
         }
         return model;
