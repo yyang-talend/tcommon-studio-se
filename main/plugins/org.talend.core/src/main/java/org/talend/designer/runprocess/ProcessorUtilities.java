@@ -1351,15 +1351,20 @@ public class ProcessorUtilities {
                                 }
                                 
                                 if(jobInfo.getArgumentsMap() !=null && jobInfo.getArgumentsMap().get(TalendProcessArgumentConstant.ARG_BUILD_TYPE) != null) {
-                                	if(componentName.equals("cTalendJob") ||  componentName.equals("tRunJob")) {
-                                    	Object buildType = jobInfo.getArgumentsMap().get(TalendProcessArgumentConstant.ARG_BUILD_TYPE);
-                                		if(buildType.equals("ROUTE") || buildType.equals("OSGI")) {
+                                    if(componentName.equals("cTalendJob") ||  componentName.equals("tRunJob")) {
+                                        Object buildType = jobInfo.getArgumentsMap().get(TalendProcessArgumentConstant.ARG_BUILD_TYPE);
+                                        if(buildType.equals("ROUTE") || buildType.equals("OSGI")) {
                                             if(subJobInfo.getArgumentsMap() == null) {
-                                            	subJobInfo.setArgumentsMap(new HashMap<String, Object>());
-                                            }                                			
-                                			subJobInfo.getArgumentsMap().put(TalendProcessArgumentConstant.ARG_BUILD_TYPE, "OSGI");
-                                		}
-                                	}
+                                                subJobInfo.setArgumentsMap(new HashMap<String, Object>());
+                                            }
+                                            if(buildType.equals("ROUTE")) {
+                                                subJobInfo.getArgumentsMap().put(TalendProcessArgumentConstant.ARG_BUILD_TYPE, "OSGI");
+                                            }
+                                            if(componentName.equals("tRunJob")){
+                                                subJobInfo.getArgumentsMap().put("INCLUDE_EXT_RESOURCES", "");
+                                            }
+                                        }
+                                    }
                                 }
                                 
                                 // children won't have stats / traces
