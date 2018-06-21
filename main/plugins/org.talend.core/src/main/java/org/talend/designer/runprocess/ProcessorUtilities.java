@@ -1350,23 +1350,19 @@ public class ProcessorUtilities {
                                     subJobOption |= GENERATE_WITHOUT_COMPILING;
                                 }
                                 
-                                if(jobInfo.getArgumentsMap() !=null && jobInfo.getArgumentsMap().get(TalendProcessArgumentConstant.ARG_BUILD_TYPE) != null) {
-                                    if(componentName.equals("cTalendJob") ||  componentName.equals("tRunJob")) {
-                                        Object buildType = jobInfo.getArgumentsMap().get(TalendProcessArgumentConstant.ARG_BUILD_TYPE);
-                                        if(buildType.equals("ROUTE") || buildType.equals("OSGI")) {
-                                            if(subJobInfo.getArgumentsMap() == null) {
-                                                subJobInfo.setArgumentsMap(new HashMap<String, Object>());
-                                            }
-                                            if(buildType.equals("ROUTE")) {
-                                                subJobInfo.getArgumentsMap().put(TalendProcessArgumentConstant.ARG_BUILD_TYPE, "OSGI");
-                                            }
-                                            if(componentName.equals("tRunJob")){
-                                                subJobInfo.getArgumentsMap().put("INCLUDE_EXT_RESOURCES", "");
-                                            }
-                                        }
-                                    }
-                                }
+                                Object buildType = (jobInfo.getArgumentsMap() != null)? 
+                                        jobInfo.getArgumentsMap().get(TalendProcessArgumentConstant.ARG_BUILD_TYPE):null;
+
+                                Map<String, Object> subjobArguments = (subJobInfo.getArgumentsMap() != null) ? 
+                                        subJobInfo.getArgumentsMap(): new HashMap<String, Object>();
                                 
+                                if(componentName.equals("tRunJob") && (buildType == null || "OSGI".equals(buildType))) {
+                                    subjobArguments.put("INCLUDE_EXT_RESOURCES", "");
+                                    subJobInfo.setArgumentsMap(subjobArguments);
+                                }else if (componentName.equals("cTalendJob") && buildType.equals("ROUTE")) {
+                                    subjobArguments.put(TalendProcessArgumentConstant.ARG_BUILD_TYPE, "OSGI");
+                                    subJobInfo.setArgumentsMap(subjobArguments);
+                        		}
                                 // children won't have stats / traces
                                 generateCode(subJobInfo, selectedContextName, statistics, false, properties, isNeedLoadmodules,
                                         subJobOption, progressMonitor);
