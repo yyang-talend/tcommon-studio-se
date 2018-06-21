@@ -1359,7 +1359,7 @@ public class ProcessorUtilities {
                                 if(componentName.equals("tRunJob") && (buildType == null || "OSGI".equals(buildType))) {
                                     subjobArguments.put("INCLUDE_EXT_RESOURCES", "");
                                     subJobInfo.setArgumentsMap(subjobArguments);
-                                }else if (componentName.equals("cTalendJob") && buildType.equals("ROUTE")) {
+                                }else if (componentName.equals("cTalendJob") && "ROUTE".equals(buildType)) {
                                     subjobArguments.put(TalendProcessArgumentConstant.ARG_BUILD_TYPE, "OSGI");
                                     subJobInfo.setArgumentsMap(subjobArguments);
                         		}
