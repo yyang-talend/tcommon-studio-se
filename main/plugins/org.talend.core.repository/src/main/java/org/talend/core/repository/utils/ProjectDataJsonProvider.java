@@ -139,7 +139,7 @@ public class ProjectDataJsonProvider {
         }
     }
 
-    public static void loadRelationShips(Project project, IPath projectFolderPath) throws PersistenceException {
+    private static void loadRelationShips(Project project, IPath projectFolderPath) throws PersistenceException {
         File file = getLoadingConfigurationFile(projectFolderPath, FileConstants.RELATIONSHIP_FILE_NAME);
         if (file != null && file.exists()) {
             try {
