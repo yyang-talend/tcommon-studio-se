@@ -150,7 +150,7 @@ public class ProjectDataJsonProvider {
         }
     }
 
-    private static void loadRelationShips(Project project, InputStream input) throws PersistenceException {
+    public static void loadRelationShips(Project project, InputStream input) throws PersistenceException {
         TypeReference<List<ItemRelationsJson>> typeReference = new TypeReference<List<ItemRelationsJson>>() {
             // no need to overwrite
         };
