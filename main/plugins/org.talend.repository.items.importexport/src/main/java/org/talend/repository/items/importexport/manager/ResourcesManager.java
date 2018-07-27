@@ -52,7 +52,10 @@ public abstract class ResourcesManager implements InputStreamProvider {
     }
 
     final public InputStream getStream(IPath path) throws IOException {
-        return getStream(path, null);
+        if (path2Object.get(path) != null) {
+            return getStream(path, null);
+        }
+        return null;
     }
 
     public void addFolder(String path) {
